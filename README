@@ -1,0 +1,12 @@
+PE Resource Kit
+---------------
+* portable, cross-platform, endian-agnostic tool
+  which can be used as either a library or a
+  stand-alone application.
+
+* parse a raw PE image at once, provide the caller
+  with a host-native meta representation of the
+  image's internal structures.
+
+* when built as an application, output requested
+  information about a given PE image.
