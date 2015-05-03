@@ -9,8 +9,14 @@
 
 static int pe_free_image_meta_impl (struct pe_image_meta * meta, int status)
 {
+	unsigned i;
+
 	if (!meta) return 0;
 
+	for (i=0; i<meta->summary.num_of_implibs; i++)
+		free(meta->idata[i].items);
+
+	free(meta->idata);
 	free(meta->sectbl);
 	free(meta);
 
