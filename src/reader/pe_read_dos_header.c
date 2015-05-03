@@ -6,8 +6,6 @@
 
 int pe_read_dos_header(const struct pe_image_dos_hdr * p, struct pe_meta_image_dos_hdr * m)
 {
-	int i;
-
 	if ((p->dos_magic[0] != 'M') || (p->dos_magic[1] != 'Z'))
 		return PERK_BAD_DOS_HEADER;
 
@@ -16,6 +14,8 @@ int pe_read_dos_header(const struct pe_image_dos_hdr * p, struct pe_meta_image_d
 	memcpy(m,p,sizeof(*p));
 
 	#else
+
+	int i;
 
 	m->dos_magic[0] = p->dos_magic[0];
 	m->dos_magic[1] = p->dos_magic[1];
@@ -49,4 +49,4 @@ int pe_read_dos_header(const struct pe_image_dos_hdr * p, struct pe_meta_image_d
 	#endif
 
 	return 0;
-};
+}

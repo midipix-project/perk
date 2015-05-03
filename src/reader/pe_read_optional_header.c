@@ -6,14 +6,6 @@
 
 int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
-	struct pe_opt_hdr_std *		astd;
-	struct pe_opt_hdr_vers *	avers;
-	struct pe_opt_hdr_align *	aalign;
-	struct pe_opt_hdr_img *		aimg;
-	struct pe_opt_hdr_ldr *		aldr;
-	struct pe_opt_hdr_dirs *	adirs;
-	size_t				sdirs;
-
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
 	memset(&m->dirs,0,sizeof(m->dirs));
 
@@ -54,20 +46,28 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 
 	#else
 
+	struct pe_opt_hdr_std *		astd;
+	struct pe_opt_hdr_vers *	avers;
+	struct pe_opt_hdr_align *	aalign;
+	struct pe_opt_hdr_img *		aimg;
+	struct pe_opt_hdr_ldr *		aldr;
+	struct pe_opt_hdr_dirs *	adirs;
+	size_t				sdirs;
+
 	astd = (struct pe_opt_hdr_std *)p;
 
 	switch (m->std.magic) {
 		case PE_MAGIC_PE32:
-			avers	= (struct pe_opt_hdr_std *)&p->opt_hdr_32.major_os_ver;
-			aalign	= (struct pe_opt_hdr_std *)&p->opt_hdr_32.section_align;
+			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_32.major_os_ver;
+			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_32.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_32.size_of_image;
 			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_32.loader_flags;
 			adirs	= (struct pe_opt_hdr_dirs *)&p->opt_hdr_32.export_tbl;
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
-			avers	= (struct pe_opt_hdr_std *)&p->opt_hdr_64.major_os_ver;
-			aalign	= (struct pe_opt_hdr_std *)&p->opt_hdr_64.section_align;
+			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_64.major_os_ver;
+			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_64.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_64.size_of_image;
 			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_64.loader_flags;
 			adirs	= (struct pe_opt_hdr_dirs *)&p->opt_hdr_64.export_tbl;
@@ -78,8 +78,8 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 	}
 
 	/* std */
-	m->std.major_linker_ver			= astd->major_linker_ver;
-	m->std.minor_linker_ver			= astd->minor_linker_ver;
+	m->std.major_linker_ver			= astd->major_linker_ver[0];
+	m->std.minor_linker_ver			= astd->minor_linker_ver[0];
 
 	m->std.size_of_code			= pe_read_long(astd->size_of_code);
 	m->std.size_of_initialized_data		= pe_read_long(astd->size_of_initialized_data);
@@ -136,4 +136,4 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 	};
 
 	return 0;
-};
+}

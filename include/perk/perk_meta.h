@@ -65,7 +65,7 @@ struct pe_meta_opt_hdr_std {
 
 struct pe_meta_opt_hdr_vers {
 	uint16_t	major_os_ver;
-	uint16_t	minor_or_ver;
+	uint16_t	minor_os_ver;
 	uint16_t	major_image_ver;
 	uint16_t	minor_image_ver;
 	uint16_t	major_subsys_ver;

@@ -33,7 +33,6 @@ app:
 	$(CC) -static -o perk $(OBJS)
 
 static:
-	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/main/perk.c
 	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/main/pe_map_raw_image.c
 	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/main/pe_get_image_meta.c
 	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_dos_header.c
@@ -47,7 +46,6 @@ static:
 	$(CROSS_COMPILE)ranlib libperk.a
 
 shared:
-	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/main/perk.c
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/main/pe_map_raw_image.c
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/main/pe_get_image_meta.c
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_dos_header.c

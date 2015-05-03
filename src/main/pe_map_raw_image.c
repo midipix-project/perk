@@ -37,4 +37,4 @@ int pe_map_raw_image (int fd, const char * fname, struct pe_raw_image * map)
 int pe_unmap_raw_image (struct pe_raw_image * map)
 {
 	return munmap(map->addr, map->size);
-};
+}

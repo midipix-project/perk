@@ -34,4 +34,4 @@ int pe_read_coff_header(const struct pe_coff_file_hdr * p, struct pe_meta_coff_f
 	#endif
 
 	return 0;
-};
+}

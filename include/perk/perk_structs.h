@@ -166,7 +166,7 @@ struct pe_opt_hdr_align {
 
 struct pe_opt_hdr_vers {
 	unsigned char	major_os_ver                      [PE_MAJOR_OPERATING_SYSTEM_VERSION_BS];       /* 0x28 */
-	unsigned char	minor_or_ver                      [PE_MINOR_OPERATING_SYSTEM_VERSION_BS];       /* 0x2a */
+	unsigned char	minor_os_ver                      [PE_MINOR_OPERATING_SYSTEM_VERSION_BS];       /* 0x2a */
 	unsigned char	major_image_ver                   [PE_MAJOR_IMAGE_VERSION_BS];                  /* 0x2c */
 	unsigned char	minor_image_ver                   [PE_MINOR_IMAGE_VERSION_BS];                  /* 0x2e */
 	unsigned char	major_subsys_ver                  [PE_MAJOR_SUBSYSTEM_VERSION_BS];              /* 0x30 */

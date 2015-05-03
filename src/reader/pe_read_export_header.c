@@ -29,4 +29,4 @@ int pe_read_export_header(const struct pe_export_hdr * p, struct pe_meta_export_
 	#endif
 
 	return 0;
-};
+}

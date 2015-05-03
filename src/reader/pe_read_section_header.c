@@ -24,7 +24,7 @@ int pe_read_section_header(const struct pe_sec_hdr * p, struct pe_meta_sec_hdr *
 	m->size_of_raw_data	= pe_read_long(p->size_of_raw_data);
 	m->ptr_to_raw_data	= pe_read_long(p->ptr_to_raw_data);
 	m->ptr_to_relocs	= pe_read_long(p->ptr_to_relocs);
-	m->ptr_to_line_nums	= pe_read_long(p->ptr_to_linu_nums);
+	m->ptr_to_line_nums	= pe_read_long(p->ptr_to_line_nums);
 
 	m->num_of_relocs	= pe_read_short(p->num_of_relocs);
 	m->num_of_line_nums	= pe_read_short(p->num_of_line_nums);
@@ -34,4 +34,4 @@ int pe_read_section_header(const struct pe_sec_hdr * p, struct pe_meta_sec_hdr *
 	#endif
 
 	return 0;
-};
+}

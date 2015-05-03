@@ -112,5 +112,5 @@ static int perk_main(int argc, char * argv[], char * envp[])
 }
 
 #ifdef PERK_APP
-extern __typeof(perk_main) main __attribute__((alias("perk_main")));
+__typeof(perk_main) main __attribute__((alias("perk_main")));
 #endif
