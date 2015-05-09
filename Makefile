@@ -6,8 +6,7 @@ CFLAGS_APP = -DPERK_APP
 CFLAGS_OBJ = -DPERK_PRE_ALPHA
 CFLAGS_LIB = -fPIC # -DPERK_PRE_ALPHA
 
-OBJS   = perk.o \
-	pe_map_raw_image.o \
+OBJS =	pe_map_raw_image.o \
 	pe_get_image_meta.o \
 	pe_read_dos_header.o \
 	pe_read_coff_header.o \
@@ -30,7 +29,7 @@ app:
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_export_header.c
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_import_header.c
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/output/pe_output_export_symbols.c
-	$(CC) -static -o perk $(OBJS)
+	$(CC) -static -o perk perk.o $(OBJS)
 
 static:
 	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/main/pe_map_raw_image.c
