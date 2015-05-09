@@ -206,6 +206,26 @@ struct pe_opt_hdr_dirs {
 	unsigned char	reserved                          [PE_RESERVED__MUST_BE_ZERO_BS];
 };
 
+struct pe_data_dirs {
+	unsigned char	rva_and_sizes                     [PE_NUMBER_OF_RVA_AND_SIZES_BS];
+	unsigned char	export_tbl                        [PE_EXPORT_TABLE_BS];
+	unsigned char	import_tbl                        [PE_IMPORT_TABLE_BS];
+	unsigned char	resource_tbl                      [PE_RESOURCE_TABLE_BS];
+	unsigned char	exception_tbl                     [PE_EXCEPTION_TABLE_BS];
+	unsigned char	certificate_tbl                   [PE_CERTIFICATE_TABLE_BS];
+	unsigned char	base_reloc_tbl                    [PE_BASE_RELOCATION_TABLE_BS];
+	unsigned char	debug                             [PE_DEBUG_BS];
+	unsigned char	arch                              [PE_ARCHITECTURE_BS];
+	unsigned char	global_ptr                        [PE_GLOBAL_PTR_BS];
+	unsigned char	tls_tbl                           [PE_TLS_TABLE_BS];
+	unsigned char	load_config_tbl                   [PE_LOAD_CONFIG_TABLE_BS];
+	unsigned char	bound_import                      [PE_BOUND_IMPORT_BS];
+	unsigned char	iat                               [PE_IAT_BS];
+	unsigned char	delay_import_descriptor           [PE_DELAY_IMPORT_DESCRIPTOR_BS];
+	unsigned char	clr_runtime_hdr                   [PE_CLR_RUNTIME_HEADER_BS];
+	unsigned char	reserved                          [PE_RESERVED__MUST_BE_ZERO_BS];
+};
+
 struct pe_opt_hdr_32 {
 	unsigned char	magic                             [PE_MAGIC_BS];                                /* 0x00 */
 	unsigned char	major_linker_ver                  [PE_MAJOR_LINKER_VERSION_BS];                 /* 0x02 */
