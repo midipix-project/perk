@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <perk/perk_consts.h>
-#include <perk/perk_structs.h>
-#include <perk/perk_meta.h>
-#include <perk/perk_output.h>
+#include "perk_consts.h"
+#include "perk_structs.h"
+#include "perk_meta.h"
+#include "perk_output.h"
 
 #ifdef __cplusplus
 extern "C" {
