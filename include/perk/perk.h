@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "perk_api.h"
 #include "perk_consts.h"
 #include "perk_structs.h"
 #include "perk_meta.h"
@@ -70,26 +71,26 @@ struct pe_image_meta {
 };
 
 /* utility api */
-int pe_output_export_symbols	(const struct pe_image_meta *, uint32_t flags, FILE *);
+perk_api int pe_output_export_symbols	(const struct pe_image_meta *, uint32_t flags, FILE *);
 
 /* high-level api */
-int pe_map_raw_image		(int fd, const char * name, struct pe_raw_image *);
-int pe_unmap_raw_image		(struct pe_raw_image *);
+perk_api int pe_map_raw_image		(int fd, const char * name, struct pe_raw_image *);
+perk_api int pe_unmap_raw_image		(struct pe_raw_image *);
 
-int pe_get_image_meta		(const struct pe_raw_image *, struct pe_image_meta **);
-int pe_free_image_meta		(struct pe_image_meta *);
+perk_api int pe_get_image_meta		(const struct pe_raw_image *, struct pe_image_meta **);
+perk_api int pe_free_image_meta		(struct pe_image_meta *);
 
-int pe_get_named_section_index	(const struct pe_image_meta *, const char * name);
-int pe_get_block_section_index	(const struct pe_image_meta *, const struct pe_block *);
+perk_api int pe_get_named_section_index	(const struct pe_image_meta *, const char * name);
+perk_api int pe_get_block_section_index	(const struct pe_image_meta *, const struct pe_block *);
 
 /* low-level api */
-int pe_read_dos_header		(const struct pe_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);
-int pe_read_coff_header		(const struct pe_coff_file_hdr *,	struct pe_meta_coff_file_hdr *);
-int pe_read_optional_header	(const union  pe_opt_hdr *,		struct pe_meta_opt_hdr *);
-int pe_read_section_header	(const struct pe_sec_hdr *,		struct pe_meta_sec_hdr *);
-int pe_read_export_header	(const struct pe_export_hdr *,		struct pe_meta_export_hdr *);
-int pe_read_import_header	(const struct pe_import_hdr *,		struct pe_meta_import_hdr *);
-int pe_read_import_lookup_item	(const struct pe_import_lookup_item *,	struct pe_meta_import_lookup_item *,uint32_t magic);
+perk_api int pe_read_dos_header		(const struct pe_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);
+perk_api int pe_read_coff_header		(const struct pe_coff_file_hdr *,	struct pe_meta_coff_file_hdr *);
+perk_api int pe_read_optional_header	(const union  pe_opt_hdr *,		struct pe_meta_opt_hdr *);
+perk_api int pe_read_section_header	(const struct pe_sec_hdr *,		struct pe_meta_sec_hdr *);
+perk_api int pe_read_export_header	(const struct pe_export_hdr *,		struct pe_meta_export_hdr *);
+perk_api int pe_read_import_header	(const struct pe_import_hdr *,		struct pe_meta_import_hdr *);
+perk_api int pe_read_import_lookup_item	(const struct pe_import_lookup_item *,	struct pe_meta_import_lookup_item *,uint32_t magic);
 
 #ifdef __cplusplus
 }
