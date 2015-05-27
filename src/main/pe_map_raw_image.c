@@ -21,7 +21,7 @@ int pe_map_raw_image (int fd, const char * fname, int prot, struct pe_raw_image 
 		return errno;
 
 	map->size = stat.st_size;
-	map->addr = (char *)mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
+	map->addr = mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
 
 	if (map->addr == MAP_FAILED) {
 		map->addr = 0;

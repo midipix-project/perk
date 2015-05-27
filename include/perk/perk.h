@@ -37,7 +37,7 @@ extern "C" {
 #define PERK_MALFORMED_IMAGE	0xA8
 
 struct pe_raw_image {
-	char *	addr;
+	void *	addr;
 	size_t	size;
 };
 
