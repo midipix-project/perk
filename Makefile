@@ -1,10 +1,12 @@
-SRCTREE    = .
-CFE        = gcc
-CC         = $(CROSS_COMPILE)$(CFE)
-CFLAGS     = -O0 -g2 -I$(SRCTREE)/include -I$(SRCTREE)/src/internal -D_XOPEN_SOURCE=900
-CFLAGS_APP = -DPERK_APP
-CFLAGS_OBJ = -DPERK_PRE_ALPHA
-CFLAGS_LIB = -fPIC # -DPERK_PRE_ALPHA
+SRCTREE     = .
+CFE         = gcc
+CC          = $(CROSS_COMPILE)$(CFE)
+CFLAGS      = -O0 -g2 -I$(SRCTREE)/include -I$(SRCTREE)/src/internal -D_XOPEN_SOURCE=900
+CFLAGS_APP  = -DPERK_APP
+CFLAGS_OBJ  = -DPERK_PRE_ALPHA
+CFLAGS_LIB  = -fPIC # -DPERK_PRE_ALPHA
+LDFLAGS_APP =
+LDFLAGS_LIB =
 
 OBJS =	pe_map_raw_image.o \
 	pe_get_image_meta.o \
@@ -29,7 +31,7 @@ app:
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_export_header.c
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_import_header.c
 	$(CC) $(CFLAGS_APP) $(CFLAGS) -c $(SRCTREE)/src/output/pe_output_export_symbols.c
-	$(CC) -static -o perk perk.o $(OBJS)
+	$(CC) -static -o perk perk.o $(OBJS) $(LDFLAGS_APP)
 
 static:
 	$(CC) $(CFLAGS_OBJ) $(CFLAGS) -c $(SRCTREE)/src/main/pe_map_raw_image.c
@@ -54,7 +56,7 @@ shared:
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_export_header.c
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/reader/pe_read_import_header.c
 	$(CC) $(CFLAGS_LIB) $(CFLAGS) -c $(SRCTREE)/src/output/pe_output_export_symbols.c
-	$(CC) -shared -o libperk.so $(OBJS)
+	$(CC) -shared -o libperk.so $(OBJS) $(LDFLAGS_LIB)
 
 clean:
 	rm -f *~
