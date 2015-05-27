@@ -65,7 +65,7 @@ static int perk_map_input(struct perk_ctx * ctx)
 		return ctx->status;
 	}
 
-	ctx->status = pe_map_raw_image(ctx->fd,0,&ctx->map);
+	ctx->status = pe_map_raw_image(ctx->fd,0,PROT_READ,&ctx->map);
 
 	return ctx->status;
 }

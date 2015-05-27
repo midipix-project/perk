@@ -9,7 +9,7 @@
 
 #include <perk/perk.h>
 
-int pe_map_raw_image (int fd, const char * fname, struct pe_raw_image * map)
+int pe_map_raw_image (int fd, const char * fname, int prot, struct pe_raw_image * map)
 {
 	struct stat stat;
 	int nfd, ret;
@@ -21,7 +21,7 @@ int pe_map_raw_image (int fd, const char * fname, struct pe_raw_image * map)
 		return errno;
 
 	map->size = stat.st_size;
-	map->addr = (char *)mmap(0,map->size,PROT_READ,MAP_PRIVATE,fd,0);
+	map->addr = (char *)mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
 
 	if (map->addr == MAP_FAILED) {
 		map->addr = 0;
