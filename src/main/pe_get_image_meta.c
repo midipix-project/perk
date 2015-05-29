@@ -140,7 +140,9 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 			m->idata[i].aitems = (struct pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
 						+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
+			#ifdef PERK_DEVEL
 			printf("%s\n",m->idata[i].name);
+			#endif
 
 			/* items */
 			m->idata[i].count = 0;
@@ -174,7 +176,9 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 					m->idata[i].items[j].hint = pe_read_short(pentry->hint);
 				else {
 					m->idata[i].items[j].name = (char *)pentry->name;
+					#ifdef PERK_DEVEL
 					printf("%s\n",m->idata[i].items[j].name);
+					#endif
 				}
 			}
 		}
