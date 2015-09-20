@@ -4,5 +4,6 @@
 *.so
 *.gch
 *.exe
-./perk
-./perk.exe
+Makefile
+/bin
+/lib
