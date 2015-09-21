@@ -1,0 +1,373 @@
+#!/bin/sh
+# we are no longer lazy.
+
+# this script respects both CFLAGS and CFLAGS_CMDLINE,
+# as well as both LDFLAGS and LDFLAGS_CMDLINE, however
+# the latter variable of each pair should be preferred.
+
+error_msg()
+{
+	echo $@ >&2
+}
+
+
+init_vars()
+{
+	mb_project_dir=`readlink -f $(dirname $0)`
+	mb_pwd=`pwd`
+
+	if [ x"$mb_config" = x ]; then
+		. $mb_project_dir/config.project || exit 2
+	else
+		. "$mb_config" || exit 2
+	fi
+
+	# dirs
+	mb_prefix=$PREFIX
+	mb_bindir=$BIN_DIR
+	mb_libdir=$LIB_DIR
+	mb_includedir=$INCLUDE_DIR
+	mb_syslibdir=$LIB_DIR
+	mb_mandir=$MAN_DIR
+	mb_docdir=$DOC_DIR
+	mb_libexecdir=$LIBEXEC_DIR
+
+
+	# build
+	mb_build=$BUILD
+	mb_host=$HOST
+	mb_target=$TARGET
+	mb_arch=$ARCH
+	mb_toolchain=$TOOLCHAIN
+	mb_sysroot=$SYSROOT
+	mb_cross_compile=$CROSS_COMPILE
+	mb_shell=$SHELL
+
+	# switches
+	mb_cflags=$CFLAGS
+	mb_cflags_debug=$CFLAGS_DEBUG
+	mb_cflags_common=$CFLAGS_COMMON
+	mb_cflags_cmdline=$CFLAGS_CMDLINE
+	mb_cflags_config=$CFLAGS_CONFIG
+	mb_cflags_sysroot=$CFLAGS_SYSROOT
+	mb_cflags_path=$CFLAGS_PATH
+
+	mb_ldflags=$LDFLAGS
+	mb_ldflags_debug=$LDFLAGS_DEBUG
+	mb_ldflags_common=$LDFLAGS_COMMON
+	mb_ldflags_cmdline=$LDFLAGS_CMDLINE
+	mb_ldflags_config=$LDFLAGS_CONFIG
+	mb_ldflags_sysroot=$LDFLAGS_SYSROOT
+	mb_ldflags_path=$LDFLAGS_PATH
+
+	mb_pe_subsystem=$PE_SUBSYSTEM
+	mb_pe_image_base=$PE_IMAGE_BASE
+	mb_pe_config_defs=$PE_CONFIG_DEFS
+
+	mb_elf_eh_frame=$ELF_EH_FRAME
+	mb_elf_hash_style=$ELF_HASH_STYLE
+	mb_elf_config_defs=$ELF_CONFIG_DEFS
+
+	# overrides
+	mb_build_cc=$BUILD_CC
+	mb_build_os=$BUILD_OS
+	mb_build_os_bits=$BUILD_OS_BITS
+	mb_build_os_underscore=$BUILD_OS_UNDERSCORE
+}
+
+
+verify_build_directory()
+{
+	if [ x"$mb_project_dir" = x"$mb_pwd" ]; then
+		if [ x"$mb_require_out_of_tree" = xyes ]; then
+			error_msg "$mb_package: out-of-tree builds are required."
+			error_msg "please invoke configure again from a clean build directory."
+			exit 2
+		else
+			mb_project_dir='.'
+		fi
+	fi
+}
+
+
+common_defaults()
+{
+	# dirs
+	[ -z "$mb_prefix" ] 		&& mb_prefix=$mb_default_prefix
+	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_default_bindir
+	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_default_libdir
+	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_default_includedir
+	[ -z "$mb_syslibdir" ] 		&& mb_syslibdir=$mb_default_syslibdir
+	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_default_mandir
+	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_default_docdir
+	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_default_libexecdir
+
+	# build
+	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build
+	[ -z "$mb_host" ] 		&& mb_host=$mb_default_host
+	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
+	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
+	[ -z "$mb_toolchain" ] 		&& mb_toolchain=$mb_default_toolchain
+	[ -z "$mb_sysroot" ] 		&& mb_sysroot=$mb_default_sysroot
+	[ -z "$mb_cross_compile" ] 	&& mb_cross_compile=$mb_default_cross_compile
+	[ -z "$mb_shell" ] 		&& mb_shell=$mb_default_shell
+
+	# switches
+	[ -z "$mb_cflags_debug" ]	&& mb_cflags_debug=$mb_default_cflags_debug
+	[ -z "$mb_cflags_common" ]	&& mb_cflags_common=$mb_default_cflags_common
+	[ -z "$mb_cflags_cmdline" ]	&& mb_cflags_cmdline=$mb_default_cflags_cmdline
+	[ -z "$mb_cflags_config" ]	&& mb_cflags_config=$mb_default_cflags_config
+	[ -z "$mb_cflags_sysroot" ]	&& mb_cflags_sysroot=$mb_default_cflags_sysroot
+	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
+
+	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
+	[ -z "$mb_ldflags_common" ]	&& mb_ldflags_common=$mb_default_ldflags_common
+	[ -z "$mb_ldflags_cmdline" ]	&& mb_ldflags_cmdline=$mb_default_ldflags_cmdline
+	[ -z "$mb_ldflags_config" ]	&& mb_ldflags_config=$mb_default_ldflags_config
+	[ -z "$mb_ldflags_sysroot" ]	&& mb_ldflags_sysroot=$mb_default_ldflags_sysroot
+	[ -z "$mb_ldflags_path" ]	&& mb_ldflags_path=$mb_default_ldflags_path
+
+	[ -z "$mb_pe_subsystem" ]	&& mb_pe_subsystem=$mb_default_pe_subsystem
+	[ -z "$mb_pe_image_base" ]	&& mb_pe_image_base=$mb_default_pe_image_base
+	[ -z "$mb_pe_config_defs" ]	&& mb_pe_config_defs=$mb_default_pe_config_defs
+
+	[ -z "$mb_elf_eh_frame" ]	&& mb_elf_eh_frame=$mb_default_elf_eh_frame
+	[ -z "$mb_elf_hash_style" ]	&& mb_elf_hash_style=$mb_default_elf_hash_style
+	[ -z "$mb_elf_config_defs" ]	&& mb_elf_config_defs=$mb_default_elf_config_defs
+
+	# host/target
+	[ -z "$mb_host" ] 		&& mb_host=$mb_target
+
+	# sysroot
+	if [ x"$mb_sysroot" != x ]; then
+		if [ x"$mb_cflags_sysroot" = x ]; then
+			mb_cflags_sysroot="--sysroot=$mb_sysroot"
+		fi
+
+		if [ x"$mb_ldflags_sysroot" = x ]; then
+			mb_ldflags_sysroot="-Wl,--sysroot,$mb_sysroot"
+		fi
+	fi
+
+	# debug
+	if [ x"$mb_debug" = xyes ]; then
+		if [ x"$mb_cflags_debug" = x ]; then
+			mb_cflags_debug='-g3 -O0'
+		fi
+	fi
+}
+
+
+native_defaults()
+{
+	# toolchain
+	[ -z "$mb_build_cc" ] && mb_build_cc=$CC
+	[ -z "$mb_build_cc" ] && mb_build_cc='cc'
+	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+
+	[ -z "$mb_build_cc" ] && mb_build_cc='gcc'
+	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+
+	[ -z "$mb_build_cc" ] && mb_build_cc='clang'
+	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+
+	if [ x"$mb_build_cc" = x ]; then
+		error_msg "config error: could not find a working native compiler."
+		exit 2
+	fi
+
+	if [ x"$mb_toolchain" = x ]; then
+		$mb_build_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_toolchain='clang'
+	fi
+
+	if [ x"$mb_toolchain" = x ]; then
+		$mb_build_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_toolchain='gcc'
+	fi
+
+	if [ x"$mb_toolchain" = x ]; then
+		error_msg "config error: could not identify the native compiler."
+		exit 2
+	fi
+
+
+	# host
+	if [ x"$mb_host" = x ]; then
+		mb_host='native'
+	fi
+
+
+	# os
+	mb_native_os=`uname | tr '[:upper:]' '[:lower:]'`
+
+	mb_native_os_sizeof_pointer=`$mb_build_cc -dM -E - < /dev/null \
+			| grep __SIZEOF_POINTER__  \
+			| cut -d ' ' -f3`
+
+	mb_native_os_bits=`expr '8' '*' '0'"$mb_native_os_sizeof_pointer"`
+
+	if [ $mb_native_os_bits = 32 ]; then
+		mb_native_os_underscore='_'
+	else
+		mb_native_os_underscore=''
+	fi
+
+	if [ x"$mb_native_os_sizeof_pointer" = x ]; then
+		error_msg "config error: could not determine size of pointer on native system."
+		exit 2
+	fi
+
+	[ -z "$mb_build_os" ] 			&& mb_build_os=$mb_native_os
+	[ -z "$mb_build_os_bits" ] 		&& mb_build_os_bits=$mb_native_os_bits
+	[ -z "$mb_build_os_underscore" ]	&& mb_build_os_underscore=$mb_native_os_underscore
+}
+
+
+cross_defaults()
+{
+	if [ x"$mb_cross_compile" = x ] && [ x"$mb_host" != xnative ]; then
+		mb_cross_compile=$mb_host'-'
+	fi
+}
+
+
+config_copy()
+{
+	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
+			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
+											\
+			-e 's^@build@^'"$mb_build"'^g'					\
+			-e 's^@host@^'"$mb_host"'^g'					\
+			-e 's^@target@^'"$mb_target"'^g'				\
+			-e 's^@arch@^'"$mb_arch"'^g'					\
+			-e 's^@toolchain@^'"$mb_toolchain"'^g'				\
+			-e 's^@sysroot@^'"$mb_sysroot"'^g'				\
+			-e 's^@cross_compile@^'"$mb_cross_compile"'^g'			\
+			-e 's^@shell@^'"$mb_shell"'^g'					\
+											\
+			-e 's^@cflags@^'"$mb_cflags"'^g'				\
+			-e 's^@cflags_debug@^'"$mb_cflags_debug"'^g'			\
+			-e 's^@cflags_common@^'"$mb_cflags_common"'^g'			\
+			-e 's^@cflags_cmdline@^'"$mb_cflags $mb_cflags_cmdline"'^g'	\
+			-e 's^@cflags_config@^'"$mb_cflags_config"'^g'			\
+			-e 's^@cflags_sysroot@^'"$mb_cflags_sysroot"'^g'		\
+			-e 's^@cflags_path@^'"$mb_cflags_path"'^g'			\
+											\
+			-e 's^@ldflags@^'"$mb_ldflags"'^g'				\
+			-e 's^@ldflags_debug@^'"$mb_ldflags_debug"'^g'			\
+			-e 's^@ldflags_common@^'"$mb_ldflags_common"'^g'		\
+			-e 's^@ldflags_cmdline@^'"$mb_ldflags $mb_ldflags_cmdline"'^g'	\
+			-e 's^@ldflags_config@^'"$mb_ldflags_config"'^g'		\
+			-e 's^@ldflags_sysroot@^'"$mb_ldflags_sysroot"'^g'		\
+			-e 's^@ldflags_path@^'"$mb_ldflags_path"'^g'			\
+											\
+			-e 's^@pe_subsystem@^'"$mb_pe_subsystem"'^g'			\
+			-e 's^@pe_image\_base@^'"$mb_pe_image_base"'^g'			\
+			-e 's^@pe_config\_defs@^'"$mb_pe_config_defs"'^g'		\
+											\
+			-e 's^@elf_eh\_frame@^'"$mb_elf_eh_frame"'^g'			\
+			-e 's^@elf_hash\_style@^'"$mb_elf_hash_style"'^g'		\
+			-e 's^@elf_config\_defs@^'"$mb_elf_config_defs"'^g'		\
+											\
+			-e 's^@prefix@^'"$mb_prefix"'^g'				\
+			-e 's^@bindir@^'"$mb_bindir"'^g'				\
+			-e 's^@libdir@^'"$mb_libdir"'^g'				\
+			-e 's^@includedir@^'"$mb_includedir"'^g'			\
+			-e 's^@syslibdir@^'"$mb_syslibdir"'^g'				\
+			-e 's^@mandir@^'"$mb_mandir"'^g'				\
+			-e 's^@docdir@^'"$mb_docdir"'^g'				\
+			-e 's^@libexecdir@^'"$mb_libexecdir"'^g'			\
+											\
+			-e 's^@build_cc@^'"$mb_build_cc"'^g'				\
+			-e 's^@build_os@^'"$mb_build_os"'^g'				\
+			-e 's^@build_os_bits@^'"$mb_build_os_bits"'^g'			\
+			-e 's^@build_os_underscore@^'"$mb_build_os_underscore"'^g'	\
+		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
+}
+
+
+
+# one: init
+init_vars
+verify_build_directory
+
+
+# two: args
+for arg ; do
+	case "$arg" in
+		--help)	usage
+			;;
+
+		# dirs
+		--prefix=*)
+			mb_prefix=${arg#*=}
+			;;
+		--bindir=*)
+			mb_bindir=${arg#*=}
+			;;
+		--libdir=*)
+			mb_libdir=${arg#*=}
+			;;
+		--includedir=*)
+			mb_includedir=${arg#*=}
+			;;
+		--syslibdir=*)
+			mb_syslibdir=${arg#*=}
+			;;
+		--mandir=*)
+			mb_mandir=${arg#*=}
+			;;
+		--libexecdir=*)
+			mb_libexecdir=${arg#*=}
+			;;
+
+
+		# build
+		--build=*)
+			mb_build=${arg#*=}
+			;;
+		--host=*)
+			mb_host=${arg#*=}
+			;;
+		--target=*)
+			mb_target=${arg#*=}
+			;;
+		--arch=*)
+			mb_arch=${arg#*=}
+			;;
+		--toolchain=*)
+			mb_toolchain=${arg#*=}
+			;;
+		--sysroot=*)
+			mb_sysroot=${arg#*=}
+			;;
+		--cross-compile=*)
+			mb_cross_compile=${arg#*=}
+			;;
+		--shell=*)
+			mb_shell=${arg#*=}
+			;;
+		--debug)
+			mb_debug='yes'
+			;;
+		*)
+			error_msg ${arg#}: "unsupported config argument."
+			exit 2
+			;;
+	esac
+done
+
+
+
+# three: defaults
+common_defaults
+native_defaults
+cross_defaults
+
+
+
+# four: config
+config_copy
+
+
+# all done
+exit 0

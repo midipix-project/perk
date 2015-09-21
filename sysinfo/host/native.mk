@@ -1,0 +1,6 @@
+include $(PROJECT_DIR)/sysinfo/os/$(BUILD_OS).mk
+
+CC 		= $(BUILD_CC)
+OS 		= $(BUILD_OS)
+HOST_BITS 	= $(BUILD_OS_BITS)
+HOST_UNDERSCORE = $(BUILD_OS_UNDERSCORE)

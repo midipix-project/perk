@@ -1,0 +1,213 @@
+PACKAGE 		?= @package@
+PROJECT_DIR 		?= @project_dir@
+
+BUILD 			?= @build@
+HOST 			?= @host@
+TARGET 			?= @target@
+ARCH 			?= @arch@
+TOOLCHAIN 		?= @toolchain@
+SYSROOT 		?= @sysroot@
+CROSS_COMPILE 		?= @cross_compile@
+SHELL 			?= @shell@
+
+CFLAGS_DEBUG 		?= @cflags_debug@
+CFLAGS_COMMON 		?= @cflags_common@
+CFLAGS_CMDLINE 		?= @cflags_cmdline@
+CFLAGS_CONFIG 		?= @cflags_config@
+CFLAGS_SYSROOT 		?= @cflags_sysroot@
+CFLAGS_PATH 		?= @cflags_path@
+
+LDFLAGS_DEBUG 		?= @ldflags_debug@
+LDFLAGS_COMMON 		?= @ldflags_common@
+LDFLAGS_CMDLINE 	?= @ldflags_cmdline@
+LDFLAGS_CONFIG 		?= @ldflags_config@
+LDFLAGS_SYSROOT 	?= @ldflags_sysroot@
+LDFLAGS_PATH 		?= @ldflags_path@
+
+PE_SUBSYSTEM 		?= @pe_subsystem@
+PE_IMAGE_BASE 		?= @pe_image_base@
+PE_CONFIG_DEFS  	?= @pe_config_defs@
+
+ELF_EH_FRAME 		?= @elf_eh_frame@
+ELF_HASH_STYLE 		?= @elf_hash_style@
+ELF_CONFIG_DEFS 	?= @elf_config_defs@
+
+PREFIX 			?= @prefix@
+BIN_DIR 		?= @bindir@
+LIB_DIR 		?= @libdir@
+INCLUDE_DIR 		?= @includedir@
+SYSLIB_DIR 		?= @syslibdir@
+MAN_DIR 		?= @mandir@
+DOC_DIR 		?= @docdir@
+LIBEXEC_DIR 		?= @libexecdir@
+
+BUILD_CC 		?= @build_cc@
+BUILD_OS 		?= @build_os@
+BUILD_OS_BITS 		?= @build_os_bits@
+BUILD_OS_UNDERSCORE	?= @build_os_underscore@
+
+
+
+all:
+install:
+shared:
+static:
+
+
+
+include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
+include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
+
+include $(PROJECT_DIR)/project/defs.mk
+include $(PROJECT_DIR)/project/tree.mk
+include $(PROJECT_DIR)/project/depends.mk
+include $(PROJECT_DIR)/project/headers.mk
+include $(PROJECT_DIR)/project/common.mk
+include $(PROJECT_DIR)/project/arch.mk
+include $(PROJECT_DIR)/project/extras.mk
+include $(PROJECT_DIR)/project/overrides.mk
+
+
+
+$(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
+
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS)
+		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
+
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS)
+		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
+
+$(LIB_DIR)/%$(OS_LIB_SUFFIX):
+		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
+
+$(LIB_DIR)/%$(OS_ARCHIVE_EXT):
+		rm -f $@
+		$(AR) -rcs $@ $^
+
+
+
+all:		shared static app
+
+install:	install-libs install-headers install-app
+
+app:		default-app
+
+
+install-libs:	install-shared install-static install-implib
+
+install-headers:shared static
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(INCLUDE_DIR)/$(PACKAGE)
+		cp $(API_HEADERS) $(DESTDIR)/./$(PREFIX)/./$(INCLUDE_DIR)/$(PACKAGE)
+
+install-shared:	shared install-implib
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+		cp $(SHARED_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+
+install-static:	static
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+		cp $(STATIC_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+
+install-app:	app
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(BIN_DIR)
+		cp $(APP) $(DESTDIR)/./$(PREFIX)/./$(BIN_DIR)
+
+
+
+shared:		shared-lib shared-implib
+
+static:		static-lib
+
+shared-lib:	shared-objs $(SHARED_LIB)
+
+static-lib:	static-objs $(STATIC_LIB)
+
+
+
+default-app:	static $(DEFAULT_APP) $(APP)
+
+shared-app:	shared $(SHARED_APP)
+
+static-app:	static $(STATIC_APP)
+
+
+
+shared-objs:	dirs $(SHARED_OBJS)
+
+static-objs:	dirs $(STATIC_OBJS)
+
+app-objs:	dirs $(APP_OBJS)
+
+
+
+$(SHARED_LIB):	$(SHARED_OBJS)
+
+$(STATIC_LIB):	$(STATIC_OBJS)
+
+$(APP):		$(DEFAULT_APP)
+		cp $^ $@
+
+$(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		$(CC) -o $@ $^ $(LDFLAGS_APP)
+
+$(SHARED_APP):	$(SHARED_LIB) $(APP_OBJS)
+		$(CC) -o $@ $(APP_OBJS) -l$(PACKAGE) $(LDFLAGS_APP)
+
+$(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		$(CC) -static -o $@ $^ -l$(PACKAGE) $(LDFLAGS_STATIC)
+
+
+dirs: 		dirs.tag tree.tag
+
+dirs.tag:
+		mkdir -p $(BIN_DIR)
+		mkdir -p $(LIB_DIR)
+		touch dirs.tag
+
+distclean:	clean
+		rm -f Makefile
+
+clean:
+		rm -f tree.tag
+		rm -f dirs.tag
+		rm -f $(SHARED_OBJS)
+		rm -f $(STATIC_OBJS)
+		rm -f $(APP_OBJS)
+		rm -f $(SHARED_LIB)
+		rm -f $(STATIC_LIB)
+		rm -f $(SHARED_IMPLIB)
+		rm -f $(APP)
+		rm -f $(DEFAULT_APP)
+		rm -f $(SHARED_APP)
+		rm -f $(STATIC_APP)
+
+
+.display:
+		@echo CC:         $(CC)
+		@echo CPP:        $(CPP)
+		@echo CXX:        $(CXX)
+
+		@echo AS:         $(AS)
+		@echo AR:         $(AR)
+		@echo LD:         $(LD)
+		@echo NM:         $(NM)
+		@echo OBJDUMP:    $(OBJDUMP)
+		@echo RANLIB:     $(RANLIB)
+		@echo SIZE:       $(SIZE)
+		@echo STRIP:      $(STRIP)
+		@echo STRINGS:    $(STRINGS)
+
+		@echo ADDR2LINE:  $(ADDR2LINE)
+		@echo COV:        $(COV)
+		@echo CXXFILT     $(CXXFILT)
+		@echo ELFEDIT:    $(ELFEDIT)
+		@echo OBJCOPY:    $(OBJCOPY)
+		@echo READELF:    $(READELF)
+
+
+.PHONY:		all install shared static app .display \
+		shared-objs shared-lib shared-implib \
+		static-objs static-lib \
+		default-app shared-app static-app \
+		install-shared install-static install-implib \
+		install-headers install-app \
+		clean distclean
