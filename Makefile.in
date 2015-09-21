@@ -121,6 +121,8 @@ shared-lib:	shared-objs $(SHARED_LIB)
 
 static-lib:	static-objs $(STATIC_LIB)
 
+shared-implib:	shared-lib
+
 
 
 default-app:	static $(DEFAULT_APP) $(APP)
