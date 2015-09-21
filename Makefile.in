@@ -183,27 +183,87 @@ clean:
 		rm -f $(STATIC_APP)
 
 
-.display:
-		@echo CC:         $(CC)
-		@echo CPP:        $(CPP)
-		@echo CXX:        $(CXX)
+.display:	.display-env .display-tools .display-flags \
+		.display-pe .display-elf .display-dirs .display-build
 
-		@echo AS:         $(AS)
-		@echo AR:         $(AR)
-		@echo LD:         $(LD)
-		@echo NM:         $(NM)
-		@echo OBJDUMP:    $(OBJDUMP)
-		@echo RANLIB:     $(RANLIB)
-		@echo SIZE:       $(SIZE)
-		@echo STRIP:      $(STRIP)
-		@echo STRINGS:    $(STRINGS)
+.display-env:
+		@echo BUILD:'                  '$(BUILD)
+		@echo HOST:'                   '$(HOST)
+		@echo TARGET:'                 '$(TARGET)
+		@echo ARCH:'                   '$(ARCH)
+		@echo TOOLCHAIN:'              '$(TOOLCHAIN)
+		@echo SYSROOT:'                '$(SYSROOT)
+		@echo XCOMPILE:'               '$(CROSS_COMPILE)
+		@echo SHELL:'                  '$(SHELL)
 
-		@echo ADDR2LINE:  $(ADDR2LINE)
-		@echo COV:        $(COV)
-		@echo CXXFILT     $(CXXFILT)
-		@echo ELFEDIT:    $(ELFEDIT)
-		@echo OBJCOPY:    $(OBJCOPY)
-		@echo READELF:    $(READELF)
+.display-tools:
+		@echo CC:'                     '$(CC)
+		@echo CPP:'                    '$(CPP)
+		@echo CXX:'                    '$(CXX)
+		@echo
+		@echo AS:'                     '$(AS)
+		@echo AR:'                     '$(AR)
+		@echo LD:'                     '$(LD)
+		@echo NM:'                     '$(NM)
+		@echo OBJDUMP:'                '$(OBJDUMP)
+		@echo RANLIB:'                 '$(RANLIB)
+		@echo SIZE:'                   '$(SIZE)
+		@echo STRIP:'                  '$(STRIP)
+		@echo STRINGS:'                '$(STRINGS)
+		@echo
+		@echo ADDR2LINE:'              '$(ADDR2LINE)
+		@echo COV:'                    '$(COV)
+		@echo CXXFILT'                 '$(CXXFILT)
+		@echo ELFEDIT:'                '$(ELFEDIT)
+		@echo OBJCOPY:'                '$(OBJCOPY)
+		@echo READELF:'                '$(READELF)
+		@echo
+
+.display-flags:
+		@echo CFLAGS_DEBUG:'           '$(CFLAGS_DEBUG)
+		@echo CFLAGS_COMMON:'          '$(CFLAGS_COMMON)
+		@echo CFLAGS_CMDLINE:'         '$(CFLAGS_CMDLINE)
+		@echo CFLAGS_CONFIG:'          '$(CFLAGS_CONFIG)
+		@echo CFLAGS_SYSROOT:'         '$(CFLAGS_SYSROOT)
+		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
+		@echo
+		@echo LDFLAGS_DEBUG:'           '$(LDFLAGS_DEBUG)
+		@echo LDFLAGS_COMMON:'          '$(LDFLAGS_COMMON)
+		@echo LDFLAGS_CMDLINE:'         '$(LDFLAGS_CMDLINE)
+		@echo LDFLAGS_CONFIG:'          '$(LDFLAGS_CONFIG)
+		@echo LDFLAGS_SYSROOT:'         '$(LDFLAGS_SYSROOT)
+		@echo LDFLAGS_PATH:'            '$(LDFLAGS_PATH)
+		@echo
+
+.display-pe:
+		@echo PE_SUBSYSTEM:'           '$(PE_SUBSYSTEM)
+		@echo PE_IMAGE_BASE:'          '$(PE_IMAGE_BASE)
+		@echo PE_CONFIG_DEFS:'         '$(PE_CONFIG_DEFS)
+		@echo
+
+.display-elf:
+		@echo ELF_EH_FRAME:'           '$(ELF_EH_FRAME)
+		@echo ELF_HASH_STYLE:'         '$(ELF_HASH_STYLE)
+		@echo ELF_CONFIG_DEFS:'        '$(ELF_CONFIG_DEFS)
+		@echo
+
+.display-dirs:
+		@echo PREFIX:'                 '$(PREFIX)
+		@echo BIN_DIR:'                '$(BIN_DIR)
+		@echo LIB_DIR:'                '$(LIB_DIR)
+		@echo INCLUDE_DIR:'            '$(INCLUDE_DIR)
+		@echo SYSLIB_DIR:'             '$(SYSLIB_DIR)
+		@echo MAN_DIR:'                '$(MAN_DIR)
+		@echo DOC_DIR:'                '$(DOC_DIR)
+		@echo LIBEXEC_DIR:'            '$(LIBEXEC_DIR)
+		@echo
+
+.display-build:
+		@echo BUILD_CC:'               '$(BUILD_CC)
+		@echo BUILD_OS:'               '$(BUILD_OS)
+		@echo BUILD_OS_BITS:'          '$(BUILD_OS_BITS)
+		@echo BUILD_OS_USCORE:'        '$(BUILD_OS_UNDERSCORE)
+		@echo
 
 
 .PHONY:		all install shared static app .display \
@@ -212,4 +272,6 @@ clean:
 		default-app shared-app static-app \
 		install-shared install-static install-implib \
 		install-headers install-app \
-		clean distclean
+		clean distclean \
+		.display-env .display-tools .display-flags \
+		.display-pe .display-elf .display-dirs .display-build
