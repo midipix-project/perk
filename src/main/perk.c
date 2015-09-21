@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <malloc.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -101,7 +100,7 @@ static int perk_run(struct perk_ctx * ctx)
 	return perk_exit(ctx);
 }
 
-static int perk_main(int argc, char * argv[], char * envp[])
+static int perk_main(int argc, char ** argv, char ** envp)
 {
 	struct perk_ctx ctx = {argc,argv,envp};
 
@@ -111,6 +110,7 @@ static int perk_main(int argc, char * argv[], char * envp[])
 		return perk_run(&ctx);
 }
 
-#ifdef PERK_APP
-__typeof(perk_main) main __attribute__((alias("perk_main")));
-#endif
+int main(int argc, char ** argv, char ** envp)
+{
+	return perk_main(argc,argv,envp);
+}
