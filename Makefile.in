@@ -1,50 +1,50 @@
-PACKAGE 		?= @package@
-PROJECT_DIR 		?= @project_dir@
+PACKAGE 		= @package@
+PROJECT_DIR 		= @project_dir@
 
-BUILD 			?= @build@
-HOST 			?= @host@
-TARGET 			?= @target@
-ARCH 			?= @arch@
-TOOLCHAIN 		?= @toolchain@
-SYSROOT 		?= @sysroot@
-CROSS_COMPILE 		?= @cross_compile@
-SHELL 			?= @shell@
+BUILD 			= @build@
+HOST 			= @host@
+TARGET 			= @target@
+ARCH 			= @arch@
+TOOLCHAIN 		= @toolchain@
+SYSROOT 		= @sysroot@
+CROSS_COMPILE 		= @cross_compile@
+SHELL 			= @shell@
 
-CFLAGS_DEBUG 		?= @cflags_debug@
-CFLAGS_COMMON 		?= @cflags_common@
-CFLAGS_CMDLINE 		?= @cflags_cmdline@
-CFLAGS_CONFIG 		?= @cflags_config@
-CFLAGS_SYSROOT 		?= @cflags_sysroot@
-CFLAGS_PATH 		?= @cflags_path@
+CFLAGS_DEBUG 		= @cflags_debug@
+CFLAGS_COMMON 		= @cflags_common@
+CFLAGS_CMDLINE 		= @cflags_cmdline@
+CFLAGS_CONFIG 		= @cflags_config@
+CFLAGS_SYSROOT 		= @cflags_sysroot@
+CFLAGS_PATH 		= @cflags_path@
 
-LDFLAGS_DEBUG 		?= @ldflags_debug@
-LDFLAGS_COMMON 		?= @ldflags_common@
-LDFLAGS_CMDLINE 	?= @ldflags_cmdline@
-LDFLAGS_CONFIG 		?= @ldflags_config@
-LDFLAGS_SYSROOT 	?= @ldflags_sysroot@
-LDFLAGS_PATH 		?= @ldflags_path@
+LDFLAGS_DEBUG 		= @ldflags_debug@
+LDFLAGS_COMMON 		= @ldflags_common@
+LDFLAGS_CMDLINE 	= @ldflags_cmdline@
+LDFLAGS_CONFIG 		= @ldflags_config@
+LDFLAGS_SYSROOT 	= @ldflags_sysroot@
+LDFLAGS_PATH 		= @ldflags_path@
 
-PE_SUBSYSTEM 		?= @pe_subsystem@
-PE_IMAGE_BASE 		?= @pe_image_base@
-PE_CONFIG_DEFS  	?= @pe_config_defs@
+PE_SUBSYSTEM 		= @pe_subsystem@
+PE_IMAGE_BASE 		= @pe_image_base@
+PE_CONFIG_DEFS  	= @pe_config_defs@
 
-ELF_EH_FRAME 		?= @elf_eh_frame@
-ELF_HASH_STYLE 		?= @elf_hash_style@
-ELF_CONFIG_DEFS 	?= @elf_config_defs@
+ELF_EH_FRAME 		= @elf_eh_frame@
+ELF_HASH_STYLE 		= @elf_hash_style@
+ELF_CONFIG_DEFS 	= @elf_config_defs@
 
-PREFIX 			?= @prefix@
-BIN_DIR 		?= @bindir@
-LIB_DIR 		?= @libdir@
-INCLUDE_DIR 		?= @includedir@
-SYSLIB_DIR 		?= @syslibdir@
-MAN_DIR 		?= @mandir@
-DOC_DIR 		?= @docdir@
-LIBEXEC_DIR 		?= @libexecdir@
+PREFIX 			= @prefix@
+BIN_DIR 		= @bindir@
+LIB_DIR 		= @libdir@
+INCLUDE_DIR 		= @includedir@
+SYSLIB_DIR 		= @syslibdir@
+MAN_DIR 		= @mandir@
+DOC_DIR 		= @docdir@
+LIBEXEC_DIR 		= @libexecdir@
 
-BUILD_CC 		?= @build_cc@
-BUILD_OS 		?= @build_os@
-BUILD_OS_BITS 		?= @build_os_bits@
-BUILD_OS_UNDERSCORE	?= @build_os_underscore@
+BUILD_CC 		= @build_cc@
+BUILD_OS 		= @build_os@
+BUILD_OS_BITS 		= @build_os_bits@
+BUILD_OS_UNDERSCORE	= @build_os_underscore@
 
 
 

@@ -22,4 +22,4 @@ OBJCOPY 	= $(CROSS_COMPILE)objcopy
 READELF 	= $(CROSS_COMPILE)readelf
 
 
-CFLAGS_PIC 	?= -fPIC
+CFLAGS_PIC 	= -fPIC
