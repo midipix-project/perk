@@ -71,10 +71,10 @@ include $(PROJECT_DIR)/project/overrides.mk
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS)
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS)
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 $(LIB_DIR)/%$(OS_LIB_SUFFIX):
@@ -165,12 +165,17 @@ dirs.tag:
 		mkdir -p $(LIB_DIR)
 		touch dirs.tag
 
+host.tag:	Makefile
+		$(SHELL) $(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
+		touch host.tag
+
 distclean:	clean
 		rm -f Makefile
 
 clean:
 		rm -f tree.tag
 		rm -f dirs.tag
+		rm -f host.tag
 		rm -f $(SHARED_OBJS)
 		rm -f $(STATIC_OBJS)
 		rm -f $(APP_OBJS)
