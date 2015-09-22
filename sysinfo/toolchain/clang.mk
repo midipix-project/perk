@@ -7,9 +7,9 @@ else
 endif
 
 
-CC 		= clang $(CROSS_HOST_SPEC)
-CPP 		= clang $(CROSS_HOST_SPEC)
-CXX 		= clang++ $(CROSS_HOST_SPEC)
+CC 		= $(BUILD_CC) $(CROSS_HOST_SPEC)
+CPP 		= $(BUILD_CC) $(CROSS_HOST_SPEC)
+CXX 		= $(BUILD_CC)++ $(CROSS_HOST_SPEC)
 
 
 AS 		= $(CROSS_COMPILE)as

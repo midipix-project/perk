@@ -155,6 +155,13 @@ common_defaults()
 			mb_cflags_debug='-g3 -O0'
 		fi
 	fi
+
+	# toolchain
+	if [ x"$mb_toolchain" != x ]; then
+		if [ x"$mb_build_cc" = x ]; then
+			mb_build_cc=$mb_toolchain
+		fi
+	fi
 }
 
 
