@@ -166,7 +166,7 @@ dirs.tag:
 		touch dirs.tag
 
 host.tag:	Makefile
-		$(SHELL) $(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
+		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
 
 distclean:	clean
