@@ -1,3 +1,4 @@
+OS 		= darwin
 OS_APP_PREFIX 	=
 OS_APP_SUFFIX 	=
 OS_LIB_PREFIX 	= lib

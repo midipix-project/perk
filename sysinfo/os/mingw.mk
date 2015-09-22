@@ -1,3 +1,4 @@
+OS 		= mingw
 OS_APP_PREFIX 	=
 OS_APP_SUFFIX 	= .exe
 OS_LIB_PREFIX 	= lib
