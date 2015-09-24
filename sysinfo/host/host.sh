@@ -15,7 +15,7 @@ host_test()
 		exit 2
 	fi
 
-	"$mb_compiler" -dM -E - < /dev/null > /dev/null && return 0
+	$mb_compiler -dM -E - < /dev/null > /dev/null && return 0
 
 	error_msg "config error: invalid compiler."
 	exit 2
@@ -27,18 +27,18 @@ host_endian_h()
 	rm -f "$mb_hdrdir"/$mb_header
 
 	# portable
-	"$mb_compiler" $mb_cflags \
+	$mb_compiler $mb_cflags \
 		--include=$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
 		&& return 0
 
 	# non-portable
 	mb_hosthdr=
 
-	[ -z $mb_hosthdr ] && "$mb_compiler" $mb_cflags \
+	[ -z $mb_hosthdr ] && $mb_compiler $mb_cflags \
 		--include='sys/'$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
 		&& mb_hosthdr='sys/'$mb_header
 
-	[ -z $mb_hosthdr ] && "$mb_compiler" $mb_cflags \
+	[ -z $mb_hosthdr ] && $mb_compiler $mb_cflags \
 		--include='machine/'$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
 		&& mb_hosthdr='machine/'$mb_header
 
