@@ -8,7 +8,7 @@ OS_LIBDEF_EXT 	= .def
 OS_ARCHIVE_EXT 	= .a
 
 CFLAGS_PIC 	=
-LDFLAGS_CONFIG	+= -Wl,--mout-implib,$(SHARED_IMPLIB)
+LDFLAGS_CONFIG	+= -Wl,--out-implib,$(SHARED_IMPLIB)
 
 install-implib:	shared-implib
 		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
