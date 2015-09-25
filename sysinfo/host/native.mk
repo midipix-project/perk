@@ -1,9 +1,9 @@
-include $(PROJECT_DIR)/sysinfo/os/$(BUILD_OS).mk
+include $(PROJECT_DIR)/sysinfo/os/$(NATIVE_OS).mk
 
-CC 		= $(BUILD_CC)
-OS 		= $(BUILD_OS)
-HOST_BITS 	= $(BUILD_OS_BITS)
-HOST_UNDERSCORE = $(BUILD_OS_UNDERSCORE)
+CC 		= $(NATIVE_CC)
+OS 		= $(NATIVE_OS)
+HOST_BITS 	= $(NATIVE_OS_BITS)
+HOST_UNDERSCORE = $(NATIVE_OS_UNDERSCORE)
 
 ifeq ($(OS),linux)
 	ifeq ($(HOST_BITS),32)

@@ -41,10 +41,10 @@ MAN_DIR 		= @mandir@
 DOC_DIR 		= @docdir@
 LIBEXEC_DIR 		= @libexecdir@
 
-BUILD_CC 		= @build_cc@
-BUILD_OS 		= @build_os@
-BUILD_OS_BITS 		= @build_os_bits@
-BUILD_OS_UNDERSCORE	= @build_os_underscore@
+NATIVE_CC 		= @native_cc@
+NATIVE_OS 		= @native_os@
+NATIVE_OS_BITS 		= @native_os_bits@
+NATIVE_OS_UNDERSCORE	= @native_os_underscore@
 
 
 
@@ -264,10 +264,10 @@ clean:
 		@echo
 
 .display-build:
-		@echo BUILD_CC:'               '$(BUILD_CC)
-		@echo BUILD_OS:'               '$(BUILD_OS)
-		@echo BUILD_OS_BITS:'          '$(BUILD_OS_BITS)
-		@echo BUILD_OS_USCORE:'        '$(BUILD_OS_UNDERSCORE)
+		@echo NATIVE_CC:'              '$(NATIVE_CC)
+		@echo NATIVE_OS:'              '$(NATIVE_OS)
+		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
+		@echo NATIVE_OS_USCORE:'       '$(NATIVE_OS_UNDERSCORE)
 		@echo
 
 

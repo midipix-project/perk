@@ -69,10 +69,10 @@ init_vars()
 	mb_elf_config_defs=$ELF_CONFIG_DEFS
 
 	# overrides
-	mb_build_cc=$BUILD_CC
-	mb_build_os=$BUILD_OS
-	mb_build_os_bits=$BUILD_OS_BITS
-	mb_build_os_underscore=$BUILD_OS_UNDERSCORE
+	mb_native_cc=$NATIVE_CC
+	mb_native_os=$NATIVE_OS
+	mb_native_os_bits=$NATIVE_OS_BITS
+	mb_native_os_underscore=$NATIVE_OS_UNDERSCORE
 }
 
 
@@ -158,8 +158,8 @@ common_defaults()
 
 	# toolchain
 	if [ x"$mb_toolchain" != x ]; then
-		if [ x"$mb_build_cc" = x ]; then
-			mb_build_cc=$mb_toolchain
+		if [ x"$mb_native_cc" = x ]; then
+			mb_native_cc=$mb_toolchain
 		fi
 	fi
 }
@@ -168,27 +168,27 @@ common_defaults()
 native_defaults()
 {
 	# toolchain
-	[ -z "$mb_build_cc" ] && mb_build_cc=$CC
-	[ -z "$mb_build_cc" ] && mb_build_cc='cc'
-	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+	[ -z "$mb_native_cc" ] && mb_native_cc=$CC
+	[ -z "$mb_native_cc" ] && mb_native_cc='cc'
+	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
-	[ -z "$mb_build_cc" ] && mb_build_cc='gcc'
-	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+	[ -z "$mb_native_cc" ] && mb_native_cc='gcc'
+	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
-	[ -z "$mb_build_cc" ] && mb_build_cc='clang'
-	$mb_build_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_build_cc=
+	[ -z "$mb_native_cc" ] && mb_native_cc='clang'
+	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
-	if [ x"$mb_build_cc" = x ]; then
+	if [ x"$mb_native_cc" = x ]; then
 		error_msg "config error: could not find a working native compiler."
 		exit 2
 	fi
 
 	if [ x"$mb_toolchain" = x ]; then
-		$mb_build_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_toolchain='clang'
+		$mb_native_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_toolchain='clang'
 	fi
 
 	if [ x"$mb_toolchain" = x ]; then
-		$mb_build_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_toolchain='gcc'
+		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_toolchain='gcc'
 	fi
 
 	if [ x"$mb_toolchain" = x ]; then
@@ -206,7 +206,7 @@ native_defaults()
 	# os
 	mb_native_os=`uname | tr '[:upper:]' '[:lower:]'`
 
-	mb_native_os_sizeof_pointer=`$mb_build_cc -dM -E - < /dev/null \
+	mb_native_os_sizeof_pointer=`$mb_native_cc -dM -E - < /dev/null \
 			| grep __SIZEOF_POINTER__  \
 			| cut -d ' ' -f3`
 
@@ -223,9 +223,9 @@ native_defaults()
 		exit 2
 	fi
 
-	[ -z "$mb_build_os" ] 			&& mb_build_os=$mb_native_os
-	[ -z "$mb_build_os_bits" ] 		&& mb_build_os_bits=$mb_native_os_bits
-	[ -z "$mb_build_os_underscore" ]	&& mb_build_os_underscore=$mb_native_os_underscore
+	[ -z "$mb_native_os" ] 			&& mb_native_os=$mb_native_os
+	[ -z "$mb_native_os_bits" ] 		&& mb_native_os_bits=$mb_native_os_bits
+	[ -z "$mb_native_os_underscore" ]	&& mb_native_os_underscore=$mb_native_os_underscore
 }
 
 
@@ -284,10 +284,10 @@ config_copy()
 			-e 's^@docdir@^'"$mb_docdir"'^g'				\
 			-e 's^@libexecdir@^'"$mb_libexecdir"'^g'			\
 											\
-			-e 's^@build_cc@^'"$mb_build_cc"'^g'				\
-			-e 's^@build_os@^'"$mb_build_os"'^g'				\
-			-e 's^@build_os_bits@^'"$mb_build_os_bits"'^g'			\
-			-e 's^@build_os_underscore@^'"$mb_build_os_underscore"'^g'	\
+			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
+			-e 's^@native_os@^'"$mb_native_os"'^g'				\
+			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'			\
+			-e 's^@native_os_underscore@^'"$mb_native_os_underscore"'^g'	\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
 }
 
