@@ -33,13 +33,13 @@ ELF_HASH_STYLE 		= @elf_hash_style@
 ELF_CONFIG_DEFS 	= @elf_config_defs@
 
 PREFIX 			= @prefix@
-BIN_DIR 		= @bindir@
-LIB_DIR 		= @libdir@
-INCLUDE_DIR 		= @includedir@
-SYSLIB_DIR 		= @syslibdir@
-MAN_DIR 		= @mandir@
-DOC_DIR 		= @docdir@
-LIBEXEC_DIR 		= @libexecdir@
+BINDIR 			= @bindir@
+LIBDIR 			= @libdir@
+INCLUDEDIR 		= @includedir@
+SYSLIBDIR 		= @syslibdir@
+MANDIR 			= @mandir@
+DOCDIR 			= @docdir@
+LIBEXECDIR 		= @libexecdir@
 
 NATIVE_CC 		= @native_cc@
 NATIVE_OS 		= @native_os@
@@ -77,10 +77,10 @@ src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
 src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-$(LIB_DIR)/%$(OS_LIB_SUFFIX):
+$(LIBDIR)/%$(OS_LIB_SUFFIX):
 		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
 
-$(LIB_DIR)/%$(OS_ARCHIVE_EXT):
+$(LIBDIR)/%$(OS_ARCHIVE_EXT):
 		rm -f $@
 		$(AR) -rcs $@ $^
 
@@ -96,20 +96,20 @@ app:		default-app
 install-libs:	install-shared install-static install-implib
 
 install-headers:shared static
-		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(INCLUDE_DIR)/$(PACKAGE)
-		cp $(API_HEADERS) $(DESTDIR)/./$(PREFIX)/./$(INCLUDE_DIR)/$(PACKAGE)
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(INCLUDEDIR)/$(PACKAGE)
+		cp $(API_HEADERS) $(DESTDIR)/./$(PREFIX)/./$(INCLUDEDIR)/$(PACKAGE)
 
 install-shared:	shared install-implib
-		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
-		cp $(SHARED_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIBDIR)
+		cp $(SHARED_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIBDIR)
 
 install-static:	static
-		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
-		cp $(STATIC_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIB_DIR)
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(LIBDIR)
+		cp $(STATIC_LIB) $(DESTDIR)/./$(PREFIX)/./$(LIBDIR)
 
 install-app:	app
-		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(BIN_DIR)
-		cp $(APP) $(DESTDIR)/./$(PREFIX)/./$(BIN_DIR)
+		mkdir -p $(DESTDIR)/./$(PREFIX)/./$(BINDIR)
+		cp $(APP) $(DESTDIR)/./$(PREFIX)/./$(BINDIR)
 
 
 
@@ -161,8 +161,8 @@ $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 dirs: 		dirs.tag tree.tag
 
 dirs.tag:
-		mkdir -p $(BIN_DIR)
-		mkdir -p $(LIB_DIR)
+		mkdir -p $(BINDIR)
+		mkdir -p $(LIBDIR)
 		touch dirs.tag
 
 host.tag:	Makefile
@@ -254,13 +254,13 @@ clean:
 
 .display-dirs:
 		@echo PREFIX:'                 '$(PREFIX)
-		@echo BIN_DIR:'                '$(BIN_DIR)
-		@echo LIB_DIR:'                '$(LIB_DIR)
-		@echo INCLUDE_DIR:'            '$(INCLUDE_DIR)
-		@echo SYSLIB_DIR:'             '$(SYSLIB_DIR)
-		@echo MAN_DIR:'                '$(MAN_DIR)
-		@echo DOC_DIR:'                '$(DOC_DIR)
-		@echo LIBEXEC_DIR:'            '$(LIBEXEC_DIR)
+		@echo BINDIR:'                 '$(BINDIR)
+		@echo LIBDIR:'                 '$(LIBDIR)
+		@echo INCLUDEDIR:'             '$(INCLUDEDIR)
+		@echo SYSLIBDIR:'              '$(SYSLIBDIR)
+		@echo MANDIR:'                 '$(MANDIR)
+		@echo DOCDIR:'                 '$(DOCDIR)
+		@echo LIBEXECDIR:'             '$(LIBEXECDIR)
 		@echo
 
 .display-build:

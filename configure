@@ -24,13 +24,13 @@ init_vars()
 
 	# dirs
 	mb_prefix=$PREFIX
-	mb_bindir=$BIN_DIR
-	mb_libdir=$LIB_DIR
-	mb_includedir=$INCLUDE_DIR
-	mb_syslibdir=$LIB_DIR
-	mb_mandir=$MAN_DIR
-	mb_docdir=$DOC_DIR
-	mb_libexecdir=$LIBEXEC_DIR
+	mb_bindir=$BINDIR
+	mb_libdir=$LIBDIR
+	mb_includedir=$INCLUDEDIR
+	mb_syslibdir=$LIBDIR
+	mb_mandir=$MANDIR
+	mb_docdir=$DOCDIR
+	mb_libexecdir=$LIBEXECDIR
 
 
 	# build
