@@ -167,11 +167,12 @@ common_defaults()
 
 native_defaults()
 {
-	# toolchain
+	# CC (when set, must be valid)
 	if [ x"$CC" != x ]; then
 		$CC -dM -E - < /dev/null > /dev/null || exit 2
 	fi
 
+	# toolchain
 	[ -z "$mb_native_cc" ] && mb_native_cc=$CC
 	[ -z "$mb_native_cc" ] && mb_native_cc='cc'
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
