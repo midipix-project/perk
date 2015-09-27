@@ -71,10 +71,10 @@ include $(PROJECT_DIR)/project/overrides.mk
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 $(LIBDIR)/%$(OS_LIB_SUFFIX):
