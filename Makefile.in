@@ -200,6 +200,7 @@ clean:
 		@echo SYSROOT:'                '$(SYSROOT)
 		@echo XCOMPILE:'               '$(CROSS_COMPILE)
 		@echo SHELL:'                  '$(SHELL)
+		@echo
 
 .display-tools:
 		@echo CC:'                     '$(CC)
