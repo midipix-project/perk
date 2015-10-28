@@ -55,8 +55,8 @@ static:
 
 
 
-include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
+include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
 include $(PROJECT_DIR)/project/defs.mk
 include $(PROJECT_DIR)/project/tree.mk

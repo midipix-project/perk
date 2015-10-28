@@ -1,4 +1,4 @@
-CC 		= $(CROSS_COMPILE)gcc
+CC 		= $(CROSS_COMPILE)$(NATIVE_CC)
 CPP 		= $(CROSS_COMPILE)cpp
 CXX 		= $(CROSS_COMPILE)c++
 
