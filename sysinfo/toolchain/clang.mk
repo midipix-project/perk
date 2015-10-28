@@ -7,9 +7,23 @@ else
 endif
 
 
-CC 		= $(NATIVE_CC) $(CROSS_HOST_SPEC)
-CPP 		= $(NATIVE_CC) $(CROSS_HOST_SPEC) -E
-CXX 		= $(NATIVE_CC)++ $(CROSS_HOST_SPEC)
+ifeq ($(USER_CC)x,x)
+	CC	= $(NATIVE_CC) $(CROSS_HOST_SPEC)
+else
+	CC	= $(USER_CC) $(CROSS_HOST_SPEC)
+endif
+
+ifeq ($(USER_CPP)x,x)
+	CPP	= $(NATIVE_CC) $(CROSS_HOST_SPEC) -E
+else
+	CPP	= $(USER_CPP) $(CROSS_HOST_SPEC) -E
+endif
+
+ifeq ($(USER_CXX)x,x)
+	CXX	= $(NATIVE_CC)++ $(CROSS_HOST_SPEC)
+else
+	CXX	= $(USER_CXX) $(CROSS_HOST_SPEC)
+endif
 
 
 AS 		= $(CROSS_COMPILE)as

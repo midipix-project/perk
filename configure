@@ -73,6 +73,10 @@ init_vars()
 	mb_native_os=$NATIVE_OS
 	mb_native_os_bits=$NATIVE_OS_BITS
 	mb_native_os_underscore=$NATIVE_OS_UNDERSCORE
+
+	mb_user_cc=$CC
+	mb_user_cpp=$CPP
+	mb_user_cxx=$CXX
 }
 
 
@@ -300,6 +304,10 @@ config_copy()
 			-e 's^@native_os@^'"$mb_native_os"'^g'				\
 			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'			\
 			-e 's^@native_os_underscore@^'"$mb_native_os_underscore"'^g'	\
+											\
+			-e 's^@user_cc@^'"$mb_user_cc"'^g'				\
+			-e 's^@user_cpp@^'"$mb_user_cpp"'^g'				\
+			-e 's^@user_cxx@^'"$mb_user_cxx"'^g'				\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
 }
 

@@ -46,6 +46,9 @@ NATIVE_OS 		= @native_os@
 NATIVE_OS_BITS 		= @native_os_bits@
 NATIVE_OS_UNDERSCORE	= @native_os_underscore@
 
+USER_CC                 = @user_cc@
+USER_CPP                = @user_cpp@
+USER_CXX                = @user_cxx@
 
 
 all:
@@ -269,6 +272,10 @@ clean:
 		@echo NATIVE_OS:'              '$(NATIVE_OS)
 		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
 		@echo NATIVE_OS_USCORE:'       '$(NATIVE_OS_UNDERSCORE)
+		@echo
+		@echo USER_CC:'                '$(USER_CC)
+		@echo USER_CPP:'               '$(USER_CPP)
+		@echo USER_CXX:'               '$(USER_CXX)
 		@echo
 
 
