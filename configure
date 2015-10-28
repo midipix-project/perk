@@ -183,6 +183,9 @@ native_defaults()
 	[ -z "$mb_native_cc" ] && mb_native_cc='clang'
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
+	[ -z "$mb_native_cc" ] && mb_native_cc='cparser'
+	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
+
 	if [ x"$mb_native_cc" = x ]; then
 		error_msg "config error: could not find a working native compiler."
 		exit 2
@@ -194,6 +197,10 @@ native_defaults()
 
 	if [ x"$mb_toolchain" = x ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_toolchain='gcc'
+	fi
+
+	if [ x"$mb_toolchain" = x ]; then
+		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_toolchain='cparser'
 	fi
 
 	if [ x"$mb_toolchain" = x ]; then
