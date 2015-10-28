@@ -297,6 +297,16 @@ config_copy()
 }
 
 
+config_host()
+{
+	make host.tag && return 0
+
+	error_msg "configure was able to generate a Makefile for the selected host,"
+	error_msg "however the host-targeting toolchain was found to be missing"
+	error_msg "at least one of the required headers or features."
+	exit 2
+}
+
 
 # one: init
 init_vars
@@ -379,6 +389,7 @@ cross_defaults
 
 # four: config
 config_copy
+config_host
 
 
 # all done
