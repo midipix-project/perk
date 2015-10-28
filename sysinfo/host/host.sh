@@ -27,19 +27,19 @@ host_endian_h()
 	rm -f "$mb_hdrdir"/$mb_header
 
 	# portable
-	$mb_compiler $mb_cflags \
-		--include=$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
+	printf "#include <$mb_header>" | $mb_compiler $mb_cflags \
+		-E - > /dev/null 2>/dev/null \
 		&& return 0
 
 	# non-portable
 	mb_hosthdr=
 
-	[ -z $mb_hosthdr ] && $mb_compiler $mb_cflags \
-		--include='sys/'$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
+	[ -z $mb_hosthdr ] && printf "#include <sys/$mb_header>" | $mb_compiler $mb_cflags \
+		-E - > /dev/null 2>/dev/null \
 		&& mb_hosthdr='sys/'$mb_header
 
-	[ -z $mb_hosthdr ] && $mb_compiler $mb_cflags \
-		--include='machine/'$mb_header -E - < /dev/null > /dev/null 2>/dev/null \
+	[ -z $mb_hosthdr ] && printf "#include <machine/$mb_header>" | $mb_compiler $mb_cflags \
+		-E - > /dev/null 2>/dev/null \
 		&& mb_hosthdr='machine/'$mb_header
 
 	if [ x"$mb_hosthdr" = x ]; then
