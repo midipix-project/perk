@@ -308,6 +308,13 @@ config_host()
 }
 
 
+config_status()
+{
+	printf "\n\n"
+	make .display
+	printf "\nconfiguration completed successfully.\n\n"
+}
+
 # one: init
 init_vars
 verify_build_directory
@@ -390,6 +397,7 @@ cross_defaults
 # four: config
 config_copy
 config_host
+config_status
 
 
 # all done
