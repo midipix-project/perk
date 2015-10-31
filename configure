@@ -5,6 +5,12 @@
 # as well as both LDFLAGS and LDFLAGS_CMDLINE, however
 # the latter variable of each pair should be preferred.
 
+usage()
+{
+	cat config.usage
+	exit $?
+}
+
 error_msg()
 {
 	echo $@ >&2

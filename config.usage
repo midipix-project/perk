@@ -1,0 +1,77 @@
+configure: a skinny configuration script.
+
+supported switches:
+-------------------
+	--help
+
+	--prefix
+	--bindir
+	--libdir
+	--includedir
+	--syslibdir
+	--mandir
+	--libexecdir
+
+	--build
+	--host
+	--target
+	--arch
+	--toolchain
+	--sysroot
+	--cross-compile
+	--shell
+	--debug
+
+
+supported variables:
+--------------------
+	PREFIX
+	BINDIR
+	LIBDIR
+	INCLUDEDIR
+	LIBDIR
+	MANDIR
+	DOCDIR
+	LIBEXECDIR
+
+	CC
+	CPP
+	CXX
+
+	BUILD
+	HOST
+	TARGET
+	ARCH
+	TOOLCHAIN
+	SYSROOT
+	CROSS_COMPILE
+	SHELL
+
+	CFLAGS
+	CFLAGS_DEBUG
+	CFLAGS_COMMON
+	CFLAGS_CMDLINE
+	CFLAGS_CONFIG
+	CFLAGS_SYSROOT
+	CFLAGS_PATH
+
+	LDFLAGS
+	LDFLAGS_DEBUG
+	LDFLAGS_COMMON
+	LDFLAGS_CMDLINE
+	LDFLAGS_CONFIG
+	LDFLAGS_SYSROOT
+	LDFLAGS_PATH
+
+	PE_SUBSYSTEM
+	PE_IMAGE_BASE
+	PE_CONFIG_DEFS
+
+	ELF_EH_FRAME
+	ELF_HASH_STYLE
+	ELF_CONFIG_DEFS
+
+	NATIVE_CC
+	NATIVE_OS
+	NATIVE_OS_BITS
+	NATIVE_OS_UNDERSCORE
