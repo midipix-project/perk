@@ -137,8 +137,9 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 			m->idata[i].name = base + m->hidata->ptr_to_raw_data
 						+ m->idata[i].name_rva - m->hidata->virtual_addr;
 
-			m->idata[i].aitems = (struct pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
-						+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
+			if (m->idata[i].import_lookup_tbl_rva)
+				m->idata[i].aitems = (struct pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
+							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
 			#ifdef PERK_DEVEL
 			printf("%s\n",m->idata[i].name);
@@ -146,11 +147,13 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 
 			/* items */
 			m->idata[i].count = 0;
-			for (pitem=m->idata[i].aitems; *(uint32_t *)pitem->u.hint_name_tbl_rva; pitem++)
-				m->idata[i].count++;
+			if (m->idata[i].import_lookup_tbl_rva) {
+				for (pitem=m->idata[i].aitems; *(uint32_t *)pitem->u.hint_name_tbl_rva; pitem++)
+					m->idata[i].count++;
 
-			if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
-				return pe_free_image_meta_impl(m,status);
+				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
+					return pe_free_image_meta_impl(m,status);
+			}
 
 			for (j=0; j<m->idata[i].count; j++) {
 				if ((status = pe_read_import_lookup_item(
