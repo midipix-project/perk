@@ -92,13 +92,13 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(m,PERK_MALFORMED_IMAGE);
 
-	if (i >= 0 ) {
-		m->hedata = &m->sectbl[i];
-		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
-	} else if (s >= 0) {
+	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
 		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
 				+ m->opt.dirs.export_tbl.rva - m->sectbl[s].virtual_addr);
+	} else if (i >= 0) {
+		m->hedata = &m->sectbl[i];
+		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
 	}
 
 	if (m->aedata)
@@ -114,13 +114,13 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(m,PERK_MALFORMED_IMAGE);
 
-	if (i >= 0 ) {
-		m->hidata = &m->sectbl[i];
-		m->aidata = (struct pe_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
-	} else if (s >= 0) {
+	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
 		m->aidata = (struct pe_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
 				+ m->opt.dirs.import_tbl.rva - m->sectbl[s].virtual_addr);
+	} else if (i >= 0) {
+		m->hidata = &m->sectbl[i];
+		m->aidata = (struct pe_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
 	}
 
 	if (m->aidata) {
