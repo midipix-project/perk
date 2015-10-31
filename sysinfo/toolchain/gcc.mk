@@ -1,5 +1,9 @@
 ifeq ($(USER_CC)x,x)
-	CC	= $(CROSS_COMPILE)$(NATIVE_CC)
+	ifeq ($(CROSS_COMPILE)x,x)
+		CC = $(CROSS_COMPILE)$(NATIVE_CC)
+	else
+		CC = $(CROSS_COMPILE)gcc
+	endif
 else
 	CC	= $(USER_CC)
 endif
