@@ -271,7 +271,7 @@ clean:
 		@echo NATIVE_CC:'              '$(NATIVE_CC)
 		@echo NATIVE_OS:'              '$(NATIVE_OS)
 		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
-		@echo NATIVE_OS_USCORE:'       '$(NATIVE_OS_UNDERSCORE)
+		@echo NATIVE_OS_UNDERSCORE:'   '$(NATIVE_OS_UNDERSCORE)
 		@echo
 		@echo USER_CC:'                '$(USER_CC)
 		@echo USER_CPP:'               '$(USER_CPP)
