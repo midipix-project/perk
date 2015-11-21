@@ -4,15 +4,15 @@
 #include <limits.h>
 
 /* perk_export */
-#if	defined(__attr_export__)
-#define perk_export __attr_export__
+#if	defined(__dllexport)
+#define perk_export __dllexport
 #else
 #define perk_export
 #endif
 
 /* perk_import */
-#if	defined(__attr_import__)
-#define perk_import __attr_import__
+#if	defined(__dllimport)
+#define perk_import __dllimport
 #else
 #define perk_import
 #endif
