@@ -571,7 +571,13 @@ static struct argv_meta * argv_get(
 	argv_scan(meta->argv,options,&ctx,meta);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
+		if (!ctx.program)
+			ctx.program = argv[0];
+
+		ctx.errcode = ARGV_ERROR_INTERNAL;
+		argv_show_error(&ctx);
 		argv_free(meta);
+
 		return 0;
 	}
 
