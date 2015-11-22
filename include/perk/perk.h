@@ -157,7 +157,7 @@ perk_api int pe_get_unit_ctx		(struct pe_driver_ctx *, const char * name, struct
 perk_api int pe_free_unit_ctx		(struct pe_unit_ctx *);
 
 /* utility api */
-perk_api int pe_output_export_symbols	(const struct pe_image_meta *, uint32_t flags, FILE *);
+perk_api int pe_output_export_symbols	(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
 
 /* high-level api */
 perk_api int pe_map_raw_image		(int fd, const char * name, int prot, struct pe_raw_image *);
