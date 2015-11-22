@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <errno.h>
 
 #include <perk/perk.h>
 #include "perk_impl.h"
@@ -11,21 +10,19 @@ static int pe_free_image_meta_impl (struct pe_image_meta * meta, int status)
 {
 	unsigned i;
 
-	if (!meta) return 0;
+	if (meta) {
+		for (i=0; i<meta->summary.num_of_implibs; i++)
+			free(meta->idata[i].items);
 
-	for (i=0; i<meta->summary.num_of_implibs; i++)
-		free(meta->idata[i].items);
-
-	free(meta->idata);
-	free(meta->sectbl);
-	free(meta);
-
-	return status;
+		free(meta->idata);
+		free(meta->sectbl);
+		free(meta);
+	}
 }
 
-int pe_free_image_meta (struct pe_image_meta * meta)
+void pe_free_image_meta (struct pe_image_meta * meta)
 {
-	return pe_free_image_meta_impl(meta,0);
+	pe_free_image_meta_impl(meta,0);
 }
 
 int pe_get_named_section_index (const struct pe_image_meta * m, const char * name)
@@ -60,7 +57,7 @@ int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta *
 	char * base = image->addr;
 
 	if (!(m = calloc(1,sizeof(*m))))
-		return errno;
+		return -1;
 
 	m->ados = (struct pe_image_dos_hdr *)base;
 
