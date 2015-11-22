@@ -8,13 +8,13 @@
 
 #include <perk/perk.h>
 
-int pe_map_raw_image (int fd, const char * fname, int prot, struct pe_raw_image * map)
+int pe_map_raw_image (int fd, const char * path, int prot, struct pe_raw_image * map)
 {
 	struct stat	stat;
 	bool		fnew;
 
 	if (fnew = (fd < 0))
-		fd  = open(fname,O_RDONLY | O_CLOEXEC);
+		fd  = open(path,O_RDONLY | O_CLOEXEC);
 
 	if ((fd < 0) || (fstat(fd,&stat) < 0))
 		return -1;

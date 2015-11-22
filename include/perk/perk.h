@@ -153,14 +153,14 @@ struct pe_unit_ctx {
 perk_api int pe_get_driver_ctx		(const char ** argv, const char ** envp, uint32_t flags, struct pe_driver_ctx **);
 perk_api void pe_free_driver_ctx	(struct pe_driver_ctx *);
 
-perk_api int pe_get_unit_ctx		(struct pe_driver_ctx *, const char * name, struct pe_unit_ctx **);
+perk_api int pe_get_unit_ctx		(struct pe_driver_ctx *, const char * path, struct pe_unit_ctx **);
 perk_api void pe_free_unit_ctx		(struct pe_unit_ctx *);
 
 /* utility api */
 perk_api int pe_output_export_symbols	(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
 
 /* high-level api */
-perk_api int pe_map_raw_image		(int fd, const char * name, int prot, struct pe_raw_image *);
+perk_api int pe_map_raw_image		(int fd, const char * path, int prot, struct pe_raw_image *);
 perk_api int pe_unmap_raw_image		(struct pe_raw_image *);
 
 perk_api int pe_get_image_meta		(const struct pe_raw_image *, struct pe_image_meta **);
