@@ -82,6 +82,8 @@ struct argv_ctx {
 	const char *			program;
 };
 
+static const char * argv_program_name(const char *);
+
 static void argv_usage(
 	FILE *,
 	const char *	header,
@@ -377,6 +379,21 @@ static void argv_scan(
 	}
 }
 
+static const char * argv_program_name(const char * program_path)
+{
+	const char * ch;
+
+	if (program_path) {
+		if ((ch = strrchr(program_path,'/')))
+			return *(++ch) ? ch : 0;
+
+		if ((ch = strrchr(program_path,'\\')))
+			return *(++ch) ? ch : 0;
+	}
+
+	return program_path;
+}
+
 static void argv_show_error(struct argv_ctx * ctx)
 {
 	fprintf(stderr,"%s: error: ",ctx->program);
@@ -538,8 +555,12 @@ static struct argv_meta * argv_get(
 	argv_scan(argv,options,&ctx,0);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
+		if (!ctx.program)
+			ctx.program = argv_program_name(argv[0]);
+
 		if (ctx.flags & ARGV_VERBOSITY_ERRORS)
 			argv_show_error(&ctx);
+
 		return 0;
 	}
 
