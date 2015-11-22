@@ -7,6 +7,7 @@ API_HEADERS = \
 	$(PROJECT_DIR)/include/$(PACKAGE)/perk_structs.h
 
 INTERNAL_HEADERS = \
+	$(PROJECT_DIR)/src/internal/argv/argv.h \
 	$(PROJECT_DIR)/src/internal/$(PACKAGE)_impl.h
 
 ALL_HEADERS = $(API_HEADERS) $(INTERNAL_HEADERS)
