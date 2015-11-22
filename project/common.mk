@@ -1,6 +1,6 @@
 COMMON_SRCS = \
-	src/main/pe_get_image_meta.c \
-	src/main/pe_map_raw_image.c \
+	src/logic/pe_get_image_meta.c \
+	src/logic/pe_map_raw_image.c \
 	src/output/pe_output_export_symbols.c \
 	src/reader/pe_read_coff_header.c \
 	src/reader/pe_read_dos_header.c \
@@ -10,4 +10,4 @@ COMMON_SRCS = \
 	src/reader/pe_read_section_header.c \
 
 APP_SRCS = \
-	src/main/perk.c
+	src/perk.c

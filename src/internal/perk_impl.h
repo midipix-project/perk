@@ -4,20 +4,6 @@
 #include <stdint.h>
 #include <endian.h>
 
-/* internal structures */
-struct perk_ctx {
-	int			argc;
-	char **			argv;
-	char **			envp;
-	const char *		fname;
-	int			status;
-	int			flags;
-	int			fd;
-	FILE *			fout;
-	FILE *			tmp;
-	struct pe_raw_image	map;
-};
-
 #if (BYTE_ORDER == LITTLE_ENDIAN)
 
 static inline uint16_t pe_read_short(const unsigned char * raw)
