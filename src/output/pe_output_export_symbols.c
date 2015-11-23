@@ -5,38 +5,26 @@
 #include <errno.h>
 
 #include <perk/perk.h>
+#include "perk_output.h"
 
-int pe_output_export_symbols (const struct pe_image_meta * m, const struct pe_common_ctx * cctx, FILE * f)
+int pe_output_export_symbols (const struct pe_image_meta * m, const struct pe_common_ctx * cctx, FILE * fout)
 {
+	FILE *		ftmp;
 	uint32_t 	offset;
 	uint32_t *	symrva;
-	int		fdout;
 	int		i;
 
 	if (!m->hedata)
 		return 0;
-	else if (f)
-		fdout = -1;
-	else if (!cctx)
+
+	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
 		return -1;
-	else if (cctx->fdout < 0) {
-		f = stdout;
-		fdout = -1;
-	} else if ((fdout = dup(cctx->fdout)) < 0)
-		return -1;
-	else if (!(f = fdopen(fdout,"a"))) {
-		close(fdout);
-		return -1;
-	}
 
 	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
 	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
 
 	for (i=0; i<m->edata.num_of_name_ptrs; i++)
-		fprintf(f,"%s\n",(char *)((uintptr_t)m->image.addr + symrva[i] - offset));
+		fprintf(fout,"%s\n",(char *)((uintptr_t)m->image.addr + symrva[i] - offset));
 
-	if (fdout >= 0)
-		fclose(f);
-
-	return 0;
+	return pe_output_epilog(0,ftmp);
 }
