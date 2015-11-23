@@ -128,7 +128,7 @@ int pe_get_driver_ctx(
 					}
 
 				case TAG_VERSION:
-					dflags |= PERK_DRIVER_FLAG_VERSION;
+					dflags |= PERK_DRIVER_VERSION;
 					break;
 
 				case TAG_OUTPUT:
@@ -136,7 +136,7 @@ int pe_get_driver_ctx(
 					break;
 
 				case TAG_EXPSYMS:
-					fflags |= PERK_OUTPUT_FLAG_EXPORT_SYMS;
+					fflags |= PERK_OUTPUT_EXPORT_SYMS;
 					break;
 			}
 		} else

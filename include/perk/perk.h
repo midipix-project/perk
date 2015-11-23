@@ -41,14 +41,14 @@ extern "C" {
 #define PERK_DRIVER_VERBOSITY_USAGE	0x0004
 #define PERK_DRIVER_CLONE_VECTOR	0x0008
 
-#define PERK_DRIVER_FLAG_VERSION	0x0010
-#define PERK_DRIVER_FLAG_DRY_RUN	0x0020
+#define PERK_DRIVER_VERSION		0x0010
+#define PERK_DRIVER_DRY_RUN		0x0020
 
 /* unit action flags */
-#define PERK_ACTION_FLAG_MAP_READWRITE	0x0001
+#define PERK_ACTION_MAP_READWRITE	0x0001
 
 /* unit (text) output & format flags */
-#define PERK_OUTPUT_FLAG_EXPORT_SYMS	0x0001
+#define PERK_OUTPUT_EXPORT_SYMS		0x0001
 
 struct pe_raw_image {
 	void *	addr;

@@ -9,7 +9,7 @@ static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
 {
 	uint64_t flags = uctx->cctx.fmtflags;
 
-	if (flags & PERK_OUTPUT_FLAG_EXPORT_SYMS)
+	if (flags & PERK_OUTPUT_EXPORT_SYMS)
 		uctx->cctx.status = pe_output_export_symbols(uctx->meta,&uctx->cctx,0);
 }
 
