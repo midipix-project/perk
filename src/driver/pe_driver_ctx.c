@@ -148,7 +148,10 @@ int pe_get_driver_ctx(
 			S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) < 0))
 		return pe_get_driver_ctx_fail(meta);
 
-	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)))
+	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)) && output)
+		close(fdout);
+
+	if (!ctx)
 		return pe_get_driver_ctx_fail(meta);
 
 	ctx->program		= program;
