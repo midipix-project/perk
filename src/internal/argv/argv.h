@@ -699,11 +699,11 @@ static void argv_usage(
 			rdesclen = snprintf(buf,buflen,option->description,option->argname);
 
 		if (fnewline)
-			fputc('\n',file);
+			(void)0;
 
 		if ((rparalen > paralen) || (rdesclen > desclen)) {
 			if (!fnewline) {
-				fputc('\n',file);
+				(void)0;
 				fnewline = true;
 			}
 		} else
