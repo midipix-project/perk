@@ -9,6 +9,6 @@ API_HEADERS = \
 INTERNAL_HEADERS = \
 	$(PROJECT_DIR)/src/internal/argv/argv.h \
 	$(PROJECT_DIR)/src/internal/$(PACKAGE)_impl.h \
-	$(PROJECT_DIR)/src/internal/$(PACKAGE)_output.h
+	$(PROJECT_DIR)/src/internal/$(PACKAGE)_output_impl.h
 
 ALL_HEADERS = $(API_HEADERS) $(INTERNAL_HEADERS)
