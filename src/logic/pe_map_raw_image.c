@@ -8,7 +8,11 @@
 
 #include <perk/perk.h>
 
-int pe_map_raw_image (int fd, const char * path, int prot, struct pe_raw_image * map)
+int pe_map_raw_image(
+	int			fd,
+	const char *		path,
+	int			prot,
+	struct pe_raw_image *	map)
 {
 	struct stat	stat;
 	bool		fnew;
@@ -35,7 +39,7 @@ int pe_map_raw_image (int fd, const char * path, int prot, struct pe_raw_image *
 	return (map->addr == MAP_FAILED) ? -1 : 0;
 }
 
-int pe_unmap_raw_image (struct pe_raw_image * map)
+int pe_unmap_raw_image(struct pe_raw_image * map)
 {
 	return munmap(map->addr,map->size);
 }

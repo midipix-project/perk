@@ -6,7 +6,7 @@
 #include <perk/perk.h>
 #include "perk_impl.h"
 
-static int pe_free_image_meta_impl (struct pe_image_meta * meta, int status)
+static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 {
 	unsigned i;
 
@@ -20,12 +20,12 @@ static int pe_free_image_meta_impl (struct pe_image_meta * meta, int status)
 	}
 }
 
-void pe_free_image_meta (struct pe_image_meta * meta)
+void pe_free_image_meta(struct pe_image_meta * meta)
 {
 	pe_free_image_meta_impl(meta,0);
 }
 
-int pe_get_named_section_index (const struct pe_image_meta * m, const char * name)
+int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
 {
 	int i; for (i=0; i<m->coff.num_of_sections; i++)
 		if (!(strcmp(name,m->sectbl[i].name)))
@@ -34,7 +34,7 @@ int pe_get_named_section_index (const struct pe_image_meta * m, const char * nam
 	return -1;
 }
 
-int pe_get_block_section_index (const struct pe_image_meta * m, const struct pe_block * block)
+int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
 {
 	int i;
 	uint32_t low,high;
@@ -50,7 +50,7 @@ int pe_get_block_section_index (const struct pe_image_meta * m, const struct pe_
 	return -1;
 }
 
-int pe_get_image_meta (const struct pe_raw_image * image, struct pe_image_meta ** meta)
+int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta ** meta)
 {
 	int i,j,s,status;
 	struct pe_image_meta * m;

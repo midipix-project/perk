@@ -1,6 +1,9 @@
 #include <perk/perk.h>
 
-static inline FILE * pe_output_prolog(const struct pe_common_ctx * cctx, FILE * fout, FILE ** ftmp)
+static inline FILE * pe_output_prolog(
+	const struct pe_common_ctx *	cctx,
+	FILE *				fout,
+	FILE **				ftmp)
 {
 	int fdout;
 

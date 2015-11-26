@@ -7,7 +7,10 @@
 #include <perk/perk.h>
 #include "perk_output_impl.h"
 
-int pe_output_export_symbols (const struct pe_image_meta * m, const struct pe_common_ctx * cctx, FILE * fout)
+int pe_output_export_symbols(
+	const struct pe_image_meta *	m,
+	const struct pe_common_ctx *	cctx,
+	FILE *				fout)
 {
 	FILE *		ftmp;
 	uint32_t 	offset;
