@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 
@@ -6,12 +7,32 @@
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS|PERK_DRIVER_VERBOSITY_USAGE
 #endif
 
+static void perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
+{
+	if (*fpara) {
+		if (uctx->cctx.fdout >= 0)
+			write(uctx->cctx.fdout,"\n",1);
+		else
+			fputc('\n',stdout);
+		*fpara = 0;
+	}
+}
+
 static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
 {
+	int      fpara = 0;
 	uint64_t flags = uctx->cctx.fmtflags;
 
-	if (flags & PERK_OUTPUT_EXPORT_SYMS)
+	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
 		uctx->cctx.status = pe_output_export_symbols(uctx->meta,&uctx->cctx,0);
+		fpara += uctx->meta->summary.num_of_export_syms;
+	}
+
+	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
+		perk_paragraph_break(uctx,&fpara);
+		uctx->cctx.status = pe_output_import_libraries(uctx->meta,&uctx->cctx,0);
+		fpara += (uctx->meta->summary.num_of_implibs > 0);
+	}
 }
 
 static int perk_exit(struct pe_driver_ctx * dctx, int status)

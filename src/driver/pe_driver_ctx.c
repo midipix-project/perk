@@ -9,6 +9,8 @@ enum app_tags {
 	TAG_VERSION,
 	TAG_OUTPUT,
 	TAG_EXPSYMS,
+	TAG_IMPLIBS,
+	TAG_IMPSYMS,
 };
 
 static const struct argv_option options[] = {
@@ -24,6 +26,13 @@ static const struct argv_option options[] = {
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,	0,0,
 								"print exported symbols" },
+
+	{"implibs",	'i',TAG_IMPLIBS,ARGV_OPTARG_NONE,	0,0,
+								"list direct dependency libraries"},
+
+	{"impsyms",	'I',TAG_IMPSYMS,ARGV_OPTARG_NONE,	0,0,
+								"list direct dependency libraries "
+								"along with required symbols"},
 	{0}
 };
 
@@ -138,6 +147,14 @@ int pe_get_driver_ctx(
 
 				case TAG_EXPSYMS:
 					fflags |= PERK_OUTPUT_EXPORT_SYMS;
+					break;
+
+				case TAG_IMPLIBS:
+					fflags |= PERK_OUTPUT_IMPORT_LIBS;
+					break;
+
+				case TAG_IMPSYMS:
+					fflags |= PERK_OUTPUT_IMPORT_SYMS;
 					break;
 			}
 		} else

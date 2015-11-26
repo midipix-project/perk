@@ -7,6 +7,8 @@
 
 /* output actions */
 #define PERK_OUTPUT_EXPORT_SYMS		0x00000001
+#define PERK_OUTPUT_IMPORT_LIBS		0x00000002
+#define PERK_OUTPUT_IMPORT_SYMS		0x00000004
 
 
 /* pretty-printer flags */
