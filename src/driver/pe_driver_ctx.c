@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <perk/perk.h>
+#include <perk/perk_output.h>
 #include "argv/argv.h"
 
 enum app_tags {

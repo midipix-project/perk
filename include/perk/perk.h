@@ -8,7 +8,6 @@
 #include "perk_consts.h"
 #include "perk_structs.h"
 #include "perk_meta.h"
-#include "perk_output.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,9 +45,6 @@ extern "C" {
 
 /* unit action flags */
 #define PERK_ACTION_MAP_READWRITE	0x0001
-
-/* unit (text) output & format flags */
-#define PERK_OUTPUT_EXPORT_SYMS		0x0001
 
 struct pe_raw_image {
 	void *	addr;

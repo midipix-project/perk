@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <perk/perk.h>
+#include <perk/perk_output.h>
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS|PERK_DRIVER_VERBOSITY_USAGE
