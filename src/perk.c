@@ -2,10 +2,25 @@
 #include <unistd.h>
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_version.h"
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS|PERK_DRIVER_VERBOSITY_USAGE
 #endif
+
+static const char vermsg[] = "%s (git://midipix.org/perk): commit %s.\n";
+
+static void perk_version(struct pe_driver_ctx * dctx)
+{
+	char	buf[512];
+	size_t	len;
+
+	if (dctx->cctx.fdout >= 0) {
+		len = sprintf(buf,vermsg,dctx->program,PERK_GIT_VERSION);
+		write(dctx->cctx.fdout,buf,len);
+	} else
+		fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
+}
 
 static void perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 {
@@ -50,6 +65,9 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 
 	if ((ret = pe_get_driver_ctx(argv,envp,PERK_DRIVER_FLAGS,&dctx)))
 		return (ret == PERK_USAGE) ? 0 : 2;
+
+	if (dctx->cctx.drvflags & PERK_DRIVER_VERSION)
+		perk_version(dctx);
 
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
