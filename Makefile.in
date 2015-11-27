@@ -128,11 +128,11 @@ shared-implib:	shared-lib
 
 
 
-default-app:	static $(DEFAULT_APP) $(APP)
+default-app:	version.tag static $(DEFAULT_APP) $(APP)
 
-shared-app:	shared $(SHARED_APP)
+shared-app:	version.tag shared $(SHARED_APP)
 
-static-app:	static $(STATIC_APP)
+static-app:	version.tag static $(STATIC_APP)
 
 
 
@@ -172,6 +172,13 @@ host.tag:	Makefile
 		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
 
+version.tag:
+		$(PROJECT_DIR)/sysinfo/version.sh	\
+			-s $(PROJECT_DIR)		\
+			-o build/$(PACKAGE)_version.h	\
+			-p $(PACKAGE)
+		touch version.tag
+
 distclean:	clean
 		rm -f Makefile
 
@@ -179,6 +186,7 @@ clean:
 		rm -f tree.tag
 		rm -f dirs.tag
 		rm -f host.tag
+		rm -f version.tag
 		rm -f $(SHARED_OBJS)
 		rm -f $(STATIC_OBJS)
 		rm -f $(APP_OBJS)
@@ -285,6 +293,6 @@ clean:
 		default-app shared-app static-app \
 		install-shared install-static install-implib \
 		install-headers install-app \
-		clean distclean \
+		clean distclean version \
 		.display-env .display-tools .display-flags \
 		.display-pe .display-elf .display-dirs .display-build
