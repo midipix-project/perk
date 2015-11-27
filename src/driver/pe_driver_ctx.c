@@ -63,6 +63,23 @@ static uint32_t pe_argv_flags(uint32_t flags)
 	return ret;
 }
 
+static int pe_driver_usage(
+	const unsigned char *	program,
+	const unsigned char *	arg,
+	struct argv_meta *	meta)
+{
+	char header[512];
+
+	snprintf(header,sizeof(header),
+		"Usage: %s [options] <file>...\n" "Options:\n",
+		program);
+
+	argv_usage(stdout,header,options,arg);
+	argv_free(meta);
+
+	return PERK_USAGE;
+}
+
 static struct pe_driver_ctx * pe_driver_ctx_alloc(struct argv_meta * meta, size_t nunits)
 {
 	struct pe_driver_ctx_impl *	ictx;
@@ -111,7 +128,6 @@ int pe_get_driver_ctx(
 	const char *		program;
 	const char *		output;
 	int			fdout;
-	char			header[512];
 
 	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
 		return -1;
@@ -122,20 +138,16 @@ int pe_get_driver_ctx(
 	nunits	= 0;
 	program = argv_program_name(argv[0]);
 
+	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
+		return pe_driver_usage(program,0,meta);
+
 	/* get options, count units */
 	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
 		if (entry->fopt) {
 			switch (entry->tag) {
 				case TAG_HELP:
-					if (flags & PERK_DRIVER_VERBOSITY_USAGE) {
-						snprintf(header,sizeof(header),
-							"Usage: %s [options] <file>...\n" "Options:\n",
-							program);
-
-						argv_usage(stdout,header,options,entry->arg);
-						argv_free(meta);
-						return PERK_USAGE;
-					}
+					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
+						return pe_driver_usage(program,entry->arg,meta);
 
 				case TAG_VERSION:
 					dflags |= PERK_DRIVER_VERSION;

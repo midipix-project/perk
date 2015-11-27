@@ -64,7 +64,7 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 	const char **		unit;
 
 	if ((ret = pe_get_driver_ctx(argv,envp,PERK_DRIVER_FLAGS,&dctx)))
-		return (ret == PERK_USAGE) ? 0 : 2;
+		return (ret == PERK_USAGE) ? !--argc : 2;
 
 	if (dctx->cctx.drvflags & PERK_DRIVER_VERSION)
 		perk_version(dctx);
