@@ -8,6 +8,7 @@ enum app_tags {
 	TAG_HELP,
 	TAG_VERSION,
 	TAG_OUTPUT,
+	TAG_PRETTY,
 	TAG_EXPSYMS,
 	TAG_IMPLIBS,
 	TAG_IMPSYMS,
@@ -23,6 +24,9 @@ static const struct argv_option options[] = {
 
 	{"output",	'o',TAG_OUTPUT,	ARGV_OPTARG_REQUIRED,	0,"<file>",
 								"write output to %s"},
+
+	{"pretty",	'p',TAG_PRETTY,	ARGV_OPTARG_REQUIRED,	"yaml",0,
+								"format output for parsing by %s"},
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,	0,0,
 								"print exported symbols" },
@@ -127,6 +131,7 @@ int pe_get_driver_ctx(
 	uint64_t		fflags;
 	const char *		program;
 	const char *		output;
+	const char *		pretty;
 	int			fdout;
 
 	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
@@ -135,6 +140,7 @@ int pe_get_driver_ctx(
 	dflags	= 0;
 	fflags	= 0;
 	output	= 0;
+	pretty	= 0;
 	nunits	= 0;
 	program = argv_program_name(argv[0]);
 
@@ -155,6 +161,10 @@ int pe_get_driver_ctx(
 
 				case TAG_OUTPUT:
 					output = entry->arg;
+					break;
+
+				case TAG_PRETTY:
+					pretty = entry->arg;
 					break;
 
 				case TAG_EXPSYMS:
@@ -183,6 +193,9 @@ int pe_get_driver_ctx(
 
 	if (!ctx)
 		return pe_get_driver_ctx_fail(meta);
+
+	if (pretty && !strcmp(pretty,"yaml"))
+		fflags |= PERK_PRETTY_YAML;
 
 	ctx->program		= program;
 	ctx->cctx.drvflags	= dflags;
