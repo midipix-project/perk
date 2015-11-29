@@ -18,6 +18,8 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 		free(meta->sectbl);
 		free(meta);
 	}
+
+	return status;
 }
 
 void pe_free_image_meta(struct pe_image_meta * meta)
