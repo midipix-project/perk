@@ -18,7 +18,7 @@ int pe_map_raw_image(
 	bool		fnew;
 	int		ret;
 
-	if (fnew = (fd < 0))
+	if ((fnew = (fd < 0)))
 		fd  = open(path,O_RDONLY | O_CLOEXEC);
 
 	if (fd < 0)
