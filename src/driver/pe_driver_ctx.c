@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <unistd.h>
 #include <fcntl.h>
 #include <perk/perk.h>
 #include <perk/perk_output.h>
@@ -68,8 +69,8 @@ static uint32_t pe_argv_flags(uint32_t flags)
 }
 
 static int pe_driver_usage(
-	const unsigned char *	program,
-	const unsigned char *	arg,
+	const char *		program,
+	const char *		arg,
 	struct argv_meta *	meta)
 {
 	char header[512];
