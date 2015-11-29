@@ -143,6 +143,7 @@ int pe_get_driver_ctx(
 	output	= 0;
 	pretty	= 0;
 	nunits	= 0;
+	fdout	= 0;
 	program = argv_program_name(argv[0]);
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))

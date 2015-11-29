@@ -619,6 +619,8 @@ static void argv_usage(
 	char *				paradigm;
 	char *				buf;
 	size_t				buflen;
+	const char *			sdescription;
+	const char *			sargname;
 
 	const char			indent[] = "  ";
 	const int			rblen  = sizeof("}") - sizeof(char);
@@ -684,6 +686,7 @@ static void argv_usage(
 	paradigm = next_para = buf = 0;
 	fnewline = false;
 	rparalen = 0;
+	mparalen = 0;
 
 	for (option=options,buflen=0,rdesclen=1; option->short_name || option->long_name; option++) {
 		if (option->paradigm) {
@@ -693,10 +696,13 @@ static void argv_usage(
 				rparalen = strlen(option->paradigm) - 2*rblen;
 		}
 
+		sdescription 	= option->description ? option->description : "";
+		sargname	= option->argname ? option->argname : "";
+
 		if (option->paradigm)
-			rdesclen = snprintf(buf,buflen,option->description,option->paradigm);
+			rdesclen = snprintf(buf,buflen,sdescription,option->paradigm);
 		else
-			rdesclen = snprintf(buf,buflen,option->description,option->argname);
+			rdesclen = snprintf(buf,buflen,sdescription,sargname);
 
 		if (fnewline)
 			(void)0;
