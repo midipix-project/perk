@@ -117,6 +117,8 @@ struct pe_common_ctx {
 	int				prot;
 	int				mode;
 	int				status;
+	ssize_t				ioread;
+	ssize_t				iowrite;
 	uint64_t			drvflags;
 	uint64_t			actflags;
 	uint64_t			fmtflags;
