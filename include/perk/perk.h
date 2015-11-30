@@ -175,7 +175,7 @@ perk_api int  pe_read_optional_header	(const union  pe_opt_hdr *,		struct pe_met
 perk_api int  pe_read_section_header	(const struct pe_sec_hdr *,		struct pe_meta_sec_hdr *);
 perk_api int  pe_read_export_header	(const struct pe_export_hdr *,		struct pe_meta_export_hdr *);
 perk_api int  pe_read_import_header	(const struct pe_import_hdr *,		struct pe_meta_import_hdr *);
-perk_api int  pe_read_import_lookup_item(const struct pe_import_lookup_item *,	struct pe_meta_import_lookup_item *, uint32_t magic);
+perk_api int  pe_read_import_lookup_item(const union  pe_import_lookup_item *,	struct pe_meta_import_lookup_item *, uint32_t magic);
 
 #ifdef __cplusplus
 }

@@ -27,17 +27,17 @@ int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_
 }
 
 int pe_read_import_lookup_item(
-	const struct pe_import_lookup_item * p,
+	const union pe_import_lookup_item * p,
 	struct pe_meta_import_lookup_item * m,
 	uint32_t magic)
 {
 	switch (magic) {
 		case PE_MAGIC_PE32:
-			m->u.import_lookup_entry_64 = pe_read_long(p->u.import_lookup_entry_32);
+			m->u.import_lookup_entry_64 = pe_read_long(p->import_lookup_entry_32);
 			return 0;
 
 		case PE_MAGIC_PE32_PLUS:
-			m->u.import_lookup_entry_64 = pe_read_quad(p->u.import_lookup_entry_64);
+			m->u.import_lookup_entry_64 = pe_read_quad(p->import_lookup_entry_64);
 			return 0;
 
 		default:

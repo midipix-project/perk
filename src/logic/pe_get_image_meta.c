@@ -105,7 +105,7 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 
 	/* .idata */
 	struct pe_import_hdr * 		pidata;
-	struct pe_import_lookup_item *	pitem;
+	union  pe_import_lookup_item *	pitem;
 
 	i = pe_get_named_section_index(m,".idata");
 	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
@@ -137,13 +137,13 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 						+ m->idata[i].name_rva - m->hidata->virtual_addr;
 
 			if (m->idata[i].import_lookup_tbl_rva)
-				m->idata[i].aitems = (struct pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
+				m->idata[i].aitems = (union pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
 							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
 			/* items */
 			m->idata[i].count = 0;
 			if (m->idata[i].import_lookup_tbl_rva) {
-				for (pitem=m->idata[i].aitems; *(uint32_t *)pitem->u.hint_name_tbl_rva; pitem++)
+				for (pitem=m->idata[i].aitems; *(uint32_t *)pitem->hint_name_tbl_rva; pitem++)
 					m->idata[i].count++;
 
 				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))

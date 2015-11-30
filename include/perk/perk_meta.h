@@ -211,7 +211,7 @@ struct pe_meta_import_hdr {
 	uint32_t				count;
 	char *					name;
 	struct pe_meta_import_lookup_item *	items;
-	struct pe_import_lookup_item *		aitems;
+	union pe_import_lookup_item *		aitems;
 };
 
 
