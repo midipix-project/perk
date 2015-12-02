@@ -147,6 +147,7 @@ common_defaults()
 
 	# host/target
 	[ -z "$mb_host" ] 		&& mb_host=$mb_target
+	[ -z "$mb_target" ] 		&& mb_target=$mb_host
 
 	# sysroot
 	if [ x"$mb_sysroot" != x ]; then
