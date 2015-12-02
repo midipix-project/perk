@@ -8,30 +8,31 @@
 #include <perk/perk_output.h>
 #include "perk_output_impl.h"
 
-static void pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
+static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
 {
-	if (cctx->fmtflags & PERK_PRETTY_YAML)
-		fputs("imports:\n",fout);
+	return (cctx->fmtflags & PERK_PRETTY_YAML)
+		? fputs("imports:\n",fout)
+		: 0;
 }
 
-static void pretty_implib_header(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
+static int pretty_implib_header(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
 {
 	if ((cctx->fmtflags & PERK_PRETTY_YAML) && (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS))
-		fprintf(fout,"  %s:\n",name);
+		return fprintf(fout,"  %s:\n",name);
 	else if (cctx->fmtflags & PERK_PRETTY_YAML)
-		fprintf(fout,"- %s:\n",name);
+		return fprintf(fout,"- %s:\n",name);
 	else if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
-		fprintf(fout,"%s:\n",name);
+		return fprintf(fout,"%s:\n",name);
 	else
-		fprintf(fout,"%s\n",name);
+		return fprintf(fout,"%s\n",name);
 }
 
-static void pretty_implib_item(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
+static int pretty_implib_item(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
 {
 	if (cctx->fmtflags & PERK_PRETTY_YAML)
-		fprintf(fout,"  - %s\n",name);
+		return fprintf(fout,"  - %s\n",name);
 	else
-		fprintf(fout,"%s\n",name);
+		return fprintf(fout,"%s\n",name);
 }
 
 int pe_output_import_libraries(
@@ -48,18 +49,21 @@ int pe_output_import_libraries(
 	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
 		return -1;
 
-	pretty_header(cctx,fout);
+	if ((pretty_header(cctx,fout)) < 0)
+		return pe_output_epilog(-1,ftmp);
 
 	for (i=0; i<m->summary.num_of_implibs; i++) {
-		pretty_implib_header(cctx,m->idata[i].name,fout);
+		if ((pretty_implib_header(cctx,m->idata[i].name,fout)) < 0)
+			return pe_output_epilog(-1,ftmp);
 
 		if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
 			for (j=0; j<m->idata[i].count; j++)
 				if (m->idata[i].items[j].name)
-					pretty_implib_item(
-						cctx,
-						m->idata[i].items[j].name,
-						fout);
+					if ((pretty_implib_item(
+							cctx,
+							m->idata[i].items[j].name,
+							fout)) < 0)
+						return pe_output_epilog(-1,ftmp);
 
 	}
 

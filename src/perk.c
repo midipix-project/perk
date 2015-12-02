@@ -10,27 +10,29 @@
 
 static const char vermsg[] = "%s (git://midipix.org/perk): commit %s.\n";
 
-static void perk_version(struct pe_driver_ctx * dctx)
+static ssize_t perk_version(struct pe_driver_ctx * dctx)
 {
 	char	buf[512];
 	size_t	len;
 
 	if (dctx->cctx.fdout >= 0) {
 		len = sprintf(buf,vermsg,dctx->program,PERK_GIT_VERSION);
-		write(dctx->cctx.fdout,buf,len);
+		return write(dctx->cctx.fdout,buf,len);
 	} else
-		fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
+		return fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
 }
 
-static void perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
+static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 {
 	if (*fpara) {
-		if (uctx->cctx.fdout >= 0)
-			write(uctx->cctx.fdout,"\n",1);
-		else
-			fputc('\n',stdout);
 		*fpara = 0;
-	}
+
+		if (uctx->cctx.fdout >= 0)
+			return write(uctx->cctx.fdout,"\n",1);
+		else
+			return fputc('\n',stdout);
+	} else
+		return 0;
 }
 
 static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
@@ -67,7 +69,8 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 		return (ret == PERK_USAGE) ? !--argc : 2;
 
 	if (dctx->cctx.drvflags & PERK_DRIVER_VERSION)
-		perk_version(dctx);
+		if ((perk_version(dctx)) < 0)
+			return perk_exit(dctx,2);
 
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
