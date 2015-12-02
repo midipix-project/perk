@@ -27,7 +27,7 @@ mb_default_shell=sh
 
 # switches
 mb_default_cflags_debug=
-mb_default_cflags_common="-I\$(PROJECT_DIR)/src/internal -I\$(PROJECT_DIR)/include -Ibuild"
+mb_default_cflags_common="-std=c99 -D_XOPEN_SOURCE=700 -I\$(PROJECT_DIR)/src/internal -I\$(PROJECT_DIR)/include -Ibuild"
 mb_default_cflags_cmdline=
 mb_default_cflags_config=
 mb_default_cflags_sysroot=
