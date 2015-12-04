@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
-#include "perk_impl.h"
+#include "perk_reader_impl.h"
 
 int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {

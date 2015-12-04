@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
-#include "perk_impl.h"
+#include "perk_reader_impl.h"
 
 int pe_read_export_header(const struct pe_export_hdr * p, struct pe_meta_export_hdr * m)
 {

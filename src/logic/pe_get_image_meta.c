@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
-#include "perk_impl.h"
+#include "perk_reader_impl.h"
 
 static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 {

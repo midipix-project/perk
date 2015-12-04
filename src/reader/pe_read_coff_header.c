@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
-#include "perk_impl.h"
+#include "perk_reader_impl.h"
 
 int pe_read_coff_header(const struct pe_coff_file_hdr * p, struct pe_meta_coff_file_hdr * m)
 {
