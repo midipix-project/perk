@@ -226,6 +226,12 @@ native_defaults()
 	fi
 
 
+	# target
+	if [ x"$mb_target" = x ]; then
+		mb_target='native'
+	fi
+
+
 	# os
 	mb_native_os=`uname | tr '[:upper:]' '[:lower:]'`
 
