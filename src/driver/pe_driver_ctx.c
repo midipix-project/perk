@@ -41,7 +41,7 @@ static const struct argv_option options[] = {
 	{0}
 };
 
-struct pe_driver_ctx_impl {
+struct pe_driver_ctx_alloc {
 	struct argv_meta *	meta;
 	struct pe_symbol_ctx	symctx;
 	struct pe_output_ctx	outctx;
@@ -87,12 +87,12 @@ static int pe_driver_usage(
 
 static struct pe_driver_ctx * pe_driver_ctx_alloc(struct argv_meta * meta, size_t nunits)
 {
-	struct pe_driver_ctx_impl *	ictx;
+	struct pe_driver_ctx_alloc *	ictx;
 	size_t				size;
 	struct argv_entry *		entry;
 	const char **			units;
 
-	size =  sizeof(struct pe_driver_ctx_impl);
+	size =  sizeof(struct pe_driver_ctx_alloc);
 	size += (nunits+1)*sizeof(const char *);
 
 	if (!(ictx = calloc(size,1)))
@@ -225,7 +225,7 @@ static void pe_driver_close_fds(struct pe_common_ctx * cctx)
 		close(cctx->fdout);
 }
 
-static void pe_free_driver_ctx_impl(struct pe_driver_ctx_impl * ictx)
+static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
 {
 	if (ictx->symctx.append)
 		free(ictx->symctx.append);
@@ -240,12 +240,12 @@ static void pe_free_driver_ctx_impl(struct pe_driver_ctx_impl * ictx)
 
 void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 {
-	struct pe_driver_ctx_impl *	ictx;
+	struct pe_driver_ctx_alloc *	ictx;
 	uintptr_t			addr;
 
 	if (ctx) {
-		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_impl,ctx);
-		ictx = (struct pe_driver_ctx_impl *)addr;
+		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_alloc,ctx);
+		ictx = (struct pe_driver_ctx_alloc *)addr;
 		pe_free_driver_ctx_impl(ictx);
 	}
 }
