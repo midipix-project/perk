@@ -81,32 +81,26 @@ struct pe_image_meta {
 };
 
 struct pe_symbol_ctx {
-	uint32_t			size;
-	uint32_t			version;
+	const char **			attrs;
 	const char **			append;
 	const char **			exclude;
 };
 
 struct pe_output_ctx {
-	uint32_t			size;
-	uint32_t			version;
+	const char **			attrs;
 	const char *			header;
 	const char *			footer;
 };
 
 struct pe_linker_ctx {
-	uint32_t			size;
-	uint32_t			version;
+	const char **			attrs;
 };
 
 struct pe_server_ctx {
-	uint32_t			size;
-	uint32_t			version;
+	const char **			attrs;
 };
 
 struct pe_common_ctx {
-	uint32_t			size;
-	uint32_t			version;
 	int				fdin;
 	int				fdout;
 	int				fderr;
