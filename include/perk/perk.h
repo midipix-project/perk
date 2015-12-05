@@ -131,7 +131,7 @@ struct pe_driver_ctx {
 	const char **			units;
 	const char *			program;
 	const char *			module;
-	struct pe_common_ctx		cctx;
+	const struct pe_common_ctx *	cctx;
 };
 
 struct pe_unit_ctx {

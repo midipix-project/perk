@@ -15,9 +15,9 @@ static ssize_t perk_version(struct pe_driver_ctx * dctx)
 	char	buf[512];
 	size_t	len;
 
-	if (dctx->cctx.fdout >= 0) {
+	if (dctx->cctx->fdout >= 0) {
 		len = sprintf(buf,vermsg,dctx->program,PERK_GIT_VERSION);
-		return write(dctx->cctx.fdout,buf,len);
+		return write(dctx->cctx->fdout,buf,len);
 	} else
 		return fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
 }
@@ -68,7 +68,7 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 	if ((ret = pe_get_driver_ctx(argv,envp,PERK_DRIVER_FLAGS,&dctx)))
 		return (ret == PERK_USAGE) ? !--argc : 2;
 
-	if (dctx->cctx.drvflags & PERK_DRIVER_VERSION)
+	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
 		if ((perk_version(dctx)) < 0)
 			return perk_exit(dctx,2);
 

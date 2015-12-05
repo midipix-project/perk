@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <fcntl.h>
+
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_impl.h"
 #include "argv/argv.h"
 
 enum app_tags {
@@ -47,7 +49,7 @@ struct pe_driver_ctx_alloc {
 	struct pe_output_ctx	outctx;
 	struct pe_linker_ctx	lnkctx;
 	struct pe_server_ctx	srvctx;
-	struct pe_driver_ctx	ctx;
+	struct pe_driver_ctx_impl	ctx;
 	uint64_t		guard;
 	const char *		units[];
 };
@@ -85,7 +87,7 @@ static int pe_driver_usage(
 	return PERK_USAGE;
 }
 
-static struct pe_driver_ctx * pe_driver_ctx_alloc(struct argv_meta * meta, size_t nunits)
+static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(struct argv_meta * meta, size_t nunits)
 {
 	struct pe_driver_ctx_alloc *	ictx;
 	size_t				size;
@@ -108,7 +110,7 @@ static struct pe_driver_ctx * pe_driver_ctx_alloc(struct argv_meta * meta, size_
 		if (!entry->fopt)
 			*units++ = entry->arg;
 
-	ictx->ctx.units = ictx->units;
+	ictx->ctx.ctx.units = ictx->units;
 	return &ictx->ctx;
 }
 
@@ -124,7 +126,7 @@ int pe_get_driver_ctx(
 	uint32_t		flags,
 	struct pe_driver_ctx ** pctx)
 {
-	struct pe_driver_ctx *	ctx;
+	struct pe_driver_ctx_impl *	ctx;
 	struct argv_meta *	meta;
 	struct argv_entry *	entry;
 	size_t			nunits;
@@ -199,7 +201,7 @@ int pe_get_driver_ctx(
 	if (pretty && !strcmp(pretty,"yaml"))
 		fflags |= PERK_PRETTY_YAML;
 
-	ctx->program		= program;
+	ctx->ctx.program	= program;
 	ctx->cctx.drvflags	= dflags;
 	ctx->cctx.fmtflags	= fflags;
 	ctx->cctx.output	= output;
@@ -212,7 +214,9 @@ int pe_get_driver_ctx(
 	ctx->cctx.fddst		= AT_FDCWD;
 	ctx->cctx.fdtmp		= AT_FDCWD;
 
-	*pctx = ctx;
+	ctx->ctx.cctx		= &ctx->cctx;
+
+	*pctx = &ctx->ctx;
 	return PERK_OK;
 }
 
@@ -245,6 +249,7 @@ void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 
 	if (ctx) {
 		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_alloc,ctx);
+		addr = addr - offsetof(struct pe_driver_ctx_impl,ctx);
 		ictx = (struct pe_driver_ctx_alloc *)addr;
 		pe_free_driver_ctx_impl(ictx);
 	}
