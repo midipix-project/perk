@@ -121,10 +121,10 @@ struct pe_common_ctx {
 	const char *			srcdir;
 	const char *			dstdir;
 	const char *			tmpdir;
-	struct pe_symbol_ctx *		symctx;
-	struct pe_output_ctx *		outctx;
-	struct pe_linker_ctx *		lnkctx;
-	struct pe_server_ctx *		srvctx;
+	const struct pe_symbol_ctx *	symctx;
+	const struct pe_output_ctx *	outctx;
+	const struct pe_linker_ctx *	lnkctx;
+	const struct pe_server_ctx *	srvctx;
 };
 
 struct pe_driver_ctx {
