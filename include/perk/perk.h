@@ -135,10 +135,12 @@ struct pe_driver_ctx {
 };
 
 struct pe_unit_ctx {
-	const char *			path;
-	struct pe_raw_image		map;
-	struct pe_image_meta *		meta;
-	struct pe_common_ctx		cctx;
+	const char * const *		path;
+	const struct pe_raw_image *	map;
+	const struct pe_image_meta *	meta;
+	const struct pe_common_ctx *	cctx;
+	int				status;
+	int				nerrors;
 };
 
 /* driver api */

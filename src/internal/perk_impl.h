@@ -13,4 +13,12 @@ struct pe_driver_ctx_impl {
 	struct pe_driver_ctx	ctx;
 };
 
+struct pe_unit_ctx_impl {
+	const char *		path;
+	struct pe_raw_image	map;
+	struct pe_image_meta *	meta;
+	struct pe_common_ctx	cctx;
+	struct pe_unit_ctx	uctx;
+};
+
 #endif

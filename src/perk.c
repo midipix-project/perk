@@ -27,8 +27,8 @@ static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 	if (*fpara) {
 		*fpara = 0;
 
-		if (uctx->cctx.fdout >= 0)
-			return write(uctx->cctx.fdout,"\n",1);
+		if (uctx->cctx->fdout >= 0)
+			return write(uctx->cctx->fdout,"\n",1);
 		else
 			return fputc('\n',stdout);
 	} else
@@ -38,24 +38,26 @@ static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
 {
 	int      fpara = 0;
-	uint64_t flags = uctx->cctx.fmtflags;
+	uint64_t flags = uctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
-		uctx->cctx.status = pe_output_export_symbols(uctx->meta,&uctx->cctx,0);
+		uctx->status = pe_output_export_symbols(uctx->meta,uctx->cctx,0);
+		uctx->nerrors += !!uctx->status;
 		fpara += uctx->meta->summary.num_of_export_syms;
 	}
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
 		perk_paragraph_break(uctx,&fpara);
-		uctx->cctx.status = pe_output_import_libraries(uctx->meta,&uctx->cctx,0);
+		uctx->status = pe_output_import_libraries(uctx->meta,uctx->cctx,0);
+		uctx->nerrors += !!uctx->status;
 		fpara += (uctx->meta->summary.num_of_implibs > 0);
 	}
 }
 
-static int perk_exit(struct pe_driver_ctx * dctx, int status)
+static int perk_exit(struct pe_driver_ctx * dctx, int nerrors)
 {
 	pe_free_driver_ctx(dctx);
-	return (status < 0) ? 2 : status;
+	return nerrors ? 2 : 0;
 }
 
 static int perk_main(int argc, const char ** argv, const char ** envp)
@@ -75,7 +77,7 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
 			perk_perform_unit_actions(uctx);
-			ret = uctx->cctx.status ? uctx->cctx.status : ret;
+			ret += uctx->nerrors;
 			pe_free_unit_ctx(uctx);
 		}
 	}

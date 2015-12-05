@@ -1,10 +1,13 @@
 #include <stdint.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
-#include <perk/perk.h>
 
-static int pe_free_unit_ctx_impl(struct pe_unit_ctx * ctx, int status)
+#include <perk/perk.h>
+#include "perk_impl.h"
+
+static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int status)
 {
 	if (ctx) {
 		pe_free_image_meta(ctx->meta);
@@ -20,7 +23,7 @@ int pe_get_unit_ctx(
 	const char *		path,
 	struct pe_unit_ctx **	pctx)
 {
-	struct pe_unit_ctx *	ctx;
+	struct pe_unit_ctx_impl *	ctx;
 	int			prot;
 
 	if (!dctx || !(ctx = calloc(sizeof(*ctx),1)))
@@ -39,14 +42,26 @@ int pe_get_unit_ctx(
 	memcpy(&ctx->cctx,dctx->cctx,
 		sizeof(ctx->cctx));
 
-	ctx->path	= path;
+	ctx->path	= ctx->path;
 	ctx->cctx.prot	= prot;
 
-	*pctx = ctx;
+	ctx->uctx.path	= &ctx->path;
+	ctx->uctx.map	= &ctx->map;
+	ctx->uctx.meta	= ctx->meta;
+	ctx->uctx.cctx	= &ctx->cctx;
+
+	*pctx = &ctx->uctx;
 	return 0;
 }
 
 void pe_free_unit_ctx(struct pe_unit_ctx * ctx)
 {
-	pe_free_unit_ctx_impl(ctx,0);
+	struct pe_unit_ctx_impl *	ictx;
+	uintptr_t			addr;
+
+	if (ctx) {
+		addr = (uintptr_t)ctx - offsetof(struct pe_unit_ctx_impl,uctx);
+		ictx = (struct pe_unit_ctx_impl *)addr;
+		pe_free_unit_ctx_impl(ictx,0);
+	}
 }
