@@ -14,10 +14,10 @@ static inline FILE * pe_output_prolog(
 		return fout;
 	else if (!cctx)
 		return 0;
-	else if (cctx->fdout < 0)
+	else if (cctx->ioctx->fdout < 0)
 		return stdout;
 
-	if ((fdout = dup(cctx->fdout)) < 0)
+	if ((fdout = dup(cctx->ioctx->fdout)) < 0)
 		return 0;
 
 	if ((*ftmp = fdopen(fdout,"a")))

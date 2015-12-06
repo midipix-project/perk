@@ -33,7 +33,7 @@ int pe_get_unit_ctx(
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
 
-	if (pe_map_raw_image(dctx->cctx->fdin,path,prot,&ctx->map))
+	if (pe_map_raw_image(dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
 		return pe_free_unit_ctx_impl(ctx,-1);
 
 	if (pe_get_image_meta(&ctx->map,&ctx->meta))
@@ -43,7 +43,7 @@ int pe_get_unit_ctx(
 		sizeof(ctx->cctx));
 
 	ctx->path	= ctx->path;
-	ctx->cctx.prot	= prot;
+	ctx->ioctx.prot	= prot;
 
 	ctx->uctx.path	= &ctx->path;
 	ctx->uctx.map	= &ctx->map;

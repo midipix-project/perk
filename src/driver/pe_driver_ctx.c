@@ -105,6 +105,7 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(struct argv_meta * meta, 
 	ictx->ctx.cctx.outctx	= &ictx->outctx;
 	ictx->ctx.cctx.lnkctx	= &ictx->lnkctx;
 	ictx->ctx.cctx.srvctx	= &ictx->srvctx;
+	ictx->ctx.cctx.ioctx	= &ictx->ctx.ioctx;
 
 	for (entry=meta->entries,units=ictx->units; entry->fopt || entry->arg; entry++)
 		if (!entry->fopt)
@@ -205,14 +206,14 @@ int pe_get_driver_ctx(
 	ctx->cctx.drvflags	= dflags;
 	ctx->cctx.fmtflags	= fflags;
 	ctx->cctx.output	= output;
-	ctx->cctx.fdout		= output ? fdout : -1;
+	ctx->ioctx.fdout	= output ? fdout : -1;
 
-	ctx->cctx.fdin		= -1;
-	ctx->cctx.fderr		= -1;
-	ctx->cctx.fdlog		= -1;
-	ctx->cctx.fdsrc		= AT_FDCWD;
-	ctx->cctx.fddst		= AT_FDCWD;
-	ctx->cctx.fdtmp		= AT_FDCWD;
+	ctx->ioctx.fdin		= -1;
+	ctx->ioctx.fderr	= -1;
+	ctx->ioctx.fdlog	= -1;
+	ctx->ioctx.fdsrc	= AT_FDCWD;
+	ctx->ioctx.fddst	= AT_FDCWD;
+	ctx->ioctx.fdtmp	= AT_FDCWD;
 
 	ctx->ctx.cctx		= &ctx->cctx;
 
@@ -222,11 +223,11 @@ int pe_get_driver_ctx(
 
 static void pe_driver_close_fds(struct pe_common_ctx * cctx)
 {
-	if (cctx->status && cctx->output)
-		unlinkat(cctx->fddst,cctx->output,0);
+	if (cctx->ioctx->status && cctx->output)
+		unlinkat(cctx->ioctx->fddst,cctx->output,0);
 
-	if (cctx->fdout >= 0)
-		close(cctx->fdout);
+	if (cctx->ioctx->fdout >= 0)
+		close(cctx->ioctx->fdout);
 }
 
 static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)

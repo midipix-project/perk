@@ -100,7 +100,10 @@ struct pe_server_ctx {
 	const char **			attrs;
 };
 
-struct pe_common_ctx {
+struct pe_io_ctx {
+	int				status;
+	int				prot;
+	int				mode;
 	int				fdin;
 	int				fdout;
 	int				fderr;
@@ -108,11 +111,9 @@ struct pe_common_ctx {
 	int				fdsrc;
 	int				fddst;
 	int				fdtmp;
-	int				prot;
-	int				mode;
-	int				status;
-	ssize_t				ioread;
-	ssize_t				iowrite;
+};
+
+struct pe_common_ctx {
 	uint64_t			drvflags;
 	uint64_t			actflags;
 	uint64_t			fmtflags;
@@ -125,6 +126,7 @@ struct pe_common_ctx {
 	const struct pe_output_ctx *	outctx;
 	const struct pe_linker_ctx *	lnkctx;
 	const struct pe_server_ctx *	srvctx;
+	const struct pe_io_ctx *	ioctx;
 };
 
 struct pe_driver_ctx {

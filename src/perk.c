@@ -15,9 +15,9 @@ static ssize_t perk_version(struct pe_driver_ctx * dctx)
 	char	buf[512];
 	size_t	len;
 
-	if (dctx->cctx->fdout >= 0) {
+	if (dctx->cctx->ioctx->fdout >= 0) {
 		len = sprintf(buf,vermsg,dctx->program,PERK_GIT_VERSION);
-		return write(dctx->cctx->fdout,buf,len);
+		return write(dctx->cctx->ioctx->fdout,buf,len);
 	} else
 		return fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
 }
@@ -27,8 +27,8 @@ static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 	if (*fpara) {
 		*fpara = 0;
 
-		if (uctx->cctx->fdout >= 0)
-			return write(uctx->cctx->fdout,"\n",1);
+		if (uctx->cctx->ioctx->fdout >= 0)
+			return write(uctx->cctx->ioctx->fdout,"\n",1);
 		else
 			return fputc('\n',stdout);
 	} else
