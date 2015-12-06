@@ -43,14 +43,14 @@ static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
 	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
 		uctx->status = pe_output_export_symbols(uctx->meta,uctx->cctx,0);
 		uctx->nerrors += !!uctx->status;
-		fpara += uctx->meta->summary.num_of_export_syms;
+		fpara += uctx->meta->summary.nexpsyms;
 	}
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
 		perk_paragraph_break(uctx,&fpara);
 		uctx->status = pe_output_import_libraries(uctx->meta,uctx->cctx,0);
 		uctx->nerrors += !!uctx->status;
-		fpara += (uctx->meta->summary.num_of_implibs > 0);
+		fpara += (uctx->meta->summary.nimplibs > 0);
 	}
 }
 

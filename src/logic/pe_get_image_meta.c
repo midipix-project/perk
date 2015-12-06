@@ -11,7 +11,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 	unsigned i;
 
 	if (meta) {
-		for (i=0; i<meta->summary.num_of_implibs; i++)
+		for (i=0; i<meta->summary.nimplibs; i++)
 			free(meta->idata[i].items);
 
 		free(meta->idata);
@@ -124,13 +124,13 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 
 	if (m->aidata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pidata->name_rva[0]; pidata++,m->summary.num_of_implibs++);
+		for (pidata=m->aidata; pidata->name_rva[0]; pidata++,m->summary.nimplibs++);
 
 		/* import headers */
-		if (!(m->idata = calloc(m->summary.num_of_implibs,sizeof(*(m->idata)))))
+		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*(m->idata)))))
 			return pe_free_image_meta_impl(m,status);
 
-		for (i=0; i<m->summary.num_of_implibs; i++) {
+		for (i=0; i<m->summary.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
 
 			m->idata[i].name = base + m->hidata->ptr_to_raw_data

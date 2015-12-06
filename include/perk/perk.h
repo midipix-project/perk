@@ -52,9 +52,9 @@ struct pe_raw_image {
 };
 
 struct pe_image_summary {
-	uint32_t	num_of_export_syms;
-	uint32_t	num_of_implibs;
-	uint32_t	num_of_relocs;
+	uint32_t	nexpsyms;
+	uint32_t	nimplibs;
+	uint32_t	nrelocs;
 };
 
 struct pe_image_meta {

@@ -43,7 +43,7 @@ int pe_output_import_libraries(
 	FILE *		ftmp;
 	int		i,j;
 
-	if (!m->summary.num_of_implibs)
+	if (!m->summary.nimplibs)
 		return 0;
 
 	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
@@ -52,7 +52,7 @@ int pe_output_import_libraries(
 	if ((pretty_header(cctx,fout)) < 0)
 		return pe_output_epilog(-1,ftmp);
 
-	for (i=0; i<m->summary.num_of_implibs; i++) {
+	for (i=0; i<m->summary.nimplibs; i++) {
 		if ((pretty_implib_header(cctx,m->idata[i].name,fout)) < 0)
 			return pe_output_epilog(-1,ftmp);
 
