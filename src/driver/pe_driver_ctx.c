@@ -45,10 +45,6 @@ static const struct argv_option options[] = {
 
 struct pe_driver_ctx_alloc {
 	struct argv_meta *	meta;
-	struct pe_symbol_ctx	symctx;
-	struct pe_output_ctx	outctx;
-	struct pe_linker_ctx	lnkctx;
-	struct pe_server_ctx	srvctx;
 	struct pe_driver_ctx_impl	ctx;
 	uint64_t		guard;
 	const char *		units[];
@@ -101,10 +97,10 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(struct argv_meta * meta, 
 		return 0;
 
 	ictx->meta		= meta;
-	ictx->ctx.cctx.symctx	= &ictx->symctx;
-	ictx->ctx.cctx.outctx	= &ictx->outctx;
-	ictx->ctx.cctx.lnkctx	= &ictx->lnkctx;
-	ictx->ctx.cctx.srvctx	= &ictx->srvctx;
+	ictx->ctx.cctx.symctx	= &ictx->ctx.symctx;
+	ictx->ctx.cctx.outctx	= &ictx->ctx.outctx;
+	ictx->ctx.cctx.lnkctx	= &ictx->ctx.lnkctx;
+	ictx->ctx.cctx.srvctx	= &ictx->ctx.srvctx;
 	ictx->ctx.cctx.ioctx	= &ictx->ctx.ioctx;
 
 	for (entry=meta->entries,units=ictx->units; entry->fopt || entry->arg; entry++)
@@ -232,11 +228,11 @@ static void pe_driver_close_fds(struct pe_common_ctx * cctx)
 
 static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
 {
-	if (ictx->symctx.append)
-		free(ictx->symctx.append);
+	if (ictx->ctx.symctx.append)
+		free(ictx->ctx.symctx.append);
 
-	if (ictx->symctx.exclude)
-		free(ictx->symctx.exclude);
+	if (ictx->ctx.symctx.exclude)
+		free(ictx->ctx.symctx.exclude);
 
 	pe_driver_close_fds(&ictx->ctx.cctx);
 	argv_free(ictx->meta);
