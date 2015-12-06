@@ -134,6 +134,9 @@ struct pe_driver_ctx {
 	const char *			program;
 	const char *			module;
 	const struct pe_common_ctx *	cctx;
+	void *				any;
+	int				status;
+	int				nerrors;
 };
 
 struct pe_unit_ctx {
@@ -141,6 +144,7 @@ struct pe_unit_ctx {
 	const struct pe_raw_image *	map;
 	const struct pe_image_meta *	meta;
 	const struct pe_common_ctx *	cctx;
+	void *				any;
 	int				status;
 	int				nerrors;
 };
