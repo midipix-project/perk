@@ -36,10 +36,10 @@ static uint32_t pe_argv_flags(uint32_t flags)
 }
 
 static int pe_driver_usage(
-	const char *		program,
-	const char *		arg,
+	const char *			program,
+	const char *			arg,
 	const struct argv_option *	options,
-	struct argv_meta *	meta)
+	struct argv_meta *		meta)
 {
 	char header[512];
 
