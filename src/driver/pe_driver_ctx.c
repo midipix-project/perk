@@ -2,46 +2,15 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#define ARGV_DRIVER
+
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_driver_impl.h"
 #include "perk_impl.h"
 #include "argv/argv.h"
 
-enum app_tags {
-	TAG_HELP,
-	TAG_VERSION,
-	TAG_OUTPUT,
-	TAG_PRETTY,
-	TAG_EXPSYMS,
-	TAG_IMPLIBS,
-	TAG_IMPSYMS,
-};
-
-static const struct argv_option options[] = {
-	{"version",	'v',TAG_VERSION,ARGV_OPTARG_NONE,	0,0,
-								"show version information"},
-
-	{"help",	'h',TAG_HELP,	ARGV_OPTARG_OPTIONAL,	"short|long",0,
-								"show usage information "
-								"[listing %s options only]"},
-
-	{"output",	'o',TAG_OUTPUT,	ARGV_OPTARG_REQUIRED,	0,"<file>",
-								"write output to %s"},
-
-	{"pretty",	'p',TAG_PRETTY,	ARGV_OPTARG_REQUIRED,	"yaml",0,
-								"format output for parsing by %s"},
-
-	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,	0,0,
-								"print exported symbols" },
-
-	{"implibs",	'i',TAG_IMPLIBS,ARGV_OPTARG_NONE,	0,0,
-								"list direct dependency libraries"},
-
-	{"impsyms",	'I',TAG_IMPSYMS,ARGV_OPTARG_NONE,	0,0,
-								"list direct dependency libraries "
-								"along with required symbols"},
-	{0}
-};
+extern const struct argv_option pe_default_options[];
 
 struct pe_driver_ctx_alloc {
 	struct argv_meta *		meta;
@@ -69,6 +38,7 @@ static uint32_t pe_argv_flags(uint32_t flags)
 static int pe_driver_usage(
 	const char *		program,
 	const char *		arg,
+	const struct argv_option *	options,
 	struct argv_meta *	meta)
 {
 	char header[512];
@@ -124,6 +94,7 @@ int pe_get_driver_ctx(
 	struct pe_driver_ctx ** pctx)
 {
 	struct pe_driver_ctx_impl *	ctx;
+	const struct argv_option *	options;
 	struct argv_meta *		meta;
 	struct argv_entry *		entry;
 	size_t				nunits;
@@ -133,6 +104,8 @@ int pe_get_driver_ctx(
 	const char *			output;
 	const char *			pretty;
 	int				fdout;
+
+	options = pe_default_options;
 
 	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
 		return -1;
@@ -146,7 +119,7 @@ int pe_get_driver_ctx(
 	program = argv_program_name(argv[0]);
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
-		return pe_driver_usage(program,0,meta);
+		return pe_driver_usage(program,0,options,meta);
 
 	/* get options, count units */
 	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
@@ -154,7 +127,7 @@ int pe_get_driver_ctx(
 			switch (entry->tag) {
 				case TAG_HELP:
 					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
-						return pe_driver_usage(program,entry->arg,meta);
+						return pe_driver_usage(program,entry->arg,options,meta);
 
 				case TAG_VERSION:
 					dflags |= PERK_DRIVER_VERSION;

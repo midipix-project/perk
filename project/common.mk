@@ -11,6 +11,7 @@ COMMON_SRCS = \
 	src/reader/pe_read_import_header.c \
 	src/reader/pe_read_optional_header.c \
 	src/reader/pe_read_section_header.c \
+	src/skin/pe_skin_default.c \
 
 APP_SRCS = \
 	src/perk.c

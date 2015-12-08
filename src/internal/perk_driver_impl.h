@@ -1,0 +1,14 @@
+#ifndef PE_DRIVER_IMPL_H
+#define PE_DRIVER_IMPL_H
+
+enum app_tags {
+	TAG_HELP,
+	TAG_VERSION,
+	TAG_OUTPUT,
+	TAG_PRETTY,
+	TAG_EXPSYMS,
+	TAG_IMPLIBS,
+	TAG_IMPSYMS,
+};
+
+#endif

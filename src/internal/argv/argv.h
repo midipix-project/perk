@@ -104,6 +104,8 @@ static void argv_free(struct argv_meta *);
 /* implementation of static functions */
 /*------------------------------------*/
 
+#ifdef ARGV_DRIVER
+
 static const struct argv_option * argv_short_option(
 	const char *			ch,
 	const struct argv_option	options[],
@@ -868,5 +870,7 @@ static void argv_usage(
 	if (buf)
 		free(buf);
 }
+
+#endif
 
 #endif
