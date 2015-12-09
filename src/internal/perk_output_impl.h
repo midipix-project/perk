@@ -1,3 +1,6 @@
+#ifndef PE_OUTPUT_IMPL_H
+#define PE_OUTPUT_IMPL_H
+
 #include <unistd.h>
 #include <perk/perk.h>
 
@@ -33,3 +36,5 @@ static inline int pe_output_epilog(int ret, FILE * f)
 		fclose(f);
 	return ret;
 }
+
+#endif

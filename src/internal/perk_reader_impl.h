@@ -1,5 +1,5 @@
-#ifndef PERK_IMPL_H
-#define PERK_IMPL_H
+#ifndef PERK_READER_IMPL_H
+#define PERK_READER_IMPL_H
 
 #include <stdint.h>
 #include <endian.h>
