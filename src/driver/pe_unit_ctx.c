@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 
 #include <perk/perk.h>
-#include "perk_impl.h"
+#include "perk_driver_impl.h"
 
 static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int status)
 {

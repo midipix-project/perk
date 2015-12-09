@@ -7,7 +7,6 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
-#include "perk_impl.h"
 #include "argv/argv.h"
 
 extern const struct argv_option pe_default_options[];
