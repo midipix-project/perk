@@ -153,7 +153,7 @@ struct pe_unit_ctx {
 perk_api int  pe_get_driver_ctx		(const char ** argv, const char ** envp, uint32_t flags, struct pe_driver_ctx **);
 perk_api void pe_free_driver_ctx	(struct pe_driver_ctx *);
 
-perk_api int  pe_get_unit_ctx		(struct pe_driver_ctx *, const char * path, struct pe_unit_ctx **);
+perk_api int  pe_get_unit_ctx		(const struct pe_driver_ctx *, const char * path, struct pe_unit_ctx **);
 perk_api void pe_free_unit_ctx		(struct pe_unit_ctx *);
 
 /* utility api */

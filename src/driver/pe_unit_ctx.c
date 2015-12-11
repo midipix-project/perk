@@ -19,9 +19,9 @@ static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int status)
 }
 
 int pe_get_unit_ctx(
-	struct pe_driver_ctx *	dctx,
-	const char *		path,
-	struct pe_unit_ctx **	pctx)
+	const struct pe_driver_ctx *	dctx,
+	const char *			path,
+	struct pe_unit_ctx **		pctx)
 {
 	struct pe_unit_ctx_impl *	ctx;
 	int			prot;
