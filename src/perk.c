@@ -60,7 +60,7 @@ static int perk_exit(struct pe_driver_ctx * dctx, int nerrors)
 	return nerrors ? 2 : 0;
 }
 
-static int perk_main(int argc, const char ** argv, const char ** envp)
+int perk_main(int argc, const char ** argv, const char ** envp)
 {
 	int			ret;
 	struct pe_driver_ctx *	dctx;
@@ -85,7 +85,11 @@ static int perk_main(int argc, const char ** argv, const char ** envp)
 	return perk_exit(dctx,ret);
 }
 
+#ifndef PERK_IN_A_BOX
+
 int main(int argc, const char ** argv, const char ** envp)
 {
 	return perk_main(argc,argv,envp);
 }
+
+#endif
