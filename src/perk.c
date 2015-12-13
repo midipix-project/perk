@@ -5,7 +5,8 @@
 #include "perk_version.h"
 
 #ifndef PERK_DRIVER_FLAGS
-#define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS|PERK_DRIVER_VERBOSITY_USAGE
+#define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS \
+				| PERK_DRIVER_VERBOSITY_USAGE
 #endif
 
 static const char vermsg[] = "%s (git://midipix.org/perk): commit %s.\n";
