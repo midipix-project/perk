@@ -42,7 +42,7 @@ int pe_get_unit_ctx(
 	memcpy(&ctx->cctx,dctx->cctx,
 		sizeof(ctx->cctx));
 
-	ctx->path	= ctx->path;
+	ctx->path	= path;
 	ctx->ioctx.prot	= prot;
 
 	ctx->uctx.path	= &ctx->path;
