@@ -24,7 +24,7 @@ int pe_get_unit_ctx(
 	struct pe_unit_ctx **		pctx)
 {
 	struct pe_unit_ctx_impl *	ctx;
-	int			prot;
+	int				prot;
 
 	if (!dctx || !(ctx = calloc(sizeof(*ctx),1)))
 		return -1;
