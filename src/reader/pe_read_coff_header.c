@@ -6,8 +6,9 @@
 
 int pe_read_coff_header(const struct pe_coff_file_hdr * p, struct pe_meta_coff_file_hdr * m)
 {
-	if ((p->signature[0] != 'P') || (p->signature[1] != 'E')
-			|| *(uint16_t *)&p->signature[2])
+	uint16_t * pzero = (uint16_t *)&p->signature[2];
+
+	if ((p->signature[0] != 'P') || (p->signature[1] != 'E') || *pzero)
 		return PERK_BAD_COFF_HEADER;
 
 	#if (BYTE_ORDER == LITTLE_ENDIAN)

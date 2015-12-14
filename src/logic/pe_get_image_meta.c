@@ -141,9 +141,14 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
 			/* items */
+			uint32_t * hint;
 			m->idata[i].count = 0;
+
 			if (m->idata[i].import_lookup_tbl_rva) {
-				for (pitem=m->idata[i].aitems; *(uint32_t *)pitem->hint_name_tbl_rva; pitem++)
+				pitem = m->idata[i].aitems;
+				hint  = (uint32_t *)pitem->hint_name_tbl_rva;
+
+				for (; *hint; hint=(uint32_t *)((++pitem)->hint_name_tbl_rva))
 					m->idata[i].count++;
 
 				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
