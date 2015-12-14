@@ -82,6 +82,8 @@ struct argv_ctx {
 	const char *			program;
 };
 
+#ifdef ARGV_DRIVER
+
 static const char * argv_program_name(const char *);
 
 static void argv_usage(
@@ -103,8 +105,6 @@ static void argv_free(struct argv_meta *);
 /*------------------------------------*/
 /* implementation of static functions */
 /*------------------------------------*/
-
-#ifdef ARGV_DRIVER
 
 static const struct argv_option * argv_short_option(
 	const char *			ch,
