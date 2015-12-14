@@ -51,7 +51,7 @@ fi
 
 cd "$srcdir" || exit 2
 
-gitver=`git rev-parse --verify HEAD` || gitver="unknown"
+gitver=`git rev-parse --verify HEAD 2>/dev/null` || gitver="unknown"
 macro=`echo "$prefix"_GIT_VERSION | tr '[:lower:]' '[:upper:]'`
 
 cd "$workdir" || exit 2
