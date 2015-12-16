@@ -93,14 +93,12 @@ int pe_get_driver_ctx(
 	struct pe_driver_ctx ** pctx)
 {
 	struct pe_driver_ctx_impl *	ctx;
+	struct pe_common_ctx		cctx;
 	const struct argv_option *	options;
 	struct argv_meta *		meta;
 	struct argv_entry *		entry;
 	size_t				nunits;
-	uint64_t			dflags;
-	uint64_t			fflags;
 	const char *			program;
-	const char *			output;
 	const char *			pretty;
 	int				fdout;
 
@@ -109,13 +107,11 @@ int pe_get_driver_ctx(
 	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
 		return -1;
 
-	dflags	= 0;
-	fflags	= 0;
-	output	= 0;
 	pretty	= 0;
 	nunits	= 0;
 	fdout	= 0;
 	program = argv_program_name(argv[0]);
+	memset(&cctx,0,sizeof(cctx));
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
 		return pe_driver_usage(program,0,options,meta);
@@ -129,11 +125,11 @@ int pe_get_driver_ctx(
 						return pe_driver_usage(program,entry->arg,options,meta);
 
 				case TAG_VERSION:
-					dflags |= PERK_DRIVER_VERSION;
+					cctx.drvflags |= PERK_DRIVER_VERSION;
 					break;
 
 				case TAG_OUTPUT:
-					output = entry->arg;
+					cctx.output = entry->arg;
 					break;
 
 				case TAG_PRETTY:
@@ -141,40 +137,37 @@ int pe_get_driver_ctx(
 					break;
 
 				case TAG_EXPSYMS:
-					fflags |= PERK_OUTPUT_EXPORT_SYMS;
+					cctx.fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
 					break;
 
 				case TAG_IMPLIBS:
-					fflags |= PERK_OUTPUT_IMPORT_LIBS;
+					cctx.fmtflags |= PERK_OUTPUT_IMPORT_LIBS;
 					break;
 
 				case TAG_IMPSYMS:
-					fflags |= PERK_OUTPUT_IMPORT_SYMS;
+					cctx.fmtflags |= PERK_OUTPUT_IMPORT_SYMS;
 					break;
 			}
 		} else
 			nunits++;
 	}
 
-	if (output && ((fdout = open(output,
+	if (cctx.output && ((fdout = open(cctx.output,
 			O_CREAT|O_TRUNC|O_WRONLY|O_NOCTTY|O_NOFOLLOW,
 			S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) < 0))
 		return pe_get_driver_ctx_fail(meta);
 
-	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)) && output)
+	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)) && cctx.output)
 		close(fdout);
 
 	if (!ctx)
 		return pe_get_driver_ctx_fail(meta);
 
 	if (pretty && !strcmp(pretty,"yaml"))
-		fflags |= PERK_PRETTY_YAML;
+		cctx.fmtflags |= PERK_PRETTY_YAML;
 
 	ctx->ctx.program	= program;
-	ctx->cctx.drvflags	= dflags;
-	ctx->cctx.fmtflags	= fflags;
-	ctx->cctx.output	= output;
-	ctx->ioctx.fdout	= output ? fdout : -1;
+	ctx->ioctx.fdout	= cctx.output ? fdout : -1;
 
 	ctx->ioctx.fdin		= -1;
 	ctx->ioctx.fderr	= -1;
@@ -185,6 +178,7 @@ int pe_get_driver_ctx(
 
 	ctx->ctx.cctx		= &ctx->cctx;
 
+	memcpy(&ctx->cctx,&cctx,sizeof(cctx));
 	*pctx = &ctx->ctx;
 	return PERK_OK;
 }
