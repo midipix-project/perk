@@ -1,7 +1,7 @@
 include $(PROJECT_DIR)/sysinfo/os/$(NATIVE_OS).mk
 
-OS 		= $(NATIVE_OS)
-HOST_BITS 	= $(NATIVE_OS_BITS)
+OS		= $(NATIVE_OS)
+HOST_BITS	= $(NATIVE_OS_BITS)
 HOST_UNDERSCORE = $(NATIVE_OS_UNDERSCORE)
 
 ifeq ($(OS),linux)
