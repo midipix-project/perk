@@ -52,7 +52,10 @@ static int pe_driver_usage(
 	return PERK_USAGE;
 }
 
-static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(struct argv_meta * meta, size_t nunits)
+static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
+	struct argv_meta *		meta,
+	const struct pe_common_ctx *	cctx,
+	size_t				nunits)
 {
 	struct pe_driver_ctx_alloc *	ictx;
 	size_t				size;
@@ -64,6 +67,9 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(struct argv_meta * meta, 
 
 	if (!(ictx = calloc(size,1)))
 		return 0;
+
+	if (cctx)
+		memcpy(&ictx->ctx.cctx,cctx,sizeof(*cctx));
 
 	ictx->meta		= meta;
 	ictx->ctx.cctx.symctx	= &ictx->ctx.symctx;
@@ -157,18 +163,19 @@ int pe_get_driver_ctx(
 			S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) < 0))
 		return pe_get_driver_ctx_fail(meta);
 
-	if (!(ctx = pe_driver_ctx_alloc(meta,nunits)) && cctx.output)
+	if (pretty && !strcmp(pretty,"yaml"))
+		cctx.fmtflags |= PERK_PRETTY_YAML;
+
+	if (!(ctx = pe_driver_ctx_alloc(meta,&cctx,nunits)) && cctx.output)
 		close(fdout);
 
 	if (!ctx)
 		return pe_get_driver_ctx_fail(meta);
 
-	if (pretty && !strcmp(pretty,"yaml"))
-		cctx.fmtflags |= PERK_PRETTY_YAML;
-
 	ctx->ctx.program	= program;
-	ctx->ioctx.fdout	= cctx.output ? fdout : -1;
+	ctx->ctx.cctx		= &ctx->cctx;
 
+	ctx->ioctx.fdout	= cctx.output ? fdout : -1;
 	ctx->ioctx.fdin		= -1;
 	ctx->ioctx.fderr	= -1;
 	ctx->ioctx.fdlog	= -1;
@@ -176,9 +183,6 @@ int pe_get_driver_ctx(
 	ctx->ioctx.fddst	= AT_FDCWD;
 	ctx->ioctx.fdtmp	= AT_FDCWD;
 
-	ctx->ctx.cctx		= &ctx->cctx;
-
-	memcpy(&ctx->cctx,&cctx,sizeof(cctx));
 	*pctx = &ctx->ctx;
 	return PERK_OK;
 }
