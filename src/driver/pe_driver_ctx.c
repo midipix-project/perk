@@ -86,7 +86,7 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	return &ictx->ctx;
 }
 
-int pe_get_driver_ctx_fail(struct argv_meta * meta)
+static int pe_get_driver_ctx_fail(struct argv_meta * meta)
 {
 	argv_free(meta);
 	return -1;
