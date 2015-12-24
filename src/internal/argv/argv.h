@@ -21,6 +21,10 @@
 #define ARGV_VERBOSITY_STATUS		0x02
 #define ARGV_CLONE_VECTOR		0x80
 
+#ifndef ARGV_TAB
+#define ARGV_TAB			8
+#endif
+
 enum argv_optarg {
 	ARGV_OPTARG_NONE,
 	ARGV_OPTARG_REQUIRED,
@@ -665,12 +669,12 @@ static void argv_usage(
 		}
 	}
 
-	optlen += 8;
-	optlen &= (~7);
+	optlen += ARGV_TAB;
+	optlen &= (~(ARGV_TAB-1));
 
 	if (paralen) {
-		paralen += (8);
-		paralen &= (~7);
+		paralen += (ARGV_TAB);
+		paralen &= (~(ARGV_TAB-1));
 		mparalen = paralen + 2*rbblen;
 
 		if (optlen + paralen > 64)
@@ -678,10 +682,10 @@ static void argv_usage(
 	}
 
 	/* account for '  ','\t', try to fit in 80 or 96 columns */
-	if (optlen+paralen+2+8 < 80-32)
-		desclen = 80 - (optlen+paralen+2+8);
-	else if (optlen+paralen+2+8 < 96-32)
-		desclen = 96 - (optlen+paralen+2+8);
+	if (optlen+paralen+2+ARGV_TAB < 80-32)
+		desclen = 80 - (optlen+paralen+2+ARGV_TAB);
+	else if (optlen+paralen+2+ARGV_TAB < 96-32)
+		desclen = 96 - (optlen+paralen+2+ARGV_TAB);
 	else
 		desclen = 32;
 
