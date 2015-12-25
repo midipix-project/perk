@@ -315,7 +315,7 @@ config_copy()
 											\
 			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
 			-e 's^@native_os@^'"$mb_native_os"'^g'				\
-			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'			\
+			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'		\
 			-e 's^@native_os_underscore@^'"$mb_native_os_underscore"'^g'	\
 											\
 			-e 's^@user_cc@^'"$mb_user_cc"'^g'				\
