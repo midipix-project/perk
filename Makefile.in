@@ -156,7 +156,7 @@ $(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		$(CC) -o $@ $^ $(LDFLAGS_APP)
 
 $(SHARED_APP):	$(SHARED_LIB) $(APP_OBJS)
-		$(CC) -o $@ $(APP_OBJS) -l$(PACKAGE) $(LDFLAGS_APP)
+		$(CC) -o $@ $(APP_OBJS) -l$(PACKAGE) $(LDFLAGS_SHARED)
 
 $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		$(CC) -static -o $@ $^ -l$(PACKAGE) $(LDFLAGS_STATIC)
