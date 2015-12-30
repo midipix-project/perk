@@ -672,6 +672,11 @@ static void argv_usage(
 	optlen += ARGV_TAB;
 	optlen &= (~(ARGV_TAB-1));
 
+	paradigm = next_para = buf = 0;
+	fnewline = false;
+	rparalen = 0;
+	mparalen = 0;
+
 	if (paralen) {
 		paralen += (ARGV_TAB);
 		paralen &= (~(ARGV_TAB-1));
@@ -688,11 +693,6 @@ static void argv_usage(
 		desclen = 96 - (optlen+paralen+2+ARGV_TAB);
 	else
 		desclen = 32;
-
-	paradigm = next_para = buf = 0;
-	fnewline = false;
-	rparalen = 0;
-	mparalen = 0;
 
 	for (option=options,buflen=0,rdesclen=1; option->short_name || option->long_name; option++) {
 		if (option->paradigm) {
