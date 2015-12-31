@@ -26,7 +26,7 @@ int pe_get_unit_ctx(
 	struct pe_unit_ctx_impl *	ctx;
 	int				prot;
 
-	if (!dctx || !(ctx = calloc(sizeof(*ctx),1)))
+	if (!dctx || !(ctx = calloc(1,sizeof(*ctx))))
 		return -1;
 
 	prot = (dctx->cctx->actflags & PERK_ACTION_MAP_READWRITE)
