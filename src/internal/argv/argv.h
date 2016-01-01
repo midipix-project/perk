@@ -25,6 +25,38 @@
 #define ARGV_TAB_WIDTH			8
 #endif
 
+/*******************************************/
+/*                                         */
+/* support of hybrid options               */
+/* -------------------------               */
+/* hybrid options are very similar to      */
+/* long options, yet are prefixed by       */
+/* a single dash rather than two           */
+/* (i.e. -std, -isystem).                  */
+/* hybrid options are supported by this    */
+/* driver for compatibility with legacy    */
+/* tools; note, however, that the use      */
+/* of hybrid options should be strongly    */
+/* discouraged due to the limitations      */
+/* they impose on short options (for       */
+/* example, a driver implementing -std     */
+/* may not provide -s as a short option    */
+/* that takes an arbitrary value).         */
+/*                                         */
+/* SPACE: -hybrid VALUE (i.e. -MF file)    */
+/* EQUAL: -hybrid=VALUE (i.e. -std=c99)    */
+/* ONLY:  -opt accepted, --opt rejected    */
+/*                                         */
+/*******************************************/
+
+
+#define ARGV_OPTION_HYBRID_NONE		0x00
+#define ARGV_OPTION_HYBRID_ONLY		0x01
+#define ARGV_OPTION_HYBRID_SPACE	0x02
+#define ARGV_OPTION_HYBRID_EQUAL	0x04
+#define ARGV_OPTION_HYBRID_SWITCH	(ARGV_OPTION_HYBRID_SPACE \
+					| ARGV_OPTION_HYBRID_EQUAL)
+
 enum argv_optarg {
 	ARGV_OPTARG_NONE,
 	ARGV_OPTARG_REQUIRED,
@@ -44,6 +76,10 @@ enum argv_error {
 	ARGV_ERROR_OPTARG_NONE,
 	ARGV_ERROR_OPTARG_REQUIRED,
 	ARGV_ERROR_OPTARG_PARADIGM,
+	ARGV_ERROR_HYBRID_NONE,
+	ARGV_ERROR_HYBRID_ONLY,
+	ARGV_ERROR_HYBRID_SPACE,
+	ARGV_ERROR_HYBRID_EQUAL,
 };
 
 struct argv_option {
@@ -51,6 +87,7 @@ struct argv_option {
 	const char		short_name;
 	int			tag;
 	enum argv_optarg	optarg;
+	int			flags;
 	const char *		paradigm;
 	const char *		argname;
 	const char *		description;
@@ -169,6 +206,26 @@ static inline bool is_last_option(const char * arg)
 	return (arg[0]=='-') && (arg[1]=='-') && !arg[2];
 }
 
+static inline bool is_hybrid_option(
+	const char *			arg,
+	const struct argv_option	options[])
+{
+	const struct argv_option *	option;
+	struct argv_entry		entry;
+
+	if (!is_short_option(arg))
+		return false;
+
+	if (!(option = argv_long_option(++arg,options,&entry)))
+		return false;
+
+	if (!(option->flags & ARGV_OPTION_HYBRID_SWITCH))
+		if (argv_short_option(arg,options,&entry))
+			return false;
+
+	return true;
+}
+
 static inline bool is_arg_in_paradigm(const char * arg, const char * paradigm)
 {
 	size_t		len;
@@ -217,6 +274,7 @@ static void argv_scan(
 	bool				fval;
 	bool				fnext;
 	bool				fshort;
+	bool				fhybrid;
 	bool				fnoscan;
 
 	argv++;
@@ -229,7 +287,8 @@ static void argv_scan(
 	mentry	= meta ? meta->entries : 0;
 
 	while (ch && (ferror == ARGV_ERROR_OK)) {
-		option = 0;
+		option  = 0;
+		fhybrid = false;
 
 		if (fnoscan)
 			fval = true;
@@ -237,7 +296,10 @@ static void argv_scan(
 		else if (is_last_option(ch))
 			fnoscan = true;
 
-		else if ((fshort || is_short_option(ch))) {
+		else if (!fshort && is_hybrid_option(ch,options))
+			fhybrid = true;
+
+		if (!fnoscan && !fhybrid && (fshort || is_short_option(ch))) {
 			if (!fshort)
 				ch++;
 
@@ -285,8 +347,10 @@ static void argv_scan(
 			} else
 				ferror = ARGV_ERROR_SHORT_OPTION;
 
-		} else if ((is_long_option(ch))) {
-			if ((option = argv_long_option(ch+=2,options,&entry))) {
+		} else if (!fnoscan && (fhybrid || is_long_option(ch))) {
+			ch += (fhybrid ? 1 : 2);
+
+			if ((option = argv_long_option(ch,options,&entry))) {
 				val = ch + strlen(option->long_name);
 
 				/* val[0] is either '=' or '\0' */
@@ -295,13 +359,21 @@ static void argv_scan(
 					ch = *parg;
 				}
 
-				if (option->optarg == ARGV_OPTARG_NONE) {
+				if (fhybrid && !(option->flags & ARGV_OPTION_HYBRID_SWITCH))
+					ferror = ARGV_ERROR_HYBRID_NONE;
+				else if (option->optarg == ARGV_OPTARG_NONE) {
 					if (val[0]) {
 						ferror = ARGV_ERROR_OPTARG_NONE;
 						ctx->errch = val + 1;
 					} else
 						fval = false;
-				} else if (val[0] && !val[1])
+				} else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
+					ferror = ARGV_ERROR_HYBRID_ONLY;
+				else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
+					ferror = ARGV_ERROR_HYBRID_SPACE;
+				else if (fhybrid && val[0] && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
+					ferror = ARGV_ERROR_HYBRID_EQUAL;
+				else if (val[0] && !val[1])
 					ferror = ARGV_ERROR_OPTARG_REQUIRED;
 				else if (val[0] && val[1]) {
 					fval = true;
@@ -445,6 +517,30 @@ static void argv_show_error(struct argv_ctx * ctx)
 				ctx->erropt->long_name ? "--" : "",
 				ctx->erropt->long_name,
 				ctx->erropt->paradigm);
+			break;
+
+		case ARGV_ERROR_HYBRID_NONE:
+			fprintf(stderr,"-%s is not a synonym for --%s\n",
+				ctx->erropt->long_name,
+				ctx->erropt->long_name);
+			break;
+
+		case ARGV_ERROR_HYBRID_ONLY:
+			fprintf(stderr,"--%s is not a synonym for -%s\n",
+				ctx->erropt->long_name,
+				ctx->erropt->long_name);
+			break;
+
+		case ARGV_ERROR_HYBRID_SPACE:
+			fprintf(stderr,"-%s: illegal value assignment; valid syntax is -%s=VAL\n",
+				ctx->erropt->long_name,
+				ctx->erropt->long_name);
+			break;
+
+		case ARGV_ERROR_HYBRID_EQUAL:
+			fprintf(stderr,"-%s: illegal value assignment; valid syntax is -%s VAL\n",
+				ctx->erropt->long_name,
+				ctx->erropt->long_name);
 			break;
 
 		case ARGV_ERROR_INTERNAL:
