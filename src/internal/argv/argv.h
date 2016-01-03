@@ -478,7 +478,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 
 	switch (ctx->errcode) {
 		case ARGV_ERROR_SHORT_OPTION:
-			fprintf(stderr,"'%c' is not a valid short option\n",*ctx->errch);
+			fprintf(stderr,"'-%c' is not a valid short option\n",*ctx->errch);
 			break;
 
 		case ARGV_ERROR_LONG_OPTION:
