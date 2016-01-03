@@ -617,7 +617,7 @@ static struct argv_meta * argv_alloc(const char ** argv, struct argv_ctx * ctx)
 	int			argc;
 	int			i;
 
-	if (!(imeta = calloc(sizeof(*imeta),1)))
+	if (!(imeta = calloc(1,sizeof(*imeta))))
 		return 0;
 
 	if (ctx->flags & ARGV_CLONE_VECTOR) {
@@ -626,9 +626,9 @@ static struct argv_meta * argv_alloc(const char ** argv, struct argv_ctx * ctx)
 			argc++;
 		}
 
-		if (!(imeta->argv = calloc(sizeof(char *),argc+1)))
+		if (!(imeta->argv = calloc(argc+1,sizeof(char *))))
 			return argv_free_impl(imeta);
-		else if (!(imeta->strbuf = calloc(size+1,1)))
+		else if (!(imeta->strbuf = calloc(1,size+1)))
 			return argv_free_impl(imeta);
 
 		for (i=0,dst=imeta->strbuf; i<argc; i++) {
@@ -641,7 +641,9 @@ static struct argv_meta * argv_alloc(const char ** argv, struct argv_ctx * ctx)
 	} else
 		imeta->meta.argv = argv;
 
-	if (!(imeta->meta.entries = calloc(sizeof(struct argv_entry),ctx->nentries+1)))
+	if (!(imeta->meta.entries = calloc(
+				ctx->nentries+1,
+				sizeof(struct argv_entry))))
 		return argv_free_impl(imeta);
 	else
 		return &imeta->meta;
@@ -856,7 +858,7 @@ static void argv_usage(
 			len =  rdesclen + 512;
 			len &= (~511);
 
-			if ((buf = calloc(len,1))) {
+			if ((buf = calloc(1,len))) {
 				buflen = len;
 
 				if (option->paradigm)
@@ -884,7 +886,7 @@ static void argv_usage(
 					(int)(paralen-strlen(option->paradigm)-rbblen),' ');
 			para = (char *)0;
 		} else if (option->paradigm) {
-			if (!paradigm && !(paradigm = calloc(mparalen,1))) {
+			if (!paradigm && !(paradigm = calloc(1,mparalen))) {
 				fputc('\n',file);
 				continue;
 			} else
