@@ -486,7 +486,8 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_OPTARG_NONE:
-			fprintf(stderr,"'%s' is not a valid option value for [%s%c%s%s%s] (option values may not be specified)\n",
+			fprintf(stderr,"'%s' is not a valid option value for [%s%c%s%s%s] "
+					"(option values may not be specified)\n",
 				ctx->errch,
 				ctx->erropt->short_name ? "-" : "",
 				ctx->erropt->short_name,
@@ -738,7 +739,10 @@ static void argv_usage(
 	if (header)
 		fprintf(stdout,"%s",header);
 
-	for (option=options,optlen=0,paralen=0; option->short_name || option->long_name; option++) {
+	optlen  = 0;
+	paralen = 0;
+
+	for (option=options; option->short_name || option->long_name; option++) {
 		if (fshort)
 			len = option->short_name ? sizeof(char) + solen : 0;
 		else if (flong)
@@ -790,7 +794,10 @@ static void argv_usage(
 	else
 		desclen = 32;
 
-	for (option=options,buflen=0,rdesclen=1; option->short_name || option->long_name; option++) {
+	buflen   = 0;
+	rdesclen = 1;
+
+	for (option=options; option->short_name || option->long_name; option++) {
 		if (fshort && !option->short_name)
 			continue;
 		else if (flong && !option->long_name)
@@ -828,11 +835,16 @@ static void argv_usage(
 			fprintf(file,"%s--%-*s",indent,(int)(optlen-lolen),option->long_name);
 		else {
 			if (option->short_name && option->long_name)
-				fprintf(file,"%s-%c,--%-*s",indent,option->short_name,(int)(optlen-slolen),option->long_name);
+				fprintf(file,"%s-%c,--%-*s",
+					indent,option->short_name,
+					(int)(optlen-slolen),option->long_name);
 			else if (option->short_name)
-				 fprintf(file,"%s-%-*c",indent,(int)(optlen-solen),option->short_name);
+				 fprintf(file,"%s-%-*c",
+					indent,(int)(optlen-solen),option->short_name);
 			else
-				fprintf(file,"%s%3s--%-*s",indent,"",(int)(optlen-slolen),option->long_name);
+				fprintf(file,"%s%3s--%-*s",
+					indent,"",
+					(int)(optlen-slolen),option->long_name);
 		}
 
 		if (rdesclen > buflen) {
@@ -848,9 +860,13 @@ static void argv_usage(
 				buflen = len;
 
 				if (option->paradigm)
-					rdesclen = snprintf(buf,buflen,option->description,option->paradigm);
+					rdesclen = snprintf(buf,buflen,
+							option->description,
+							option->paradigm);
 				else
-					rdesclen = snprintf(buf,buflen,option->description,option->argname);
+					rdesclen = snprintf(buf,buflen,
+							option->description,
+							option->argname);
 			} else {
 				buflen = 0;
 				continue;
@@ -859,9 +875,13 @@ static void argv_usage(
 
 		if (option->paradigm && (rparalen <= paralen)) {
 			if (option->optarg == ARGV_OPTARG_OPTIONAL)
-				fprintf(file,"[{%s}]%-*c",option->paradigm,(int)(paralen-strlen(option->paradigm)-2*rbblen),' ');
+				fprintf(file,"[{%s}]%-*c",
+					option->paradigm,
+					(int)(paralen-strlen(option->paradigm)-2*rbblen),' ');
 			else
-				fprintf(file,"{%s}%-*c",option->paradigm,(int)(paralen-strlen(option->paradigm)-rbblen),' ');
+				fprintf(file,"{%s}%-*c",
+					option->paradigm,
+					(int)(paralen-strlen(option->paradigm)-rbblen),' ');
 			para = (char *)0;
 		} else if (option->paradigm) {
 			if (!paradigm && !(paradigm = calloc(mparalen,1))) {
@@ -879,9 +899,13 @@ static void argv_usage(
 			}
 		} else if (option->argname) {
 			if (option->optarg == ARGV_OPTARG_OPTIONAL)
-				fprintf(file,"[%s]%-*c",option->argname,(int)(paralen-strlen(option->argname)-brcklen),' ');
+				fprintf(file,"[%s]%-*c",
+					option->argname,
+					(int)(paralen-strlen(option->argname)-brcklen),' ');
 			else
-				fprintf(file,"%s%-*c",option->argname,(int)(paralen-strlen(option->argname)),' ');
+				fprintf(file,"%s%-*c",
+					option->argname,
+					(int)(paralen-strlen(option->argname)),' ');
 			para = (char *)0;
 		} else {
 			fprintf(file,"%-*c",(int)paralen,' ');
@@ -900,7 +924,9 @@ static void argv_usage(
 
 		while (para || desc) {
 			if (para) {
-				for (next_para=para+rparalen-1; (next_para>para) && (*next_para!='|'); )
+				next_para = para+rparalen-1;
+
+				for (; (next_para>para) && (*next_para!='|'); )
 					next_para--;
 
 				if (para > paradigm) {
@@ -922,14 +948,20 @@ static void argv_usage(
 
 					/* 2*rbblen,2*rblen, etc.: account for indentation */
 					if (option->optarg == ARGV_OPTARG_OPTIONAL)
-						rparalen = (rparalen+2*rbblen > paralen) ? paralen-rbblen : rparalen;
+						rparalen = (rparalen+2*rbblen > paralen)
+								? paralen-rbblen
+								: rparalen;
 					else
-						rparalen = (rparalen+2*rblen > paralen) ? paralen-rblen : rparalen;
+						rparalen = (rparalen+2*rblen > paralen)
+								? paralen-rblen
+								: rparalen;
 				} else {
 					if (option->optarg == ARGV_OPTARG_OPTIONAL)
-						fprintf(file,"%s}]%-*c",para,(int)(paralen-strlen(para)-rbblen),' ');
+						fprintf(file,"%s}]%-*c",para,
+							(int)(paralen-strlen(para)-rbblen),' ');
 					else
-						fprintf(file,"%s}%-*c",para,(int)(paralen-strlen(para)-rblen),' ');
+						fprintf(file,"%s}%-*c",para,
+							(int)(paralen-strlen(para)-rblen),' ');
 					para = (char *)0;
 				}
 			} else if (desc > buf)
@@ -945,7 +977,11 @@ static void argv_usage(
 					fputs(desc,file);
 					desc = (char *)0;
 				} else {
-					for (next_desc=desc+desclen-1; (next_desc>desc) && (*next_desc!=' ') && (*next_desc!='\n'); )
+					next_desc = desc + desclen - 1;
+
+					for (; (next_desc > desc)
+							&& (*next_desc != ' ')
+							&& (*next_desc != '\n'); )
 						next_desc--;
 
 					if ((*next_desc != ' ') && (*next_desc!='\n')) {
