@@ -791,6 +791,11 @@ static void argv_usage(
 		desclen = 32;
 
 	for (option=options,buflen=0,rdesclen=1; option->short_name || option->long_name; option++) {
+		if (fshort && !option->short_name)
+			continue;
+		else if (flong && !option->long_name)
+			continue;
+
 		if (option->paradigm) {
 			if (option->optarg == ARGV_OPTARG_OPTIONAL)
 				rparalen = strlen(option->paradigm) - 2*rbblen;
