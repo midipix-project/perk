@@ -391,16 +391,7 @@ static void argv_scan(
 						fval = true;
 				} else {
 					/* ARGV_OPTARG_OPTIONAL */
-					if (!val[0] && !*parg)
-						fval = false;
-					else if (*parg && is_short_option(*parg))
-						fval = false;
-					else if (*parg && is_long_option(*parg))
-						fval = false;
-					else if (*parg && is_last_option(*parg))
-						fval = false;
-					else
-						fval = *parg;
+					fval = val[0];
 				}
 			} else
 				ferror = ARGV_ERROR_LONG_OPTION;
