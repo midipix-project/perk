@@ -393,7 +393,7 @@ static void argv_scan(
 					/* ARGV_OPTARG_OPTIONAL */
 					if (!val[0] && !*parg)
 						fval = false;
-					if (*parg && is_short_option(*parg))
+					else if (*parg && is_short_option(*parg))
 						fval = false;
 					else if (*parg && is_long_option(*parg))
 						fval = false;
