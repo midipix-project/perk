@@ -1,3 +1,9 @@
+/***************************************************************/
+/*  perk: PE Resource Kit                                      */
+/*  Copyright (C) 2015--2016  Z. Gilboa                        */
+/*  Released under GPLv2 and GPLv3; see COPYING.PERK.          */
+/***************************************************************/
+
 #include <stdint.h>
 #include <unistd.h>
 #include <fcntl.h>

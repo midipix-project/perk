@@ -1,3 +1,9 @@
+/***************************************************************/
+/*  perk: PE Resource Kit                                      */
+/*  Copyright (C) 2015--2016  Z. Gilboa                        */
+/*  Released under GPLv2 and GPLv3; see COPYING.PERK.          */
+/***************************************************************/
+
 #ifndef PE_OUTPUT_IMPL_H
 #define PE_OUTPUT_IMPL_H
 
