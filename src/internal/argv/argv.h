@@ -45,6 +45,7 @@
 /*                                         */
 /* SPACE: -hybrid VALUE (i.e. -MF file)    */
 /* EQUAL: -hybrid=VALUE (i.e. -std=c99)    */
+/* COMMA: -hybrid,VALUE (i.e. -Wl,<arg>)   */
 /* ONLY:  -opt accepted, --opt rejected    */
 /*                                         */
 /*******************************************/
@@ -54,8 +55,12 @@
 #define ARGV_OPTION_HYBRID_ONLY		0x01
 #define ARGV_OPTION_HYBRID_SPACE	0x02
 #define ARGV_OPTION_HYBRID_EQUAL	0x04
-#define ARGV_OPTION_HYBRID_SWITCH	(ARGV_OPTION_HYBRID_SPACE \
+#define ARGV_OPTION_HYBRID_COMMA	0x08
+#define ARGV_OPTION_HYBRID_DUAL		(ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_EQUAL)
+#define ARGV_OPTION_HYBRID_SWITCH	(ARGV_OPTION_HYBRID_SPACE \
+					| ARGV_OPTION_HYBRID_EQUAL \
+					| ARGV_OPTION_HYBRID_COMMA)
 
 enum argv_optarg {
 	ARGV_OPTARG_NONE,
@@ -80,6 +85,7 @@ enum argv_error {
 	ARGV_ERROR_HYBRID_ONLY,
 	ARGV_ERROR_HYBRID_SPACE,
 	ARGV_ERROR_HYBRID_EQUAL,
+	ARGV_ERROR_HYBRID_COMMA,
 };
 
 struct argv_option {
@@ -181,6 +187,11 @@ static const struct argv_option * argv_long_option(
 			arg = ch + len;
 
 			if (!*arg || (*arg == '=')) {
+				entry->tag	= option->tag;
+				entry->fopt	= true;
+				return option;
+			} else if ((option->flags & ARGV_OPTION_HYBRID_COMMA)
+					&& (*arg == ',')) {
 				entry->tag	= option->tag;
 				entry->fopt	= true;
 				return option;
@@ -353,7 +364,7 @@ static void argv_scan(
 			if ((option = argv_long_option(ch,options,&entry))) {
 				val = ch + strlen(option->long_name);
 
-				/* val[0] is either '=' or '\0' */
+				/* val[0] is either '=' (or ',') or '\0' */
 				if (!val[0]) {
 					parg++;
 					ch = *parg;
@@ -371,8 +382,12 @@ static void argv_scan(
 					ferror = ARGV_ERROR_HYBRID_ONLY;
 				else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
 					ferror = ARGV_ERROR_HYBRID_SPACE;
-				else if (fhybrid && val[0] && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
+				else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
 					ferror = ARGV_ERROR_HYBRID_EQUAL;
+				else if (fhybrid && (val[0]==',') && !(option->flags & ARGV_OPTION_HYBRID_COMMA))
+					ferror = ARGV_ERROR_HYBRID_COMMA;
+				else if (!fhybrid && (val[0]==','))
+					ferror = ARGV_ERROR_HYBRID_COMMA;
 				else if (val[0] && !val[1])
 					ferror = ARGV_ERROR_OPTARG_REQUIRED;
 				else if (val[0] && val[1]) {
@@ -524,15 +539,16 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_HYBRID_SPACE:
-			fprintf(stderr,"-%s: illegal value assignment; valid syntax is -%s=VAL\n",
-				ctx->erropt->long_name,
-				ctx->erropt->long_name);
-			break;
-
 		case ARGV_ERROR_HYBRID_EQUAL:
-			fprintf(stderr,"-%s: illegal value assignment; valid syntax is -%s VAL\n",
+		case ARGV_ERROR_HYBRID_COMMA:
+			fprintf(stderr,"-%s: illegal value assignment; valid syntax is "
+					"-%s%sVAL\n",
 				ctx->erropt->long_name,
-				ctx->erropt->long_name);
+				ctx->erropt->long_name,
+				(ctx->erropt->flags & ARGV_OPTION_HYBRID_SPACE)
+					? " " : (ctx->erropt->flags & ARGV_OPTION_HYBRID_EQUAL)
+					? "=" : ",");
+
 			break;
 
 		case ARGV_ERROR_INTERNAL:
