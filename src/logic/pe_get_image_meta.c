@@ -130,7 +130,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 
 	if (m->aidata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pidata->name_rva[0]; pidata++,m->summary.nimplibs++);
+		for (pidata=m->aidata; pidata->name_rva[0]; pidata++,m->summary.nimplibs++)
+			(void)0;
 
 		/* import headers */
 		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*(m->idata)))))
