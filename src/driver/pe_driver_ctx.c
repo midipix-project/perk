@@ -15,8 +15,6 @@
 #include "perk_driver_impl.h"
 #include "argv/argv.h"
 
-extern const struct argv_option pe_default_options[];
-
 struct pe_driver_ctx_alloc {
 	struct argv_meta *		meta;
 	struct pe_driver_ctx_impl	ctx;
