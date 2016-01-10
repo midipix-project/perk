@@ -48,7 +48,7 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 
 		default:
 			return PERK_BAD_IMAGE_TYPE;
-	};
+	}
 
 	#else
 
@@ -139,7 +139,7 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 			m->mem.size_of_heap_reserve	= pe_read_quad(p->opt_hdr_64.size_of_heap_reserve);
 			m->mem.size_of_heap_commit	= pe_read_quad(p->opt_hdr_64.size_of_heap_commit);
 			break;
-	};
+	}
 
 	return 0;
 }
