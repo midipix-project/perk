@@ -52,9 +52,9 @@ struct pe_raw_image {
 };
 
 struct pe_image_summary {
-	uint32_t	nexpsyms;
-	uint32_t	nimplibs;
-	uint32_t	nrelocs;
+	int32_t		nexpsyms;
+	int32_t		nimplibs;
+	int32_t		nrelocs;
 };
 
 struct pe_image_meta {

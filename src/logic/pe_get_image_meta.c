@@ -14,7 +14,7 @@
 
 static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 {
-	unsigned i;
+	int i;
 
 	if (meta) {
 		for (i=0; i<meta->summary.nimplibs; i++)
@@ -60,7 +60,8 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 
 int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta ** meta)
 {
-	int i,j,s,status;
+	int i,s,status;
+	unsigned j;
 	struct pe_image_meta * m;
 	char * base = image->addr;
 

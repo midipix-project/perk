@@ -37,7 +37,7 @@ int pe_output_export_symbols(
 	FILE *		ftmp;
 	uint32_t 	offset;
 	uint32_t *	symrva;
-	int		i;
+	unsigned	i;
 
 	if (!m->hedata)
 		return 0;

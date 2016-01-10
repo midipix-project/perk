@@ -47,7 +47,8 @@ int pe_output_import_libraries(
 	FILE *				fout)
 {
 	FILE *		ftmp;
-	int		i,j;
+	int		i;
+	unsigned	j;
 
 	if (!m->summary.nimplibs)
 		return 0;
