@@ -99,8 +99,8 @@ static int pe_get_driver_ctx_fail(struct argv_meta * meta)
 }
 
 int pe_get_driver_ctx(
-	const char **		argv,
-	const char **		envp,
+	char **			argv,
+	char **			envp,
 	uint32_t		flags,
 	struct pe_driver_ctx ** pctx)
 {

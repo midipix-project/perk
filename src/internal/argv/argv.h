@@ -109,12 +109,12 @@ struct argv_entry {
 };
 
 struct argv_meta {
-	const char **		argv;
+	char **			argv;
 	struct argv_entry *	entries;
 };
 
 struct argv_meta_impl {
-	const char **		argv;
+	char **			argv;
 	char *			strbuf;
 	struct argv_meta	meta;
 };
@@ -140,7 +140,7 @@ static void argv_usage(
 	const char *	mode);
 
 static struct argv_meta * argv_get(
-	const char **,
+	char **,
 	const struct argv_option[],
 	int flags);
 
@@ -270,12 +270,12 @@ static inline const struct argv_option * option_from_tag(
 }
 
 static void argv_scan(
-	const char **			argv,
+	char **				argv,
 	const struct argv_option	options[],
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
 {
-	const char **			parg;
+	char **				parg;
 	const char *			ch;
 	const char *			val;
 	const struct argv_option *	option;
@@ -566,7 +566,7 @@ static void argv_show_status(
 	struct argv_meta *		meta)
 {
 	int				argc;
-	const char **			argv;
+	char **				argv;
 	struct argv_entry *		entry;
 	const struct argv_option *	option;
 	char				short_name[2] = {0};
@@ -615,10 +615,10 @@ static struct argv_meta * argv_free_impl(struct argv_meta_impl * imeta)
 	return 0;
 }
 
-static struct argv_meta * argv_alloc(const char ** argv, struct argv_ctx * ctx)
+static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 {
 	struct argv_meta_impl * imeta;
-	const char **		vector;
+	char **			vector;
 	char *			dst;
 	size_t			size;
 	int			argc;
@@ -657,7 +657,7 @@ static struct argv_meta * argv_alloc(const char ** argv, struct argv_ctx * ctx)
 }
 
 static struct argv_meta * argv_get(
-	const char *			argv[],
+	char *				argv[],
 	const struct argv_option	options[],
 	int				flags)
 {
