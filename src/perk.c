@@ -9,6 +9,7 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_version.h"
+#include "perk_driver_impl.h"
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS \
