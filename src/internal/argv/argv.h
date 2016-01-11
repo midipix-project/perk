@@ -47,6 +47,7 @@
 /* EQUAL: -hybrid=VALUE (i.e. -std=c99)    */
 /* COMMA: -hybrid,VALUE (i.e. -Wl,<arg>)   */
 /* ONLY:  -opt accepted, --opt rejected    */
+/* JOINED: -optVALUE                       */
 /*                                         */
 /*******************************************/
 
@@ -56,11 +57,15 @@
 #define ARGV_OPTION_HYBRID_SPACE	0x02
 #define ARGV_OPTION_HYBRID_EQUAL	0x04
 #define ARGV_OPTION_HYBRID_COMMA	0x08
+#define ARGV_OPTION_HYBRID_JOINED	0x10
+#define ARGV_OPTION_HYBRID_CIRCUS	(ARGV_OPTION_HYBRID_SPACE \
+					| ARGV_OPTION_HYBRID_JOINED)
 #define ARGV_OPTION_HYBRID_DUAL		(ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_EQUAL)
 #define ARGV_OPTION_HYBRID_SWITCH	(ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_EQUAL \
-					| ARGV_OPTION_HYBRID_COMMA)
+					| ARGV_OPTION_HYBRID_COMMA \
+					| ARGV_OPTION_HYBRID_JOINED)
 
 enum argv_optarg {
 	ARGV_OPTARG_NONE,
@@ -186,12 +191,11 @@ static const struct argv_option * argv_long_option(
 		if (len && !(strncmp(option->long_name,ch,len))) {
 			arg = ch + len;
 
-			if (!*arg || (*arg == '=')) {
-				entry->tag	= option->tag;
-				entry->fopt	= true;
-				return option;
-			} else if ((option->flags & ARGV_OPTION_HYBRID_COMMA)
-					&& (*arg == ',')) {
+			if (!*arg
+				|| (*arg == '=')
+				|| (option->flags & ARGV_OPTION_HYBRID_JOINED)
+				|| ((option->flags & ARGV_OPTION_HYBRID_COMMA)
+					&& (*arg == ','))) {
 				entry->tag	= option->tag;
 				entry->fopt	= true;
 				return option;
@@ -380,7 +384,10 @@ static void argv_scan(
 						fval = false;
 				} else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
 					ferror = ARGV_ERROR_HYBRID_ONLY;
-				else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
+				else if (val[0] && (option->flags & ARGV_OPTION_HYBRID_JOINED)) {
+					fval = true;
+					ch   = val;
+				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
 					ferror = ARGV_ERROR_HYBRID_SPACE;
 				else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
 					ferror = ARGV_ERROR_HYBRID_EQUAL;
@@ -547,7 +554,8 @@ static void argv_show_error(struct argv_ctx * ctx)
 				ctx->erropt->long_name,
 				(ctx->erropt->flags & ARGV_OPTION_HYBRID_SPACE)
 					? " " : (ctx->erropt->flags & ARGV_OPTION_HYBRID_EQUAL)
-					? "=" : ",");
+					? "=" : (ctx->erropt->flags & ARGV_OPTION_HYBRID_COMMA)
+					? "," : "");
 
 			break;
 
