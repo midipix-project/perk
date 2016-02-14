@@ -56,6 +56,8 @@ init_vars()
 	mb_cflags_cmdline=$CFLAGS_CMDLINE
 	mb_cflags_config=$CFLAGS_CONFIG
 	mb_cflags_sysroot=$CFLAGS_SYSROOT
+	mb_cflags_os=$CFLAGS_OS
+	mb_cflags_site=$CFLAGS_SITE
 	mb_cflags_path=$CFLAGS_PATH
 
 	mb_ldflags=$LDFLAGS
@@ -128,6 +130,8 @@ common_defaults()
 	[ -z "$mb_cflags_cmdline" ]	&& mb_cflags_cmdline=$mb_default_cflags_cmdline
 	[ -z "$mb_cflags_config" ]	&& mb_cflags_config=$mb_default_cflags_config
 	[ -z "$mb_cflags_sysroot" ]	&& mb_cflags_sysroot=$mb_default_cflags_sysroot
+	[ -z "$mb_cflags_os" ]		&& mb_cflags_os=$mb_default_cflags_os
+	[ -z "$mb_cflags_site" ]	&& mb_cflags_site=$mb_default_cflags_site
 	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
 
 	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
@@ -286,6 +290,8 @@ config_copy()
 			-e 's^@cflags_cmdline@^'"$mb_cflags $mb_cflags_cmdline"'^g'	\
 			-e 's^@cflags_config@^'"$mb_cflags_config"'^g'			\
 			-e 's^@cflags_sysroot@^'"$mb_cflags_sysroot"'^g'		\
+			-e 's^@cflags_os@^'"$mb_cflags_os"'^g'				\
+			-e 's^@cflags_site@^'"$mb_cflags_site"'^g'			\
 			-e 's^@cflags_path@^'"$mb_cflags_path"'^g'			\
 											\
 			-e 's^@ldflags@^'"$mb_ldflags"'^g'				\

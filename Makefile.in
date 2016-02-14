@@ -15,6 +15,8 @@ CFLAGS_COMMON 		= @cflags_common@
 CFLAGS_CMDLINE 		= @cflags_cmdline@
 CFLAGS_CONFIG 		= @cflags_config@
 CFLAGS_SYSROOT 		= @cflags_sysroot@
+CFLAGS_OS		= @cflags_os@
+CFLAGS_SITE		= @cflags_site@
 CFLAGS_PATH 		= @cflags_path@
 
 LDFLAGS_DEBUG 		= @ldflags_debug@
@@ -243,6 +245,8 @@ clean:
 		@echo CFLAGS_CMDLINE:'         '$(CFLAGS_CMDLINE)
 		@echo CFLAGS_CONFIG:'          '$(CFLAGS_CONFIG)
 		@echo CFLAGS_SYSROOT:'         '$(CFLAGS_SYSROOT)
+		@echo CFLAGS_OS:'              '$(CFLAGS_OS)
+		@echo CFLAGS_SITE:'            '$(CFLAGS_SITE)
 		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
 		@echo
 		@echo LDFLAGS_DEBUG:'           '$(LDFLAGS_DEBUG)
