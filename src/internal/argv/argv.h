@@ -670,7 +670,7 @@ static struct argv_meta * argv_get(
 	int				flags)
 {
 	struct argv_meta *	meta;
-	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0};
+	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0};
 
 	argv_scan(argv,options,&ctx,0);
 
