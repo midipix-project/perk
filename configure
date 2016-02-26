@@ -44,7 +44,7 @@ init_vars()
 	mb_host=$HOST
 	mb_target=$TARGET
 	mb_arch=$ARCH
-	mb_toolchain=$TOOLCHAIN
+	mb_compiler=$COMPILER
 	mb_sysroot=$SYSROOT
 	mb_cross_compile=$CROSS_COMPILE
 	mb_shell=$SHELL
@@ -119,7 +119,7 @@ common_defaults()
 	[ -z "$mb_host" ] 		&& mb_host=$mb_default_host
 	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
 	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
-	[ -z "$mb_toolchain" ] 		&& mb_toolchain=$mb_default_toolchain
+	[ -z "$mb_compiler" ] 		&& mb_compiler=$mb_default_compiler
 	[ -z "$mb_sysroot" ] 		&& mb_sysroot=$mb_default_sysroot
 	[ -z "$mb_cross_compile" ] 	&& mb_cross_compile=$mb_default_cross_compile
 	[ -z "$mb_shell" ] 		&& mb_shell=$mb_default_shell
@@ -171,10 +171,10 @@ common_defaults()
 		fi
 	fi
 
-	# toolchain
-	if [ x"$mb_toolchain" != x ]; then
+	# compiler
+	if [ x"$mb_compiler" != x ]; then
 		if [ x"$mb_native_cc" = x ]; then
-			mb_native_cc=$mb_toolchain
+			mb_native_cc=$mb_compiler
 		fi
 	fi
 }
@@ -187,7 +187,7 @@ native_defaults()
 		$CC -dM -E - < /dev/null > /dev/null || exit 2
 	fi
 
-	# toolchain
+	# compiler
 	[ -z "$mb_native_cc" ] && mb_native_cc=$CC
 	[ -z "$mb_native_cc" ] && mb_native_cc='cc'
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
@@ -206,19 +206,19 @@ native_defaults()
 		exit 2
 	fi
 
-	if [ x"$mb_toolchain" = x ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_toolchain='clang'
+	if [ x"$mb_compiler" = x ]; then
+		$mb_native_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_compiler='clang'
 	fi
 
-	if [ x"$mb_toolchain" = x ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_toolchain='gcc'
+	if [ x"$mb_compiler" = x ]; then
+		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_compiler='gcc'
 	fi
 
-	if [ x"$mb_toolchain" = x ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_toolchain='cparser'
+	if [ x"$mb_compiler" = x ]; then
+		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_compiler='cparser'
 	fi
 
-	if [ x"$mb_toolchain" = x ]; then
+	if [ x"$mb_compiler" = x ]; then
 		error_msg "config error: could not identify the native compiler."
 		exit 2
 	fi
@@ -279,7 +279,7 @@ config_copy()
 			-e 's^@host@^'"$mb_host"'^g'					\
 			-e 's^@target@^'"$mb_target"'^g'				\
 			-e 's^@arch@^'"$mb_arch"'^g'					\
-			-e 's^@toolchain@^'"$mb_toolchain"'^g'				\
+			-e 's^@compiler@^'"$mb_compiler"'^g'				\
 			-e 's^@sysroot@^'"$mb_sysroot"'^g'				\
 			-e 's^@cross_compile@^'"$mb_cross_compile"'^g'			\
 			-e 's^@shell@^'"$mb_shell"'^g'					\
@@ -336,7 +336,7 @@ config_host()
 	make host.tag && return 0
 
 	error_msg "configure was able to generate a Makefile for the selected host,"
-	error_msg "however the host-targeting toolchain was found to be missing"
+	error_msg "however the host-targeting compiler was found to be missing"
 	error_msg "at least one of the required headers or features."
 	exit 2
 }
@@ -397,8 +397,8 @@ for arg ; do
 		--arch=*)
 			mb_arch=${arg#*=}
 			;;
-		--toolchain=*)
-			mb_toolchain=${arg#*=}
+		--compiler=*)
+			mb_compiler=${arg#*=}
 			;;
 		--sysroot=*)
 			mb_sysroot=${arg#*=}

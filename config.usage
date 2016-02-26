@@ -16,7 +16,7 @@ supported switches:
 	--host
 	--target
 	--arch
-	--toolchain
+	--compiler
 	--sysroot
 	--cross-compile
 	--shell
@@ -42,7 +42,7 @@ supported variables:
 	HOST
 	TARGET
 	ARCH
-	TOOLCHAIN
+	COMPILER
 	SYSROOT
 	CROSS_COMPILE
 	SHELL
