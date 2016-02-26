@@ -22,7 +22,7 @@ init_vars()
 	mb_project_dir=$(cd `dirname $0` ; pwd)
 	mb_pwd=`pwd`
 
-	if [ x"$mb_config" = x ]; then
+	if [ -z "$mb_config" ]; then
 		. $mb_project_dir/config.project || exit 2
 	else
 		. "$mb_config" || exit 2
@@ -91,8 +91,8 @@ init_vars()
 
 verify_build_directory()
 {
-	if [ x"$mb_project_dir" = x"$mb_pwd" ]; then
-		if [ x"$mb_require_out_of_tree" = xyes ]; then
+	if [ "$mb_project_dir" = "$mb_pwd" ]; then
+		if [ "$mb_require_out_of_tree" = yes ]; then
 			error_msg "$mb_package: out-of-tree builds are required."
 			error_msg "please invoke configure again from a clean build directory."
 			exit 2
@@ -156,37 +156,37 @@ common_defaults()
 	[ -z "$mb_target" ] 		&& mb_target=$mb_host
 
 	# sysroot
-	if [ x"$mb_sysroot" != x ]; then
-		if [ x"$mb_cflags_sysroot" = x ]; then
+	if [ -n "$mb_sysroot" ]; then
+		if [ -z "$mb_cflags_sysroot" ]; then
 			mb_cflags_sysroot="--sysroot=$mb_sysroot"
 		fi
 
-		if [ x"$mb_ldflags_sysroot" = x ]; then
+		if [ -z "$mb_ldflags_sysroot" ]; then
 			mb_ldflags_sysroot="-Wl,--sysroot,$mb_sysroot"
 		fi
 	fi
 
 	# debug
-	if [ x"$mb_debug" = xyes ]; then
-		if [ x"$mb_cflags_debug" = x ]; then
+	if [ "$mb_debug" = yes ]; then
+		if [ -z "$mb_cflags_debug" ]; then
 			mb_cflags_debug='-g3 -O0'
 		fi
 	fi
 
 	# compiler
-	if [ x"$mb_compiler" != x ]; then
-		if [ x"$mb_native_cc" = x ]; then
+	if [ -n "$mb_compiler" ]; then
+		if [ -z "$mb_native_cc" ]; then
 			mb_native_cc=$mb_compiler
 		fi
 	fi
 
 	# toolchain
-	if [ x"$mb_toolchain" = x ]; then
+	if [ -z "$mb_toolchain" ]; then
 		mb_toolchain='binutils'
 	fi
 
 	# fallback host recipe
-	if [ x"$mb_host" != x ]; then
+	if [ -n "$mb_host" ]; then
 		if ! [ -f $mb_project_dir/sysinfo/host/$mb_host.mk ]; then
 			if [ -z "$mb_cross_compile" ]; then
 				mb_cross_compile=$mb_host-
@@ -201,7 +201,7 @@ common_defaults()
 native_defaults()
 {
 	# CC (when set, must be valid)
-	if [ x"$CC" != x ]; then
+	if [ -n "$CC" ]; then
 		$CC -dM -E - < /dev/null > /dev/null || exit 2
 	fi
 
@@ -219,37 +219,37 @@ native_defaults()
 	[ -z "$mb_native_cc" ] && mb_native_cc='cparser'
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
-	if [ x"$mb_native_cc" = x ]; then
+	if [ -z "$mb_native_cc" ]; then
 		error_msg "config error: could not find a working native compiler."
 		exit 2
 	fi
 
-	if [ x"$mb_compiler" = x ]; then
+	if [ -z "$mb_compiler" ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_compiler='clang'
 	fi
 
-	if [ x"$mb_compiler" = x ]; then
+	if [ -z "$mb_compiler" ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_compiler='gcc'
 	fi
 
-	if [ x"$mb_compiler" = x ]; then
+	if [ -z "$mb_compiler" ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_compiler='cparser'
 	fi
 
-	if [ x"$mb_compiler" = x ]; then
+	if [ -z "$mb_compiler" ]; then
 		error_msg "config error: could not identify the native compiler."
 		exit 2
 	fi
 
 
 	# host
-	if [ x"$mb_host" = x ]; then
+	if [ -z "$mb_host" ]; then
 		mb_host='native'
 	fi
 
 
 	# target
-	if [ x"$mb_target" = x ]; then
+	if [ -z "$mb_target" ]; then
 		mb_target='native'
 	fi
 
@@ -269,7 +269,7 @@ native_defaults()
 		mb_native_os_underscore=''
 	fi
 
-	if [ x"$mb_native_os_sizeof_pointer" = x ]; then
+	if [ -z "$mb_native_os_sizeof_pointer" ]; then
 		error_msg "config error: could not determine size of pointer on native system."
 		exit 2
 	fi
@@ -282,7 +282,7 @@ native_defaults()
 
 cross_defaults()
 {
-	if [ x"$mb_cross_compile" = x ] && [ x"$mb_host" != xnative ]; then
+	if [ -z "$mb_cross_compile" ] && [ "$mb_host" != native ]; then
 		mb_cross_compile=$mb_host'-'
 	fi
 }

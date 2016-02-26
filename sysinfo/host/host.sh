@@ -10,7 +10,7 @@ host_test()
 	mb_hdrdir=$(pwd)/build
 	mkdir -p $mb_hdrdir || exit 2
 
-	if [ x"$mb_compiler" = x ]; then
+	if [ -z "$mb_compiler" ]; then
                 echo "config error: compiler not set."
 		exit 2
 	fi
@@ -42,7 +42,7 @@ host_endian_h()
 		-E - > /dev/null 2>/dev/null \
 		&& mb_hosthdr='machine/'$mb_header
 
-	if [ x"$mb_hosthdr" = x ]; then
+	if [ -z "$mb_hosthdr" ]; then
 		error_msg "config error: could not find an alternate <$mb_header>."
 		exit 2
 	fi
