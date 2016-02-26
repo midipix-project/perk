@@ -184,6 +184,17 @@ common_defaults()
 	if [ x"$mb_toolchain" = x ]; then
 		mb_toolchain='binutils'
 	fi
+
+	# fallback host recipe
+	if [ x"$mb_host" != x ]; then
+		if ! [ -f $mb_project_dir/sysinfo/host/$mb_host.mk ]; then
+			if [ -z "$mb_cross_compile" ]; then
+				mb_cross_compile=$mb_host-
+			fi
+
+			mb_host='any-host';
+		fi
+	fi
 }
 
 

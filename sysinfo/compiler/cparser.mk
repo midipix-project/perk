@@ -1,9 +1,11 @@
 ifeq ($(CROSS_COMPILE)x,x)
 	CROSS_HOST	=
 	CROSS_HOST_SPEC =
-else
+else ifeq ($(CROSS_HOST)x,x)
 	CROSS_HOST	= $(HOST)
 	CROSS_HOST_SPEC = --target=$(HOST)
+else
+	CROSS_HOST_SPEC = --target=$(CROSS_HOST)
 endif
 
 
