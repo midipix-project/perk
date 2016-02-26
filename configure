@@ -45,6 +45,7 @@ init_vars()
 	mb_target=$TARGET
 	mb_arch=$ARCH
 	mb_compiler=$COMPILER
+	mb_toolchain=$TOOLCHAIN
 	mb_sysroot=$SYSROOT
 	mb_cross_compile=$CROSS_COMPILE
 	mb_shell=$SHELL
@@ -120,6 +121,7 @@ common_defaults()
 	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
 	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
 	[ -z "$mb_compiler" ] 		&& mb_compiler=$mb_default_compiler
+	[ -z "$mb_toolchain" ] 		&& mb_toolchain=$mb_default_toolchain
 	[ -z "$mb_sysroot" ] 		&& mb_sysroot=$mb_default_sysroot
 	[ -z "$mb_cross_compile" ] 	&& mb_cross_compile=$mb_default_cross_compile
 	[ -z "$mb_shell" ] 		&& mb_shell=$mb_default_shell
@@ -176,6 +178,11 @@ common_defaults()
 		if [ x"$mb_native_cc" = x ]; then
 			mb_native_cc=$mb_compiler
 		fi
+	fi
+
+	# toolchain
+	if [ x"$mb_toolchain" = x ]; then
+		mb_toolchain='binutils'
 	fi
 }
 
@@ -280,6 +287,7 @@ config_copy()
 			-e 's^@target@^'"$mb_target"'^g'				\
 			-e 's^@arch@^'"$mb_arch"'^g'					\
 			-e 's^@compiler@^'"$mb_compiler"'^g'				\
+			-e 's^@toolchain@^'"$mb_toolchain"'^g'				\
 			-e 's^@sysroot@^'"$mb_sysroot"'^g'				\
 			-e 's^@cross_compile@^'"$mb_cross_compile"'^g'			\
 			-e 's^@shell@^'"$mb_shell"'^g'					\
@@ -399,6 +407,9 @@ for arg ; do
 			;;
 		--compiler=*)
 			mb_compiler=${arg#*=}
+			;;
+		--toolchain=*)
+			mb_toolchain=${arg#*=}
 			;;
 		--sysroot=*)
 			mb_sysroot=${arg#*=}

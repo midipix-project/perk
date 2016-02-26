@@ -6,6 +6,7 @@ HOST 			= @host@
 TARGET 			= @target@
 ARCH 			= @arch@
 COMPILER 		= @compiler@
+TOOLCHAIN		= @toolchain@
 SYSROOT 		= @sysroot@
 CROSS_COMPILE 		= @cross_compile@
 SHELL 			= @shell@
@@ -62,6 +63,7 @@ static:
 
 include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
+include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
 include $(PROJECT_DIR)/project/defs.mk
 include $(PROJECT_DIR)/project/tree.mk
@@ -211,6 +213,7 @@ clean:
 		@echo TARGET:'                 '$(TARGET)
 		@echo ARCH:'                   '$(ARCH)
 		@echo COMPILER:'               '$(COMPILER)
+		@echo TOOLCHAIN:'              '$(TOOLCHAIN)
 		@echo SYSROOT:'                '$(SYSROOT)
 		@echo XCOMPILE:'               '$(CROSS_COMPILE)
 		@echo SHELL:'                  '$(SHELL)
