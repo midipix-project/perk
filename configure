@@ -227,8 +227,8 @@ native_defaults()
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
 	if [ -z "$mb_native_cc" ]; then
-		error_msg "config error: could not find a working native compiler."
-		exit 2
+		echo "configure: info: could not find a working native compiler."
+		mb_native_cc='false'
 	fi
 
 	if [ -z "$mb_compiler" ]; then
@@ -244,8 +244,8 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_compiler" ]; then
-		error_msg "config error: could not identify the native compiler."
-		exit 2
+		echo "configure: info: could not identify the native compiler."
+		mb_compiler='any-compiler'
 	fi
 
 
