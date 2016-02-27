@@ -220,7 +220,7 @@ clean:
 		@echo COMPILER:'               '$(COMPILER)
 		@echo TOOLCHAIN:'              '$(TOOLCHAIN)
 		@echo SYSROOT:'                '$(SYSROOT)
-		@echo XCOMPILE:'               '$(CROSS_COMPILE)
+		@echo CROSS_COMPILE:'          '$(CROSS_COMPILE)
 		@echo SHELL:'                  '$(SHELL)
 		@echo
 
