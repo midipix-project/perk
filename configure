@@ -195,6 +195,13 @@ common_defaults()
 			mb_host='any-host';
 		fi
 	fi
+
+	# fallback compiler recipe
+	if [ -n "$mb_compiler" ]; then
+		if ! [ -f $mb_project_dir/sysinfo/compiler/$mb_compiler.mk ]; then
+			mb_compiler='any-compiler'
+		fi
+	fi
 }
 
 
