@@ -204,8 +204,13 @@ clean:
 		rm -f $(STATIC_APP)
 
 
-.display:	.display-env .display-tools .display-flags \
+.display:	.display-project .display-env .display-tools .display-flags \
 		.display-pe .display-elf .display-dirs .display-build
+
+.display-project:
+		@echo PROJECT_DIR:'            '$(PROJECT_DIR)
+		@echo BUILD_DIR:'              '$(CURDIR)
+		@echo
 
 .display-env:
 		@echo BUILD:'                  '$(BUILD)
@@ -302,5 +307,5 @@ clean:
 		install-shared install-static install-implib \
 		install-headers install-app \
 		clean distclean version \
-		.display-env .display-tools .display-flags \
+		.display-project .display-env .display-tools .display-flags \
 		.display-pe .display-elf .display-dirs .display-build
