@@ -7,7 +7,7 @@
 
 usage()
 {
-	cat config.usage
+	cat "$mb_project_dir"/config.usage
 	exit $?
 }
 
