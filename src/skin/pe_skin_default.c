@@ -11,7 +11,7 @@ const struct argv_option pe_default_options[] = {
 	{"output",	'o',TAG_OUTPUT,ARGV_OPTARG_REQUIRED,0,0,"<file>",
 			"write output to %s"},
 
-	{"pretty",	'p',TAG_PRETTY,ARGV_OPTARG_REQUIRED,0,"yaml",0,
+	{"pretty",	'p',TAG_PRETTY,ARGV_OPTARG_REQUIRED,0,"yaml|dlltool",0,
 			"format output for parsing by %s"},
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,

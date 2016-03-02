@@ -169,6 +169,8 @@ int pe_get_driver_ctx(
 
 	if (pretty && !strcmp(pretty,"yaml"))
 		cctx.fmtflags |= PERK_PRETTY_YAML;
+	else if (pretty && !strcmp(pretty,"dlltool"))
+		cctx.fmtflags |= PERK_PRETTY_DLLTOOL;
 
 	if (!(ctx = pe_driver_ctx_alloc(meta,&cctx,nunits)) && cctx.output)
 		close(fdout);

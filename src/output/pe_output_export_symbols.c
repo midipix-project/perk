@@ -16,9 +16,11 @@
 
 static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
 {
-	return (cctx->fmtflags & PERK_PRETTY_YAML)
-		? fputs("exports:\n",fout)
-		: 0;
+	if (cctx->fmtflags & PERK_PRETTY_YAML)
+		return fputs("exports:\n",fout);
+	else if (cctx->fmtflags & PERK_PRETTY_DLLTOOL)
+		return fputs("EXPORTS\n",fout);
+	return 0;
 }
 
 static int pretty_export_item(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
