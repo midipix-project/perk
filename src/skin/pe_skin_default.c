@@ -23,5 +23,5 @@ const struct argv_option pe_default_options[] = {
 	{"impsyms",	'I',TAG_IMPSYMS,ARGV_OPTARG_NONE,0,0,0,
 			"list direct dependency libraries "
 			"along with required symbols"},
-	{0}
+	{0,0,0,0,0,0,0,0}
 };
