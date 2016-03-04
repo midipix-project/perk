@@ -128,6 +128,8 @@ struct argv_ctx {
 	int				flags;
 	int				mode;
 	int				nentries;
+	int				unitidx;
+	int				erridx;
 	enum argv_error 		errcode;
 	const char *			errch;
 	const struct argv_option *	erropt;
@@ -292,14 +294,16 @@ static void argv_scan(
 	bool				fhybrid;
 	bool				fnoscan;
 
-	argv++;
-	parg	= argv;
+	parg	= &argv[1];
 	ch	= *parg;
 	ferr	= ARGV_ERROR_OK;
 	fshort	= false;
 	fnoscan	= false;
 	fval	= false;
 	mentry	= meta ? meta->entries : 0;
+
+	ctx->unitidx = 0;
+	ctx->erridx  = 0;
 
 	while (ch && (ferr == ARGV_ERROR_OK)) {
 		option  = 0;
@@ -424,10 +428,15 @@ static void argv_scan(
 				if (!is_arg_in_paradigm(ch,option->paradigm))
 					ferr = ARGV_ERROR_OPTARG_PARADIGM;
 
+		if (ferr == ARGV_ERROR_OK)
+			if (!option && !ctx->unitidx)
+				ctx->unitidx = parg - argv;
+
 		if (ferr != ARGV_ERROR_OK) {
 			ctx->errcode = ferr;
 			ctx->errch   = ctx->errch ? ctx->errch : ch;
 			ctx->erropt  = option;
+			ctx->erridx  = parg - argv;
 			return;
 		} else if (ctx->mode == ARGV_MODE_SCAN) {
 			if (!fnoscan)
@@ -670,7 +679,7 @@ static struct argv_meta * argv_get(
 	int				flags)
 {
 	struct argv_meta *	meta;
-	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0};
+	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0,0,0};
 
 	argv_scan(argv,options,&ctx,0);
 
