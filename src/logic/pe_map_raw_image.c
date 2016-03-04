@@ -20,7 +20,7 @@ int pe_map_raw_image(
 	int			prot,
 	struct pe_raw_image *	map)
 {
-	struct stat	stat;
+	struct stat	st;
 	bool		fnew;
 	int		ret;
 
@@ -30,13 +30,13 @@ int pe_map_raw_image(
 	if (fd < 0)
 		return -1;
 
-	if ((ret = fstat(fd,&stat) < 0) && fnew)
+	if ((ret = fstat(fd,&st) < 0) && fnew)
 		close(fd);
 
 	if (ret < 0)
 		return -1;
 
-	map->size = stat.st_size;
+	map->size = st.st_size;
 	map->addr = mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
 
 	if (fnew)
