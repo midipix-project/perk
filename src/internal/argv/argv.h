@@ -285,7 +285,7 @@ static void argv_scan(
 	const struct argv_option *	option;
 	struct argv_entry		entry;
 	struct argv_entry *		mentry;
-	enum argv_error			ferror;
+	enum argv_error			ferr;
 	bool				fval;
 	bool				fnext;
 	bool				fshort;
@@ -295,13 +295,13 @@ static void argv_scan(
 	argv++;
 	parg	= argv;
 	ch	= *parg;
-	ferror	= ARGV_ERROR_OK;
+	ferr	= ARGV_ERROR_OK;
 	fshort	= false;
 	fnoscan	= false;
 	fval	= false;
 	mentry	= meta ? meta->entries : 0;
 
-	while (ch && (ferror == ARGV_ERROR_OK)) {
+	while (ch && (ferr == ARGV_ERROR_OK)) {
 		option  = 0;
 		fhybrid = false;
 
@@ -332,22 +332,22 @@ static void argv_scan(
 
 				if (option->optarg == ARGV_OPTARG_NONE) {
 					if (!fnext && ch && (*ch == '-'))
-						ferror = ARGV_ERROR_OPTARG_NONE;
+						ferr = ARGV_ERROR_OPTARG_NONE;
 					else
 						fval = false;
 				} else if (!fnext)
 					fval = true;
 				else if (option->optarg == ARGV_OPTARG_REQUIRED) {
 					if (ch && is_short_option(ch))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (ch && is_long_option(ch))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (ch && is_last_option(ch))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (ch)
 						fval = true;
 					else
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 				} else {
 					/* ARGV_OPTARG_OPTIONAL */
 					if (ch && is_short_option(ch))
@@ -360,7 +360,7 @@ static void argv_scan(
 						fval = ch;
 				}
 			} else
-				ferror = ARGV_ERROR_SHORT_OPTION;
+				ferr = ARGV_ERROR_SHORT_OPTION;
 
 		} else if (!fnoscan && (fhybrid || is_long_option(ch))) {
 			ch += (fhybrid ? 1 : 2);
@@ -375,40 +375,40 @@ static void argv_scan(
 				}
 
 				if (fhybrid && !(option->flags & ARGV_OPTION_HYBRID_SWITCH))
-					ferror = ARGV_ERROR_HYBRID_NONE;
+					ferr = ARGV_ERROR_HYBRID_NONE;
 				else if (option->optarg == ARGV_OPTARG_NONE) {
 					if (val[0]) {
-						ferror = ARGV_ERROR_OPTARG_NONE;
+						ferr = ARGV_ERROR_OPTARG_NONE;
 						ctx->errch = val + 1;
 					} else
 						fval = false;
 				} else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
-					ferror = ARGV_ERROR_HYBRID_ONLY;
+					ferr = ARGV_ERROR_HYBRID_ONLY;
 				else if (val[0] && (option->flags & ARGV_OPTION_HYBRID_JOINED)) {
 					fval = true;
 					ch   = val;
 				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
-					ferror = ARGV_ERROR_HYBRID_SPACE;
+					ferr = ARGV_ERROR_HYBRID_SPACE;
 				else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
-					ferror = ARGV_ERROR_HYBRID_EQUAL;
+					ferr = ARGV_ERROR_HYBRID_EQUAL;
 				else if (fhybrid && (val[0]==',') && !(option->flags & ARGV_OPTION_HYBRID_COMMA))
-					ferror = ARGV_ERROR_HYBRID_COMMA;
+					ferr = ARGV_ERROR_HYBRID_COMMA;
 				else if (!fhybrid && (val[0]==','))
-					ferror = ARGV_ERROR_HYBRID_COMMA;
+					ferr = ARGV_ERROR_HYBRID_COMMA;
 				else if (val[0] && !val[1])
-					ferror = ARGV_ERROR_OPTARG_REQUIRED;
+					ferr = ARGV_ERROR_OPTARG_REQUIRED;
 				else if (val[0] && val[1]) {
 					fval = true;
 					ch   = ++val;
 				} else if (option->optarg == ARGV_OPTARG_REQUIRED) {
 					if (!val[0] && !*parg)
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (*parg && is_short_option(*parg))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (*parg && is_long_option(*parg))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (*parg && is_last_option(*parg))
-						ferror = ARGV_ERROR_OPTARG_REQUIRED;
+						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else
 						fval = true;
 				} else {
@@ -416,16 +416,16 @@ static void argv_scan(
 					fval = val[0];
 				}
 			} else
-				ferror = ARGV_ERROR_LONG_OPTION;
+				ferr = ARGV_ERROR_LONG_OPTION;
 		}
 
-		if (ferror == ARGV_ERROR_OK)
+		if (ferr == ARGV_ERROR_OK)
 			if (option && fval && option->paradigm)
 				if (!is_arg_in_paradigm(ch,option->paradigm))
-					ferror = ARGV_ERROR_OPTARG_PARADIGM;
+					ferr = ARGV_ERROR_OPTARG_PARADIGM;
 
-		if (ferror != ARGV_ERROR_OK) {
-			ctx->errcode = ferror;
+		if (ferr != ARGV_ERROR_OK) {
+			ctx->errcode = ferr;
 			ctx->errch   = ctx->errch ? ctx->errch : ch;
 			ctx->erropt  = option;
 			return;
