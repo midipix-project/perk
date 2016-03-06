@@ -780,10 +780,10 @@ static void argv_usage(
 			if (len > optlen)
 				optlen = len;
 
-			if (option->paradigm)
-				len = strlen(option->paradigm) + strlen("{}");
-			else if (option->argname)
+			if (option->argname)
 				len = strlen(option->argname);
+			else if (option->paradigm)
+				len = strlen(option->paradigm) + strlen("{}");
 			else if (option->optarg != ARGV_OPTARG_NONE)
 				len = strlen("<val>");
 
@@ -899,7 +899,17 @@ static void argv_usage(
 			}
 		}
 
-		if (option->paradigm && (rparalen <= paralen)) {
+		if (option->argname) {
+			if (option->optarg == ARGV_OPTARG_OPTIONAL)
+				fprintf(file,"[%s]%-*c",
+					option->argname,
+					(int)(paralen-strlen(option->argname)-brcklen),' ');
+			else
+				fprintf(file,"%s%-*c",
+					option->argname,
+					(int)(paralen-strlen(option->argname)),' ');
+			para = (char *)0;
+		} else if (option->paradigm && (rparalen <= paralen)) {
 			if (option->optarg == ARGV_OPTARG_OPTIONAL)
 				fprintf(file,"[{%s}]%-*c",
 					option->paradigm,
@@ -923,16 +933,6 @@ static void argv_usage(
 				fputc('{',file);
 				rparalen = paralen - rblen;
 			}
-		} else if (option->argname) {
-			if (option->optarg == ARGV_OPTARG_OPTIONAL)
-				fprintf(file,"[%s]%-*c",
-					option->argname,
-					(int)(paralen-strlen(option->argname)-brcklen),' ');
-			else
-				fprintf(file,"%s%-*c",
-					option->argname,
-					(int)(paralen-strlen(option->argname)),' ');
-			para = (char *)0;
 		} else {
 			fprintf(file,"%-*c",(int)paralen,' ');
 			para = (char *)0;
