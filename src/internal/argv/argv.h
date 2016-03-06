@@ -858,17 +858,27 @@ static void argv_usage(
 		if (fshort)
 			fprintf(file,"%s-%-*c",indent,(int)(optlen-solen),option->short_name);
 		else if (flong)
-			fprintf(file,"%s--%-*s",indent,(int)(optlen-lolen),option->long_name);
+			fprintf(file,
+				(option->flags & ARGV_OPTION_HYBRID_ONLY)
+					? "%s -%-*s"
+					: "%s--%-*s",
+				indent,(int)(optlen-lolen),option->long_name);
 		else {
 			if (option->short_name && option->long_name)
-				fprintf(file,"%s-%c,--%-*s",
+				fprintf(file,
+					(option->flags & ARGV_OPTION_HYBRID_ONLY)
+						? "%s-%c, -%-*s"
+						: "%s-%c,--%-*s",
 					indent,option->short_name,
 					(int)(optlen-slolen),option->long_name);
 			else if (option->short_name)
 				 fprintf(file,"%s-%-*c",
 					indent,(int)(optlen-solen),option->short_name);
 			else
-				fprintf(file,"%s%3s--%-*s",
+				fprintf(file,
+					(option->flags & ARGV_OPTION_HYBRID_ONLY)
+						? "%s%3s -%-*s"
+						: "%s%3s--%-*s",
 					indent,"",
 					(int)(optlen-slolen),option->long_name);
 		}
