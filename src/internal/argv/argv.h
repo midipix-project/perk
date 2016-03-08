@@ -381,15 +381,15 @@ static void argv_scan(
 
 				if (fhybrid && !(option->flags & ARGV_OPTION_HYBRID_SWITCH))
 					ferr = ARGV_ERROR_HYBRID_NONE;
+				else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
+					ferr = ARGV_ERROR_HYBRID_ONLY;
 				else if (option->optarg == ARGV_OPTARG_NONE) {
 					if (val[0]) {
 						ferr = ARGV_ERROR_OPTARG_NONE;
 						ctx->errch = val + 1;
 					} else
 						fval = false;
-				} else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
-					ferr = ARGV_ERROR_HYBRID_ONLY;
-				else if (val[0] && (option->flags & ARGV_OPTION_HYBRID_JOINED)) {
+				} else if (val[0] && (option->flags & ARGV_OPTION_HYBRID_JOINED)) {
 					fval = true;
 					ch   = val;
 				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
