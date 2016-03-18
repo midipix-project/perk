@@ -299,6 +299,9 @@ clean:
 		@echo USER_CXX:'               '$(USER_CXX)
 		@echo
 
+.display-host:
+		@$(CC) $(CFLAGS) -dumpmachine
+
 
 .PHONY:		all install shared static app .display \
 		shared-objs shared-lib shared-implib \
