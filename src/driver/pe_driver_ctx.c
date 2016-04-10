@@ -122,6 +122,7 @@ int pe_get_driver_ctx(
 	fdout	= 0;
 	program = argv_program_name(argv[0]);
 	memset(&cctx,0,sizeof(cctx));
+	cctx.drvflags = flags;
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
 		return pe_driver_usage(program,0,options,meta);
