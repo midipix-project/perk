@@ -5,6 +5,7 @@ supported switches:
 	--help
 
 	--prefix
+	--exec-prefix
 	--bindir
 	--libdir
 	--includedir
@@ -27,6 +28,7 @@ supported switches:
 supported variables:
 --------------------
 	PREFIX
+	EXEC_PREFIX
 	BINDIR
 	LIBDIR
 	INCLUDEDIR

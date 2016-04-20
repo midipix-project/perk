@@ -30,6 +30,7 @@ init_vars()
 
 	# dirs
 	mb_prefix=$PREFIX
+	mb_exec_prefix=$EXEC_PREFIX
 	mb_bindir=$BINDIR
 	mb_libdir=$LIBDIR
 	mb_includedir=$INCLUDEDIR
@@ -107,6 +108,7 @@ common_defaults()
 {
 	# dirs
 	[ -z "$mb_prefix" ] 		&& mb_prefix=$mb_default_prefix
+	[ -z "$mb_exec_prefix" ] 	&& mb_exec_prefix=$mb_default_exec_prefix
 	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_default_bindir
 	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_default_libdir
 	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_default_includedir
@@ -337,6 +339,7 @@ config_copy()
 			-e 's^@elf_config\_defs@^'"$mb_elf_config_defs"'^g'		\
 											\
 			-e 's^@prefix@^'"$mb_prefix"'^g'				\
+			-e 's^@exec_prefix@^'"$mb_exec_prefix"'^g'			\
 			-e 's^@bindir@^'"$mb_bindir"'^g'				\
 			-e 's^@libdir@^'"$mb_libdir"'^g'				\
 			-e 's^@includedir@^'"$mb_includedir"'^g'			\
@@ -389,6 +392,9 @@ for arg ; do
 		# dirs
 		--prefix=*)
 			mb_prefix=${arg#*=}
+			;;
+		--exec-prefix=*)
+			mb_exec_prefix=${arg#*=}
 			;;
 		--bindir=*)
 			mb_bindir=${arg#*=}

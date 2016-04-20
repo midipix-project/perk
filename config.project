@@ -5,6 +5,7 @@ mb_require_out_of_tree=no
 
 # dirs
 mb_default_prefix=
+mb_default_exec_prefix=
 mb_default_bindir=bin
 mb_default_libdir=lib
 mb_default_includedir=include

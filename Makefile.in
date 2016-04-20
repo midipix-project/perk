@@ -36,6 +36,7 @@ ELF_HASH_STYLE 		= @elf_hash_style@
 ELF_CONFIG_DEFS 	= @elf_config_defs@
 
 PREFIX 			= @prefix@
+EXEC_PREFIX 		= @exec_prefix@
 BINDIR 			= @bindir@
 LIBDIR 			= @libdir@
 INCLUDEDIR 		= @includedir@
@@ -279,6 +280,7 @@ clean:
 
 .display-dirs:
 		@echo PREFIX:'                 '$(PREFIX)
+		@echo EXEC_PREFIX:'            '$(EXEC_PREFIX)
 		@echo BINDIR:'                 '$(BINDIR)
 		@echo LIBDIR:'                 '$(LIBDIR)
 		@echo INCLUDEDIR:'             '$(INCLUDEDIR)
