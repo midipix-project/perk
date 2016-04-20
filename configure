@@ -34,7 +34,6 @@ init_vars()
 	mb_bindir=$BINDIR
 	mb_libdir=$LIBDIR
 	mb_includedir=$INCLUDEDIR
-	mb_syslibdir=$LIBDIR
 	mb_mandir=$MANDIR
 	mb_docdir=$DOCDIR
 	mb_libexecdir=$LIBEXECDIR
@@ -116,7 +115,6 @@ common_defaults()
 	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_exec_prefix/bin
 	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
 	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
-	[ -z "$mb_syslibdir" ] 		&& mb_syslibdir=/lib
 	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
 	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_datarootdir/man
 	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_datarootdir/doc
@@ -348,7 +346,6 @@ config_copy()
 			-e 's^@bindir@^'"$mb_bindir"'^g'				\
 			-e 's^@libdir@^'"$mb_libdir"'^g'				\
 			-e 's^@includedir@^'"$mb_includedir"'^g'			\
-			-e 's^@syslibdir@^'"$mb_syslibdir"'^g'				\
 			-e 's^@mandir@^'"$mb_mandir"'^g'				\
 			-e 's^@docdir@^'"$mb_docdir"'^g'				\
 			-e 's^@libexecdir@^'"$mb_libexecdir"'^g'			\
@@ -411,9 +408,6 @@ for arg ; do
 			;;
 		--includedir=*)
 			mb_includedir=${arg#*=}
-			;;
-		--syslibdir=*)
-			mb_syslibdir=${arg#*=}
 			;;
 		--mandir=*)
 			mb_mandir=${arg#*=}
