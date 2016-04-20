@@ -107,8 +107,12 @@ verify_build_directory()
 common_defaults()
 {
 	# dirs
-	[ -z "$mb_prefix" ] 		&& mb_prefix='/usr/local'
-	[ -z "$mb_exec_prefix" ] 	&& mb_exec_prefix=$mb_prefix
+	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
+					&& mb_prefix='/usr/local'
+
+	[ -z "$mb_exec_prefix" ] 	&& [ -z "$mb_exec_prefix_set" ]	\
+					&& mb_exec_prefix=$mb_prefix
+
 	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_exec_prefix/bin
 	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
 	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
@@ -392,9 +396,11 @@ for arg ; do
 
 		# dirs
 		--prefix=*)
+			mb_prefix_set=yes
 			mb_prefix=${arg#*=}
 			;;
 		--exec-prefix=*)
+			mb_exec_prefix_set=yes
 			mb_exec_prefix=${arg#*=}
 			;;
 		--bindir=*)
