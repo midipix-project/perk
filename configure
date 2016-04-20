@@ -107,15 +107,16 @@ verify_build_directory()
 common_defaults()
 {
 	# dirs
-	[ -z "$mb_prefix" ] 		&& mb_prefix=$mb_default_prefix
-	[ -z "$mb_exec_prefix" ] 	&& mb_exec_prefix=$mb_default_exec_prefix
-	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_default_bindir
-	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_default_libdir
-	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_default_includedir
-	[ -z "$mb_syslibdir" ] 		&& mb_syslibdir=$mb_default_syslibdir
-	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_default_mandir
-	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_default_docdir
-	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_default_libexecdir
+	[ -z "$mb_prefix" ] 		&& mb_prefix='/usr/local'
+	[ -z "$mb_exec_prefix" ] 	&& mb_exec_prefix=$mb_prefix
+	[ -z "$mb_bindir" ] 		&& mb_bindir=$mb_exec_prefix/bin
+	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
+	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
+	[ -z "$mb_syslibdir" ] 		&& mb_syslibdir=/lib
+	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
+	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_datarootdir/man
+	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_datarootdir/doc
+	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_exec_prefix/libexec
 
 	# build
 	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build

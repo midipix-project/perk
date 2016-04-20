@@ -3,18 +3,6 @@ mb_package=perk
 mb_require_out_of_tree=no
 
 
-# dirs
-mb_default_prefix=
-mb_default_exec_prefix=
-mb_default_bindir=bin
-mb_default_libdir=lib
-mb_default_includedir=include
-mb_default_syslibdir=lib
-mb_default_mandir=man
-mb_default_docdir=doc
-mb_default_libexecdir=libexec
-
-
 # build
 mb_default_build=
 mb_default_host=
