@@ -11,5 +11,5 @@ CFLAGS_PIC	=
 LDFLAGS_CONFIG	+= -Wl,--out-implib,$(SHARED_IMPLIB)
 
 install-implib:	shared-implib
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
-		cp $(SHARED_IMPLIB) $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(SHARED_IMPLIB) $(DESTDIR)$(LIBDIR)

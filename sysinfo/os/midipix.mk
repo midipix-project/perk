@@ -10,5 +10,5 @@ OS_ARCHIVE_EXT	= .a
 LDFLAGS_CONFIG	+= -mout-implib
 
 install-implib: shared-implib
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
-		cp $(SHARED_IMPLIB) $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(SHARED_IMPLIB) $(DESTDIR)$(LIBDIR)

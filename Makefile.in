@@ -104,20 +104,20 @@ app:		default-app
 install-libs:	install-shared install-static install-implib
 
 install-headers:shared static
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(INCLUDEDIR)/$(PACKAGE)
-		cp $(API_HEADERS) $(DESTDIR)///./$(PREFIX)/./$(INCLUDEDIR)/$(PACKAGE)
+		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
+		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
 install-shared:	shared install-implib
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
-		cp $(SHARED_LIB) $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(SHARED_LIB) $(DESTDIR)$(LIBDIR)
 
 install-static:	static
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
-		cp $(STATIC_LIB) $(DESTDIR)///./$(PREFIX)/./$(LIBDIR)
+		mkdir -p $(DESTDIR)$(LIBDIR)
+		cp $(STATIC_LIB) $(DESTDIR)$(LIBDIR)
 
 install-app:	app
-		mkdir -p $(DESTDIR)///./$(PREFIX)/./$(BINDIR)
-		cp $(APP) $(DESTDIR)///./$(PREFIX)/./$(BINDIR)
+		mkdir -p $(DESTDIR)$(BINDIR)
+		cp $(APP) $(DESTDIR)$(BINDIR)
 
 
 
