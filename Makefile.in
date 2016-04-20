@@ -79,16 +79,16 @@ include $(PROJECT_DIR)/project/overrides.mk
 $(APP_SRCS:%.c=%.o): version.tag
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-$(LIBDIR)/%$(OS_LIB_SUFFIX):
+lib/%$(OS_LIB_SUFFIX):
 		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
 
-$(LIBDIR)/%$(OS_ARCHIVE_EXT):
+lib/%$(OS_ARCHIVE_EXT):
 		rm -f $@
 		$(AR) rcs $@ $^
 
@@ -169,8 +169,8 @@ $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 dirs: 		dirs.tag tree.tag
 
 dirs.tag:
-		mkdir -p $(BINDIR)
-		mkdir -p $(LIBDIR)
+		mkdir -p bin
+		mkdir -p lib
 		touch dirs.tag
 
 host.tag:	Makefile
