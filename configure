@@ -28,6 +28,11 @@ init_vars()
 		. "$mb_config" || exit 2
 	fi
 
+	# git
+	if [ -d "$mb_project_dir/.git" ]; then
+		mb_git_reference_dir="\$(PROJECT_DIR)/.git"
+	fi
+
 	# dirs
 	mb_prefix=$PREFIX
 	mb_exec_prefix=$EXEC_PREFIX
@@ -304,6 +309,7 @@ config_copy()
 {
 	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
+			-e 's^@git_reference_dir@^'"$mb_git_reference_dir"'^g'		\
 											\
 			-e 's^@build@^'"$mb_build"'^g'					\
 			-e 's^@host@^'"$mb_host"'^g'					\

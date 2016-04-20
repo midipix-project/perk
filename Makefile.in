@@ -1,5 +1,6 @@
 PACKAGE 		= @package@
 PROJECT_DIR 		= @project_dir@
+GIT_REFERENCE_DIR	= @git_reference_dir@
 
 BUILD 			= @build@
 HOST 			= @host@
@@ -177,7 +178,7 @@ host.tag:	Makefile
 		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
 
-version.tag:
+version.tag:	$(GIT_REFERENCE_DIR)
 		$(PROJECT_DIR)/sysinfo/version.sh	\
 			-s $(PROJECT_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
