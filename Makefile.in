@@ -60,7 +60,9 @@ install:
 shared:
 static:
 
-
+install-extras:
+install-app-extras:
+install-libs-extras:
 
 include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
@@ -97,12 +99,12 @@ lib/%$(OS_ARCHIVE_EXT):
 
 all:		shared static app
 
-install:	install-libs install-headers install-app
+install:	install-libs install-headers install-app install-extras
 
 app:		default-app
 
 
-install-libs:	install-shared install-static install-implib
+install-libs:	install-shared install-static install-implib install-libs-extras
 
 install-headers:shared static
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
@@ -116,7 +118,7 @@ install-static:	static
 		mkdir -p $(DESTDIR)$(LIBDIR)
 		cp $(STATIC_LIB) $(DESTDIR)$(LIBDIR)
 
-install-app:	app
+install-app:	app install-app-extras
 		mkdir -p $(DESTDIR)$(BINDIR)
 		cp $(APP) $(DESTDIR)$(BINDIR)
 
