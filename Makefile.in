@@ -212,6 +212,8 @@ clean:
 		.display-pe .display-elf .display-dirs .display-build
 
 .display-project:
+		@echo PACKAGE:'                '$(PACKAGE)
+		@echo NICKNAME:'               '$(NICKNAME)
 		@echo PROJECT_DIR:'            '$(PROJECT_DIR)
 		@echo BUILD_DIR:'              '$(CURDIR)
 		@echo
