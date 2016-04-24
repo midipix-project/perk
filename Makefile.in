@@ -70,6 +70,7 @@ include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
 include $(PROJECT_DIR)/project/defs.mk
+include $(PROJECT_DIR)/project/version.mk
 include $(PROJECT_DIR)/project/tree.mk
 include $(PROJECT_DIR)/project/depends.mk
 include $(PROJECT_DIR)/project/headers.mk
@@ -89,7 +90,7 @@ src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
 src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-lib/%$(OS_LIB_SUFFIX):
+lib/%$(OS_LIB_SUFFIX)$(VER_XYZ):
 		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
 
 lib/%$(OS_ARCHIVE_EXT):
@@ -105,13 +106,15 @@ install:	install-libs install-headers install-app install-extras
 app:		default-app
 
 
-install-libs:	install-shared install-static install-implib install-libs-extras
+install-libs:	install-shared install-static install-libs-extras
 
 install-headers:shared static
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
-install-shared:	shared install-implib
+install-shared:	shared install-lib install-soname install-solink
+
+install-lib:	shared
 		mkdir -p $(DESTDIR)$(LIBDIR)
 		cp $(SHARED_LIB) $(DESTDIR)$(LIBDIR)
 
@@ -125,11 +128,15 @@ install-app:	app install-app-extras
 
 
 
-shared:		shared-lib shared-implib
+shared:		shared-lib shared-soname shared-solink
 
 static:		static-lib
 
 shared-lib:	shared-objs $(SHARED_LIB)
+
+shared-soname:	shared-lib $(SHARED_SONAME)
+
+shared-solink:	shared-lib $(SHARED_SOLINK)
 
 static-lib:	static-objs $(STATIC_LIB)
 
@@ -200,6 +207,8 @@ clean:
 		rm -f $(STATIC_OBJS)
 		rm -f $(APP_OBJS)
 		rm -f $(SHARED_LIB)
+		rm -f $(SHARED_SONAME)
+		rm -f $(SHARED_SOLINK)
 		rm -f $(STATIC_LIB)
 		rm -f $(SHARED_IMPLIB)
 		rm -f $(APP)
@@ -256,6 +265,7 @@ clean:
 .display-flags:
 		@echo CFLAGS_DEBUG:'           '$(CFLAGS_DEBUG)
 		@echo CFLAGS_COMMON:'          '$(CFLAGS_COMMON)
+		@echo CFLAGS_VERSION:'         '$(CFLAGS_VERSION)
 		@echo CFLAGS_CMDLINE:'         '$(CFLAGS_CMDLINE)
 		@echo CFLAGS_CONFIG:'          '$(CFLAGS_CONFIG)
 		@echo CFLAGS_SYSROOT:'         '$(CFLAGS_SYSROOT)

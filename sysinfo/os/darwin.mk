@@ -6,6 +6,7 @@ OS_LIB_SUFFIX	= .dylib
 OS_IMPLIB_EXT	= .invalid
 OS_LIBDEF_EXT	= .invalid
 OS_ARCHIVE_EXT	= .a
+OS_SONAME	= symlink
 
 CFLAGS_OS	+= -D_DARWIN_C_SOURCE
 

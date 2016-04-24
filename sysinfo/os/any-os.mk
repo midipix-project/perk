@@ -6,5 +6,6 @@ OS_LIB_SUFFIX	= .so
 OS_IMPLIB_EXT	= .invalid
 OS_LIBDEF_EXT	= .invalid
 OS_ARCHIVE_EXT	= .a
+OS_SONAME	= symlink
 
 .PHONY:		$(SHARED_IMPLIB)

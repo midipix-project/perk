@@ -6,6 +6,7 @@ OS_LIB_SUFFIX	= .so
 OS_IMPLIB_EXT	= .lib.a
 OS_LIBDEF_EXT	= .so.def
 OS_ARCHIVE_EXT	= .a
+OS_SONAME	= copy
 
 LDFLAGS_CONFIG	+= -mout-implib
 
