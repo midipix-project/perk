@@ -33,6 +33,9 @@ init_vars()
 		mb_git_reference_dir="\$(PROJECT_DIR)/.git"
 	fi
 
+	# project
+	mb_nickname=$NICKNAME
+
 	# dirs
 	mb_prefix=$PREFIX
 	mb_exec_prefix=$EXEC_PREFIX
@@ -110,6 +113,9 @@ verify_build_directory()
 
 common_defaults()
 {
+	# project
+	[ -z "$mb_nickname" ] 		&& mb_nickname=$mb_package
+
 	# dirs
 	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
 					&& mb_prefix='/usr/local'
@@ -308,6 +314,7 @@ cross_defaults()
 config_copy()
 {
 	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
+			-e 's^@nickname@^'"$mb_nickname"'^g'				\
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
 			-e 's^@git_reference_dir@^'"$mb_git_reference_dir"'^g'		\
 											\
@@ -454,6 +461,12 @@ for arg ; do
 		--debug)
 			mb_debug='yes'
 			;;
+
+		# project
+		--nickname=*)
+			mb_nickname=${arg#*=}
+			;;
+
 		*)
 			error_msg ${arg#}: "unsupported config argument."
 			exit 2

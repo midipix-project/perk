@@ -1,4 +1,5 @@
 PACKAGE 		= @package@
+NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
 GIT_REFERENCE_DIR	= @git_reference_dir@
 
