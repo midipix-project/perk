@@ -71,6 +71,8 @@ include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
 include $(PROJECT_DIR)/project/defs.mk
 include $(PROJECT_DIR)/project/version.mk
+include $(PROJECT_DIR)/project/custom.mk
+
 include $(PROJECT_DIR)/project/tree.mk
 include $(PROJECT_DIR)/project/depends.mk
 include $(PROJECT_DIR)/project/headers.mk
@@ -112,7 +114,7 @@ install-headers:shared static
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
-install-shared:	shared install-lib install-soname install-solink
+install-shared:	shared install-lib install-soname install-solink install-implib
 
 install-lib:	shared
 		mkdir -p $(DESTDIR)$(LIBDIR)
@@ -128,7 +130,7 @@ install-app:	app install-app-extras
 
 
 
-shared:		shared-lib shared-soname shared-solink
+shared:		shared-lib shared-soname shared-solink implib
 
 static:		static-lib
 
@@ -139,8 +141,6 @@ shared-soname:	shared-lib $(SHARED_SONAME)
 shared-solink:	shared-lib $(SHARED_SOLINK)
 
 static-lib:	static-objs $(STATIC_LIB)
-
-shared-implib:	shared-lib
 
 
 
@@ -198,7 +198,7 @@ version.tag:	$(GIT_REFERENCE_DIR)
 distclean:	clean
 		rm -f Makefile
 
-clean:
+clean:		clean-implib
 		rm -f tree.tag
 		rm -f dirs.tag
 		rm -f host.tag
@@ -210,7 +210,6 @@ clean:
 		rm -f $(SHARED_SONAME)
 		rm -f $(SHARED_SOLINK)
 		rm -f $(STATIC_LIB)
-		rm -f $(SHARED_IMPLIB)
 		rm -f $(APP)
 		rm -f $(DEFAULT_APP)
 		rm -f $(SHARED_APP)
@@ -320,11 +319,14 @@ clean:
 
 
 .PHONY:		all install shared static app .display \
-		shared-objs shared-lib shared-implib \
+		shared-objs shared-lib \
 		static-objs static-lib \
 		default-app shared-app static-app \
-		install-shared install-static install-implib \
+		install-shared install-static \
 		install-headers install-app \
-		clean distclean version \
+		clean distclean clean-implib version \
 		.display-project .display-env .display-tools .display-flags \
-		.display-pe .display-elf .display-dirs .display-build
+		.display-pe .display-elf .display-dirs .display-build \
+		implib implib-ver implib-soname implib-solink \
+		install-implib install-implib-ver \
+		install-implib-soname install-implib-solink
