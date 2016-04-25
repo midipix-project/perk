@@ -8,7 +8,6 @@
 #include <unistd.h>
 #include <perk/perk.h>
 #include <perk/perk_output.h>
-#include "perk_version.h"
 #include "perk_driver_impl.h"
 
 #ifndef PERK_DRIVER_FLAGS
@@ -16,18 +15,19 @@
 				| PERK_DRIVER_VERBOSITY_USAGE
 #endif
 
-static const char vermsg[] = "%s (git://midipix.org/perk): commit %s.\n";
+static const char vermsg[] = "%s (git://midipix.org/perk): "
+			     "version %d.%d.%d.\n"
+			     "[commit reference: %s]\n";
 
 static ssize_t perk_version(struct pe_driver_ctx * dctx)
 {
-	char	buf[512];
-	size_t	len;
+	const struct pe_source_version * verinfo;
 
-	if (dctx->cctx->ioctx->fdout >= 0) {
-		len = sprintf(buf,vermsg,dctx->program,PERK_GIT_VERSION);
-		return write(dctx->cctx->ioctx->fdout,buf,len);
-	} else
-		return fprintf(stdout,vermsg,dctx->program,PERK_GIT_VERSION);
+	verinfo = pe_source_version();
+
+	return fprintf(stdout,vermsg,dctx->program,
+			verinfo->major,verinfo->minor,verinfo->revision,
+			verinfo->commit);
 }
 
 static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)

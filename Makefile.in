@@ -83,7 +83,6 @@ include $(PROJECT_DIR)/project/overrides.mk
 
 
 
-$(APP_SRCS:%.c=%.o): version.tag
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
 src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag version.tag
