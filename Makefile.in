@@ -13,8 +13,8 @@ SYSROOT 		= @sysroot@
 CROSS_COMPILE 		= @cross_compile@
 SHELL 			= @shell@
 
-CFLAGS_DEBUG 		= @cflags_debug@
 CFLAGS_COMMON 		= @cflags_common@
+CFLAGS_DEBUG 		= @cflags_debug@
 CFLAGS_CMDLINE 		= @cflags_cmdline@
 CFLAGS_CONFIG 		= @cflags_config@
 CFLAGS_SYSROOT 		= @cflags_sysroot@
@@ -22,8 +22,8 @@ CFLAGS_OS		= @cflags_os@
 CFLAGS_SITE		= @cflags_site@
 CFLAGS_PATH 		= @cflags_path@
 
-LDFLAGS_DEBUG 		= @ldflags_debug@
 LDFLAGS_COMMON 		= @ldflags_common@
+LDFLAGS_DEBUG 		= @ldflags_debug@
 LDFLAGS_CMDLINE 	= @ldflags_cmdline@
 LDFLAGS_CONFIG 		= @ldflags_config@
 LDFLAGS_SYSROOT 	= @ldflags_sysroot@
@@ -261,8 +261,8 @@ clean:		clean-implib
 		@echo
 
 .display-flags:
-		@echo CFLAGS_DEBUG:'           '$(CFLAGS_DEBUG)
 		@echo CFLAGS_COMMON:'          '$(CFLAGS_COMMON)
+		@echo CFLAGS_DEBUG:'           '$(CFLAGS_DEBUG)
 		@echo CFLAGS_VERSION:'         '$(CFLAGS_VERSION)
 		@echo CFLAGS_CMDLINE:'         '$(CFLAGS_CMDLINE)
 		@echo CFLAGS_CONFIG:'          '$(CFLAGS_CONFIG)
@@ -271,8 +271,8 @@ clean:		clean-implib
 		@echo CFLAGS_SITE:'            '$(CFLAGS_SITE)
 		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
 		@echo
-		@echo LDFLAGS_DEBUG:'           '$(LDFLAGS_DEBUG)
 		@echo LDFLAGS_COMMON:'          '$(LDFLAGS_COMMON)
+		@echo LDFLAGS_DEBUG:'           '$(LDFLAGS_DEBUG)
 		@echo LDFLAGS_CMDLINE:'         '$(LDFLAGS_CMDLINE)
 		@echo LDFLAGS_CONFIG:'          '$(LDFLAGS_CONFIG)
 		@echo LDFLAGS_SYSROOT:'         '$(LDFLAGS_SYSROOT)
