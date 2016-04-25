@@ -12,8 +12,17 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_version.h"
 #include "perk_driver_impl.h"
 #include "argv/argv.h"
+
+/* package info */
+static const struct pe_source_version pe_src_version = {
+	PERK_TAG_VER_MAJOR,
+	PERK_TAG_VER_MINOR,
+	PERK_TAG_VER_PATCH,
+	PERK_GIT_VERSION
+};
 
 struct pe_driver_ctx_alloc {
 	struct argv_meta *		meta;
@@ -227,4 +236,9 @@ void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 		ictx = (struct pe_driver_ctx_alloc *)addr;
 		pe_free_driver_ctx_impl(ictx);
 	}
+}
+
+const struct pe_source_version * pe_source_version(void)
+{
+	return &pe_src_version;
 }

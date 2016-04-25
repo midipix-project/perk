@@ -86,10 +86,10 @@ include $(PROJECT_DIR)/project/overrides.mk
 $(APP_SRCS:%.c=%.o): version.tag
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag version.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag version.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 lib/%$(OS_LIB_SUFFIX)$(VER_XYZ):

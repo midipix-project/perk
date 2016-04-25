@@ -46,6 +46,13 @@ extern "C" {
 /* unit action flags */
 #define PERK_ACTION_MAP_READWRITE	0x0001
 
+struct pe_source_version {
+	int		major;
+	int		minor;
+	int		revision;
+	const char *	commit;
+};
+
 struct pe_raw_image {
 	void *	addr;
 	size_t	size;
@@ -148,6 +155,9 @@ struct pe_unit_ctx {
 	int				status;
 	int				nerrors;
 };
+
+/* package info */
+perk_api				const struct pe_source_version * pe_source_version(void);
 
 /* driver api */
 perk_api int  pe_get_driver_ctx		(char ** argv, char ** envp, uint32_t flags, struct pe_driver_ctx **);
