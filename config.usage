@@ -4,6 +4,8 @@ supported switches:
 -------------------
 	--help
 
+	--nickname
+
 	--prefix
 	--exec-prefix
 	--bindir
@@ -27,6 +29,8 @@ supported switches:
 
 supported variables:
 --------------------
+	NICKNAME
+
 	PREFIX
 	EXEC_PREFIX
 	BINDIR
