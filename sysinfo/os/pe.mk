@@ -1,5 +1,9 @@
 LDFLAGS_IMPLIB	+= -Wl,--output-def
 LDFLAGS_IMPLIB	+= -Wl,$(IMPLIB_DEF)
+LDFLAGS_SHARED	+= $(LDFLAGS_IMPLIB)
+
+LDFLAGS_SHARED	+= -Wl,-soname
+LDFLAGS_SHARED	+= -Wl,$(DSO_SONAME)
 
 implib:			implib-ver implib-soname implib-solink
 
