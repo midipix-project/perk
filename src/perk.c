@@ -15,19 +15,35 @@
 				| PERK_DRIVER_VERBOSITY_USAGE
 #endif
 
-static const char vermsg[] = "%s (git://midipix.org/perk): "
-			     "version %d.%d.%d.\n"
-			     "[commit reference: %s]\n";
+static const char vermsg[] = "%s%s%s (git://midipix.org/perk): "
+			     "version %s%d.%d.%d%s.\n"
+			     "[commit reference: %s%s%s]\n";
+
+static const char * const pe_ver_color[6] = {
+		"\e[1m\e[35m","\e[0m",
+		"\e[1m\e[32m","\e[0m",
+		"\e[1m\e[34m","\e[0m"
+};
+
+static const char * const pe_ver_plain[6] = {
+		"","",
+		"","",
+		"",""
+};
 
 static ssize_t perk_version(struct pe_driver_ctx * dctx)
 {
 	const struct pe_source_version * verinfo;
+	const char * const * verclr;
 
 	verinfo = pe_source_version();
+	verclr  = isatty(STDOUT_FILENO) ? pe_ver_color : pe_ver_plain;
 
-	return fprintf(stdout,vermsg,dctx->program,
-			verinfo->major,verinfo->minor,verinfo->revision,
-			verinfo->commit);
+	return fprintf(stdout,vermsg,
+			verclr[0],dctx->program,verclr[1],
+			verclr[2],verinfo->major,verinfo->minor,
+			verinfo->revision,verclr[3],
+			verclr[4],verinfo->commit,verclr[5]);
 }
 
 static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
