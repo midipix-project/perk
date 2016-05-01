@@ -20,9 +20,9 @@ static const char vermsg[] = "%s%s%s (git://midipix.org/perk): "
 			     "[commit reference: %s%s%s]\n";
 
 static const char * const pe_ver_color[6] = {
-		"\e[1m\e[35m","\e[0m",
-		"\e[1m\e[32m","\e[0m",
-		"\e[1m\e[34m","\e[0m"
+		"\x1b[1m\x1b[35m","\x1b[0m",
+		"\x1b[1m\x1b[32m","\x1b[0m",
+		"\x1b[1m\x1b[34m","\x1b[0m"
 };
 
 static const char * const pe_ver_plain[6] = {
