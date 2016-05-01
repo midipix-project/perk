@@ -760,13 +760,13 @@ static void argv_usage(
 	fshort = mode ? !strcmp(mode,"short") : 0;
 	flong  = fshort ? 0 : mode && !strcmp(mode,"long");
 	fboth  = !fshort && !flong;
-	fcolor = isatty(STDOUT_FILENO);
+	fcolor = isatty(fileno(file));
 
 	if (fcolor)
-		fprintf(stdout,"%s%s",cbold,cgreen);
+		fprintf(file,"%s%s",cbold,cgreen);
 
 	if (header)
-		fprintf(stdout,"%s",header);
+		fprintf(file,"%s",header);
 
 	option = options;
 	optlen = 0;
@@ -806,7 +806,7 @@ static void argv_usage(
 		/* color */
 		if (fcolor) {
 			color = (color == ccyan) ? cblue : ccyan;
-			fputs(color,stdout);
+			fputs(color,file);
 		}
 
 		/* description, using either paradigm or argname if applicable */
@@ -847,7 +847,7 @@ static void argv_usage(
 
 		/* single line? */
 		if (optlen + strlen(description) < width) {
-			fprintf(stdout,"%s%s\n",optstr,description);
+			fprintf(file,"%s%s\n",optstr,description);
 
 		} else {
 			desc = description;
@@ -879,9 +879,9 @@ static void argv_usage(
 
 				/* first line? */
 				if (desc == description)
-					fprintf(stdout,"%s%s\n",optstr,desc);
+					fprintf(file,"%s%s\n",optstr,desc);
 				else
-					fprintf(stdout,"%-*c %s\n",
+					fprintf(file,"%-*c %s\n",
 						(*desc == '|')
 							? (int)(optlen+1)
 							: (int)optlen,
@@ -898,7 +898,7 @@ static void argv_usage(
 	}
 
 	if (fcolor)
-		fputs(creset,stdout);
+		fputs(creset,file);
 }
 
 #endif
