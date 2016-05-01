@@ -859,6 +859,7 @@ static void argv_usage(
 
 				while (*mark && (mark > desc)
 						&& (*mark != ' ')
+						&& (*mark != '|')
 						&& (*mark != '\t')
 						&& (*mark != '\n'))
 					mark--;
@@ -866,6 +867,9 @@ static void argv_usage(
 				if (mark == desc) {
 					mark = (desc + desclen >= cap)
 						? cap : desc + desclen;
+					cache = *mark;
+					*mark = 0;
+				} else if (*mark == '|') {
 					cache = *mark;
 					*mark = 0;
 				} else {
@@ -877,7 +881,11 @@ static void argv_usage(
 				if (desc == description)
 					fprintf(stdout,"%s%s\n",optstr,desc);
 				else
-					fprintf(stdout,"%-*c %s\n",(int)optlen,' ',desc);
+					fprintf(stdout,"%-*c %s\n",
+						(*desc == '|')
+							? (int)(optlen+1)
+							: (int)optlen,
+						' ',desc);
 
 				if (cache)
 					*mark = cache;
