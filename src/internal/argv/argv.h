@@ -15,6 +15,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #define ARGV_VERBOSITY_NONE		0x00
 #define ARGV_VERBOSITY_ERRORS		0x01
@@ -748,10 +749,21 @@ static void argv_usage(
 	const size_t			optcap    = 64;
 	const size_t			width     = 80;
 	const char			indent[]  = "  ";
+	const char			creset[]  = "\x1b[0m";
+	const char			cbold []  = "\x1b[1m";
+	const char			cgreen[]  = "\x1b[32m";
+	const char			cblue []  = "\x1b[34m";
+	const char			ccyan []  = "\x1b[36m";
+	const char *			color     = ccyan;
+	bool				fcolor;
 
 	fshort = mode ? !strcmp(mode,"short") : 0;
 	flong  = fshort ? 0 : mode && !strcmp(mode,"long");
 	fboth  = !fshort && !flong;
+	fcolor = isatty(STDOUT_FILENO);
+
+	if (fcolor)
+		fprintf(stdout,"%s%s",cbold,cgreen);
 
 	if (header)
 		fprintf(stdout,"%s",header);
@@ -791,6 +803,12 @@ static void argv_usage(
 	desclen = (optlen < width / 2) ? width - optlen : optlen;
 
 	for (option=options; option->short_name || option->long_name; option++) {
+		/* color */
+		if (fcolor) {
+			color = (color == ccyan) ? cblue : ccyan;
+			fputs(color,stdout);
+		}
+
 		/* description, using either paradigm or argname if applicable */
 		snprintf(description,sizeof(description),option->description,
 			option->paradigm
@@ -870,6 +888,9 @@ static void argv_usage(
 			}
 		}
 	}
+
+	if (fcolor)
+		fputs(creset,stdout);
 }
 
 #endif
