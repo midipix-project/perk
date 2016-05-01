@@ -735,6 +735,141 @@ static void argv_usage(
 	const struct argv_option	options[],
 	const char *			mode)
 {
+	const struct argv_option *	option;
+	bool				fshort,flong,fboth;
+	size_t				len,optlen,desclen;
+	char				cache;
+	char *				prefix;
+	char *				desc;
+	char *				mark;
+	char *				cap;
+	char				description[4096];
+	char				optstr     [72];
+	const size_t			optcap    = 64;
+	const size_t			width     = 80;
+	const char			indent[]  = "  ";
+
+	fshort = mode ? !strcmp(mode,"short") : 0;
+	flong  = fshort ? 0 : mode && !strcmp(mode,"long");
+	fboth  = !fshort && !flong;
+
+	if (header)
+		fprintf(stdout,"%s",header);
+
+	option = options;
+	optlen = 0;
+
+	for (; option->short_name || option->long_name; option++) {
+		/* indent + comma */
+		len = fboth ? sizeof(indent) + 1 : sizeof(indent);
+
+		/* -o */
+		if (fshort || fboth)
+			len += option->short_name
+				? 2 : 0;
+
+		/* --option */
+		if (flong || fboth)
+			len += option->long_name
+				? 2 + strlen(option->long_name) : 0;
+
+		/* optlen */
+		if (len > optlen)
+			optlen = len;
+	}
+
+	if (optlen >= optcap) {
+		fprintf(stderr,
+			"Option strings exceed %zu characters, "
+			"please generate the usage screen manually.\n",
+			optcap);
+		return;
+	}
+
+	optlen += ARGV_TAB_WIDTH;
+	optlen &= (~(ARGV_TAB_WIDTH-1));
+	desclen = (optlen < width / 2) ? width - optlen : optlen;
+
+	for (option=options; option->short_name || option->long_name; option++) {
+		/* description, using either paradigm or argname if applicable */
+		snprintf(description,sizeof(description),option->description,
+			option->paradigm
+				? option->paradigm
+				: option->argname ? option->argname : "");
+		description[sizeof(description)-1] = 0;
+
+		/* long/hybrid option prefix (-/--) */
+		prefix = option->flags & ARGV_OPTION_HYBRID_ONLY
+				? " -" : "--";
+
+		/* option string */
+		if (fboth && option->short_name && option->long_name)
+			sprintf(optstr,"%s-%c,%s%s",
+				indent,option->short_name,prefix,option->long_name);
+
+		else if ((fshort || fboth) && option->short_name)
+			sprintf(optstr,"%s-%d",indent,option->short_name);
+
+		else if (flong && option->long_name)
+			sprintf(optstr,"%s%s%s",
+				indent,prefix,option->long_name);
+
+		else if (fboth && option->long_name)
+			sprintf(optstr,"%s   %s%s",
+				indent,prefix,option->long_name);
+
+		else
+			optstr[0] = 0;
+
+		/* right-indented option buffer */
+		if (description[0]) {
+			len = strlen(optstr);
+			sprintf(&optstr[len],"%-*c",(int)(optlen-len),' ');
+		}
+
+		/* single line? */
+		if (optlen + strlen(description) < width) {
+			fprintf(stdout,"%s%s\n",optstr,description);
+
+		} else {
+			desc = description;
+			cap  = desc + strlen(description);
+
+			while (desc < cap) {
+				mark = (desc + desclen >= cap)
+					? cap : desc + desclen;
+
+				while (*mark && (mark > desc)
+						&& (*mark != ' ')
+						&& (*mark != '\t')
+						&& (*mark != '\n'))
+					mark--;
+
+				if (mark == desc) {
+					mark = (desc + desclen >= cap)
+						? cap : desc + desclen;
+					cache = *mark;
+					*mark = 0;
+				} else {
+					cache = 0;
+					*mark = 0;
+				}
+
+				/* first line? */
+				if (desc == description)
+					fprintf(stdout,"%s%s\n",optstr,desc);
+				else
+					fprintf(stdout,"%-*c %s\n",(int)optlen,' ',desc);
+
+				if (cache)
+					*mark = cache;
+				else
+					mark++;
+
+				desc = mark;
+			}
+		}
+	}
 }
 
 #endif
