@@ -296,6 +296,11 @@ native_defaults()
 		error_msg "config error: could not determine size of pointer on native system."
 		exit 2
 	fi
+
+	# fallback os recipe
+	if ! [ -f $mb_project_dir/sysinfo/os/$mb_native_os.mk ]; then
+		mb_native_os='any-os';
+	fi
 }
 
 
