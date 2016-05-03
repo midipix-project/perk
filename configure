@@ -296,10 +296,6 @@ native_defaults()
 		error_msg "config error: could not determine size of pointer on native system."
 		exit 2
 	fi
-
-	[ -z "$mb_native_os" ] 			&& mb_native_os=$mb_native_os
-	[ -z "$mb_native_os_bits" ] 		&& mb_native_os_bits=$mb_native_os_bits
-	[ -z "$mb_native_os_underscore" ]	&& mb_native_os_underscore=$mb_native_os_underscore
 }
 
 
