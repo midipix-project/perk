@@ -127,6 +127,10 @@ install-app:	app install-app-extras
 		mkdir -p $(DESTDIR)$(BINDIR)
 		cp $(APP) $(DESTDIR)$(BINDIR)
 
+install-static-app:	static-app install-app-extras
+			mkdir -p $(DESTDIR)$(BINDIR)
+			cp $(STATIC_APP) $(DESTDIR)$(BINDIR)/$(NICKNAME)$(OS_APP_SUFFIX)
+
 
 
 shared:		shared-lib shared-soname shared-solink implib
