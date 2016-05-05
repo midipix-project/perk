@@ -41,3 +41,10 @@ mb_default_pe_config_defs=
 mb_default_elf_eh_frame=
 mb_default_elf_hash_style=
 mb_default_elf_config_defs=
+
+
+# config
+mb_all_static=
+mb_all_shared=
+mb_disable_static=
+mb_disable_shared=

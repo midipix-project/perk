@@ -167,6 +167,12 @@ common_defaults()
 	[ -z "$mb_elf_hash_style" ]	&& mb_elf_hash_style=$mb_default_elf_hash_style
 	[ -z "$mb_elf_config_defs" ]	&& mb_elf_config_defs=$mb_default_elf_config_defs
 
+	# config
+	[ -z "$mb_all_static" ]		&& mb_all_static='no'
+	[ -z "$mb_all_shared" ]		&& mb_all_shared='no'
+	[ -z "$mb_disable_static" ]	&& mb_disable_static='no'
+	[ -z "$mb_disable_shared" ]	&& mb_disable_shared='no'
+
 	# host/target
 	[ -z "$mb_host" ] 		&& mb_host=$mb_target
 	[ -z "$mb_target" ] 		&& mb_target=$mb_host
@@ -372,6 +378,11 @@ config_copy()
 			-e 's^@user_cc@^'"$mb_user_cc"'^g'				\
 			-e 's^@user_cpp@^'"$mb_user_cpp"'^g'				\
 			-e 's^@user_cxx@^'"$mb_user_cxx"'^g'				\
+											\
+			-e 's^@all_static@^'"$mb_all_static"'^g'			\
+			-e 's^@all_shared@^'"$mb_all_shared"'^g'			\
+			-e 's^@disable_static@^'"$mb_disable_static"'^g'		\
+			-e 's^@disable_shared@^'"$mb_disable_shared"'^g'		\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
 }
 
@@ -461,6 +472,26 @@ for arg ; do
 			;;
 		--debug)
 			mb_debug='yes'
+			;;
+
+		# config
+		--all-static)
+			mb_all_static='yes'
+			;;
+		--all-shared)
+			mb_all_shared='yes'
+			;;
+		--disable-static)
+			mb_disable_static='yes'
+			;;
+		--disable-shared)
+			mb_disable_shared='yes'
+			;;
+		--enable-static)
+			mb_disable_static='no'
+			;;
+		--enable-shared)
+			mb_disable_shared='no'
 			;;
 
 		# project

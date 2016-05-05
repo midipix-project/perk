@@ -26,6 +26,13 @@ supported switches:
 	--shell
 	--debug
 
+	--all-static
+	--all-shared
+	--enable-static
+	--enable-shared
+	--disable-static
+	--disable-shared
+
 
 supported variables:
 --------------------
