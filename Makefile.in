@@ -55,6 +55,10 @@ USER_CC                 = @user_cc@
 USER_CPP                = @user_cpp@
 USER_CXX                = @user_cxx@
 
+ALL_SHARED              = @all_shared@
+ALL_STATIC              = @all_static@
+DISABLE_SHARED          = @disable_shared@
+DISABLE_STATIC          = @disable_static@
 
 all:
 install:
@@ -63,7 +67,6 @@ static:
 
 install-extras:
 install-app-extras:
-install-libs-extras:
 
 include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
@@ -100,9 +103,11 @@ lib/%$(OS_ARCHIVE_EXT):
 
 
 
-all:		shared static app
+all:		package-shared package-static app
 
-install:	install-libs install-headers install-app install-extras
+install:	install-app
+install:	install-extras
+install:	install-libs
 
 app:		package-app app-tag
 
@@ -112,9 +117,11 @@ app.tag:	package-app
 		cp $(PACKAGE_APP) $(APP)
 		touch app.tag
 
-install-libs:	install-shared install-static install-libs-extras
+install-libs:	package-install-shared
+install-libs:	package-install-static
+install-libs:	package-install-headers
 
-install-headers:shared static
+install-headers:package-shared package-static
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
@@ -227,7 +234,8 @@ clean:		clean-implib
 
 
 .display:	.display-project .display-env .display-tools .display-flags \
-		.display-pe .display-elf .display-dirs .display-build
+		.display-pe .display-elf .display-dirs .display-build \
+		.display-config
 
 .display-project:
 		@echo PACKAGE:'                '$(PACKAGE)
@@ -323,6 +331,12 @@ clean:		clean-implib
 		@echo USER_CPP:'               '$(USER_CPP)
 		@echo USER_CXX:'               '$(USER_CXX)
 		@echo
+
+.display-config:
+		@echo ALL_SHARED:'             '$(ALL_SHARED)
+		@echo ALL_STATIC:'             '$(ALL_STATIC)
+		@echo DISABLE_SHARED:'         '$(DISABLE_SHARED)
+		@echo DISABLE_STATIC:'         '$(DISABLE_STATIC)
 
 .display-host:
 		@$(CC) $(CFLAGS) -dumpmachine

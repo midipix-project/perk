@@ -8,6 +8,34 @@ endif
 
 
 
+ifeq ($(DISABLE_STATIC),yes)
+package-static:
+package-install-static:
+else
+package-static:		static
+package-install-static:	install-static
+endif
+
+ifeq ($(DISABLE_SHARED),yes)
+package-shared:
+package-install-shared:
+else
+package-shared:		shared
+package-install-shared:	install-shared
+endif
+
+ifneq ($(DISABLE_STATIC),yes)
+package-install-headers:install-headers
+
+else ifneq ($(DISABLE_SHARED),yes)
+package-install-headers:install-headers
+
+else
+package-install-headers:
+endif
+
+
+
 ifeq ($(ALL_STATIC),yes)
 
 package-app:	static-app
