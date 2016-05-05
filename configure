@@ -68,6 +68,7 @@ init_vars()
 	mb_cflags_os=$CFLAGS_OS
 	mb_cflags_site=$CFLAGS_SITE
 	mb_cflags_path=$CFLAGS_PATH
+	mb_cflags_util=$CFLAGS_UTIL
 
 	mb_ldflags=$LDFLAGS
 	mb_ldflags_debug=$LDFLAGS_DEBUG
@@ -76,6 +77,7 @@ init_vars()
 	mb_ldflags_config=$LDFLAGS_CONFIG
 	mb_ldflags_sysroot=$LDFLAGS_SYSROOT
 	mb_ldflags_path=$LDFLAGS_PATH
+	mb_ldflags_util=$LDFLAGS_UTIL
 
 	mb_pe_subsystem=$PE_SUBSYSTEM
 	mb_pe_image_base=$PE_IMAGE_BASE
@@ -151,6 +153,7 @@ common_defaults()
 	[ -z "$mb_cflags_os" ]		&& mb_cflags_os=$mb_default_cflags_os
 	[ -z "$mb_cflags_site" ]	&& mb_cflags_site=$mb_default_cflags_site
 	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
+	[ -z "$mb_cflags_util" ]	&& mb_cflags_util=$mb_default_cflags_util
 
 	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
 	[ -z "$mb_ldflags_common" ]	&& mb_ldflags_common=$mb_default_ldflags_common
@@ -158,6 +161,7 @@ common_defaults()
 	[ -z "$mb_ldflags_config" ]	&& mb_ldflags_config=$mb_default_ldflags_config
 	[ -z "$mb_ldflags_sysroot" ]	&& mb_ldflags_sysroot=$mb_default_ldflags_sysroot
 	[ -z "$mb_ldflags_path" ]	&& mb_ldflags_path=$mb_default_ldflags_path
+	[ -z "$mb_ldflags_util" ]	&& mb_ldflags_util=$mb_default_ldflags_util
 
 	[ -z "$mb_pe_subsystem" ]	&& mb_pe_subsystem=$mb_default_pe_subsystem
 	[ -z "$mb_pe_image_base" ]	&& mb_pe_image_base=$mb_default_pe_image_base
@@ -344,6 +348,7 @@ config_copy()
 			-e 's^@cflags_os@^'"$mb_cflags_os"'^g'				\
 			-e 's^@cflags_site@^'"$mb_cflags_site"'^g'			\
 			-e 's^@cflags_path@^'"$mb_cflags_path"'^g'			\
+			-e 's^@cflags_util@^'"$mb_cflags_util"'^g'			\
 											\
 			-e 's^@ldflags@^'"$mb_ldflags"'^g'				\
 			-e 's^@ldflags_debug@^'"$mb_ldflags_debug"'^g'			\
@@ -352,6 +357,7 @@ config_copy()
 			-e 's^@ldflags_config@^'"$mb_ldflags_config"'^g'		\
 			-e 's^@ldflags_sysroot@^'"$mb_ldflags_sysroot"'^g'		\
 			-e 's^@ldflags_path@^'"$mb_ldflags_path"'^g'			\
+			-e 's^@ldflags_util@^'"$mb_ldflags_util"'^g'			\
 											\
 			-e 's^@pe_subsystem@^'"$mb_pe_subsystem"'^g'			\
 			-e 's^@pe_image\_base@^'"$mb_pe_image_base"'^g'			\
