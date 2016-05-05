@@ -104,8 +104,13 @@ all:		shared static app
 
 install:	install-libs install-headers install-app install-extras
 
-app:		default-app
+app:		package-app app-tag
 
+app-tag:	package-app app.tag
+
+app.tag:	package-app
+		cp $(PACKAGE_APP) $(APP)
+		touch app.tag
 
 install-libs:	install-shared install-static install-libs-extras
 
@@ -147,11 +152,11 @@ static-lib:	static-objs $(STATIC_LIB)
 
 
 
-default-app:	version.tag static $(DEFAULT_APP) $(APP)
+default-app:	version.tag static-objs $(DEFAULT_APP)
 
 shared-app:	version.tag shared $(SHARED_APP)
 
-static-app:	version.tag static $(STATIC_APP)
+static-app:	version.tag static-objs $(STATIC_APP)
 
 
 
@@ -167,16 +172,18 @@ $(SHARED_LIB):	$(SHARED_OBJS)
 
 $(STATIC_LIB):	$(STATIC_OBJS)
 
-$(APP):		$(DEFAULT_APP)
-		cp $^ $@
+$(APP):		$(PACKAGE_APP)
 
 $(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		rm -f app.tag
 		$(CC) -o $@ $^ $(LDFLAGS_APP)
 
 $(SHARED_APP):	$(SHARED_LIB) $(APP_OBJS)
+		rm -f app.tag
 		$(CC) -o $@ $(APP_OBJS) -l$(PACKAGE) $(LDFLAGS_SHARED)
 
 $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
+		rm -f app.tag
 		$(CC) -static -o $@ $^ -l$(PACKAGE) $(LDFLAGS_STATIC)
 
 
@@ -322,6 +329,7 @@ clean:		clean-implib
 
 
 .PHONY:		all install shared static app .display \
+		package-app \
 		shared-objs shared-lib \
 		static-objs static-lib \
 		default-app shared-app static-app \
