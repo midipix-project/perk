@@ -405,6 +405,27 @@ config_copy()
 }
 
 
+config_support()
+{
+	[ "$mb_disable_shared" = 'yes' ] && return 0
+
+	mbt_cc=`make .display-cc`
+	mbt_cflags=`make .display-cflags`
+	mbt_source='int foo(int x){return ++x;}'
+	mbt_result='no'
+
+	rm -f a.out
+	echo "$mbt_source" | "$mbt_cc" -shared -o a.out -xc -
+	stat a.out >/dev/null 2>&1 && mbt_result='yes'
+	rm -f a.out
+
+	if [ "$mbt_result" = 'no' ]; then
+		mb_disable_shared='yes'
+		config_copy
+	fi
+}
+
+
 config_host()
 {
 	make -s host.tag && return 0
@@ -536,6 +557,7 @@ cross_defaults
 # four: config
 config_flags
 config_copy
+config_support
 config_host
 config_status
 
