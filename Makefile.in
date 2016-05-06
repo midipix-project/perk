@@ -222,6 +222,7 @@ clean:		clean-implib
 		rm -f dirs.tag
 		rm -f host.tag
 		rm -f version.tag
+		rm -f app.tag
 		rm -f $(SHARED_OBJS)
 		rm -f $(STATIC_OBJS)
 		rm -f $(APP_OBJS)
