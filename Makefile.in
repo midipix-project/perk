@@ -121,19 +121,19 @@ app.tag:	package-app
 
 install-libs:	package-install-shared
 install-libs:	package-install-static
-install-libs:	package-install-headers
 
 install-headers:package-shared package-static
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
 install-shared:	shared install-lib install-soname install-solink install-implib
+install-shared: install-headers
 
 install-lib:	shared
 		mkdir -p $(DESTDIR)$(LIBDIR)
 		cp $(SHARED_LIB) $(DESTDIR)$(LIBDIR)
 
-install-static:	static
+install-static:	static install-headers
 		mkdir -p $(DESTDIR)$(LIBDIR)
 		cp $(STATIC_LIB) $(DESTDIR)$(LIBDIR)
 

@@ -24,16 +24,6 @@ package-shared:		shared
 package-install-shared:	install-shared
 endif
 
-ifneq ($(DISABLE_STATIC),yes)
-package-install-headers:install-headers
-
-else ifneq ($(DISABLE_SHARED),yes)
-package-install-headers:install-headers
-
-else
-package-install-headers:
-endif
-
 
 
 ifeq ($(ALL_STATIC),yes)
