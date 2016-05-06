@@ -242,6 +242,10 @@ clean:		clean-implib
 		.display-pe .display-elf .display-dirs .display-build \
 		.display-config
 
+.conf:		PAGER ?= less
+.conf:
+		$(MAKE) .display | $(PAGER)
+
 .display-project:
 		@echo PACKAGE:'                '$(PACKAGE)
 		@echo NICKNAME:'               '$(NICKNAME)
@@ -357,7 +361,7 @@ clean:		clean-implib
 		@echo $(CFLAGS)
 
 
-.PHONY:		all install shared static app .display \
+.PHONY:		all install shared static app \
 		package-app \
 		shared-objs shared-lib \
 		static-objs static-lib \
@@ -365,6 +369,7 @@ clean:		clean-implib
 		install-shared install-static \
 		install-headers install-app \
 		clean distclean clean-implib version \
+		.display .conf \
 		.display-project .display-env .display-tools .display-flags \
 		.display-pe .display-elf .display-dirs .display-build \
 		implib implib-ver implib-soname implib-solink \
