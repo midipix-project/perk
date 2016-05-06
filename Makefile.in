@@ -345,6 +345,9 @@ clean:		clean-implib
 .display-host:
 		@$(CC) $(CFLAGS) -dumpmachine
 
+.display-cflags:
+		@echo $(CFLAGS)
+
 
 .PHONY:		all install shared static app .display \
 		package-app \
