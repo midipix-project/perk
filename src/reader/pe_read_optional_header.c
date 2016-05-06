@@ -4,18 +4,16 @@
 /*  Released under GPLv2 and GPLv3; see COPYING.PERK.          */
 /***************************************************************/
 
-#include <endian.h>
 #include <string.h>
 
 #include <perk/perk.h>
+#include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+static int pe_read_optional_header_little_endian(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
 	memset(&m->dirs,0,sizeof(m->dirs));
-
-	#if (BYTE_ORDER == LITTLE_ENDIAN)
 
 	memcpy(&m->std,p,sizeof(struct pe_meta_opt_hdr_std));
 
@@ -50,8 +48,11 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 			return PERK_BAD_IMAGE_TYPE;
 	}
 
-	#else
+	return 0;
+}
 
+static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+{
 	struct pe_opt_hdr_std *		astd;
 	struct pe_opt_hdr_vers *	avers;
 	struct pe_opt_hdr_align *	aalign;
@@ -59,6 +60,9 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 	struct pe_opt_hdr_ldr *		aldr;
 	struct pe_opt_hdr_dirs *	adirs;
 	size_t				sdirs;
+
+	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
+	memset(&m->dirs,0,sizeof(m->dirs));
 
 	astd = (struct pe_opt_hdr_std *)p;
 
@@ -119,7 +123,20 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 	m->ldr.loader_flags			= pe_read_long(aldr->loader_flags);
 	m->ldr.rva_and_sizes			= pe_read_long(aldr->rva_and_sizes);
 
-	#endif
+	return 0;
+}
+
+int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+{
+	int ret;
+
+	if (PERK_LITTLE_ENDIAN) {
+		if ((ret = pe_read_optional_header_little_endian(p,m)))
+			return ret;
+	} else {
+		if ((ret = pe_read_optional_header_big_endian(p,m)))
+			return ret;
+	}
 
 	switch (m->std.magic) {
 		case PE_MAGIC_PE32:
