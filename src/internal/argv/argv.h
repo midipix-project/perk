@@ -591,6 +591,8 @@ static void argv_show_status(
 	char				short_name[2] = {0};
 	const char *			space = "";
 
+	(void)ctx;
+
 	fputs("\n\nconcatenated command line:\n",stderr);
 	for (argv=meta->argv; *argv; argv++) {
 		fprintf(stderr,"%s%s",space,*argv);
