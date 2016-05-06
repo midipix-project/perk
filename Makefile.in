@@ -293,13 +293,13 @@ clean:		clean-implib
 		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
 		@echo CFLAGS_UTIL:'            '$(CFLAGS_UTIL)
 		@echo
-		@echo LDFLAGS_COMMON:'          '$(LDFLAGS_COMMON)
-		@echo LDFLAGS_DEBUG:'           '$(LDFLAGS_DEBUG)
-		@echo LDFLAGS_CMDLINE:'         '$(LDFLAGS_CMDLINE)
-		@echo LDFLAGS_CONFIG:'          '$(LDFLAGS_CONFIG)
-		@echo LDFLAGS_SYSROOT:'         '$(LDFLAGS_SYSROOT)
-		@echo LDFLAGS_PATH:'            '$(LDFLAGS_PATH)
-		@echo LDFLAGS_UTIL:'            '$(LDFLAGS_UTIL)
+		@echo LDFLAGS_COMMON:'         '$(LDFLAGS_COMMON)
+		@echo LDFLAGS_DEBUG:'          '$(LDFLAGS_DEBUG)
+		@echo LDFLAGS_CMDLINE:'        '$(LDFLAGS_CMDLINE)
+		@echo LDFLAGS_CONFIG:'         '$(LDFLAGS_CONFIG)
+		@echo LDFLAGS_SYSROOT:'        '$(LDFLAGS_SYSROOT)
+		@echo LDFLAGS_PATH:'           '$(LDFLAGS_PATH)
+		@echo LDFLAGS_UTIL:'           '$(LDFLAGS_UTIL)
 		@echo
 
 .display-pe:
