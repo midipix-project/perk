@@ -115,7 +115,7 @@ app:		package-app app-tag
 
 app-tag:	package-app app.tag
 
-app.tag:	package-app
+app.tag:
 		cp $(PACKAGE_APP) $(APP)
 		touch app.tag
 

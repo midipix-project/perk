@@ -31,6 +31,7 @@ ifeq ($(ALL_STATIC),yes)
 package-app:	static-app
 app:		PACKAGE_APP = $(STATIC_APP)
 app-tag:	PACKAGE_APP = $(STATIC_APP)
+app.tag:	$(STATIC_APP)
 
 
 else ifeq ($(ALL_SHARED),yes)
@@ -38,6 +39,7 @@ else ifeq ($(ALL_SHARED),yes)
 package-app:	shared-app
 app:		PACKAGE_APP = $(SHARED_APP)
 app-tag:	PACKAGE_APP = $(SHARED_APP)
+app.tag:	$(SHARED_APP)
 
 
 else
@@ -45,5 +47,6 @@ else
 package-app:	default-app
 app:		PACKAGE_APP = $(DEFAULT_APP)
 app-tag:	PACKAGE_APP = $(DEFAULT_APP)
+app.tag:	$(DEFAULT_APP)
 
 endif
