@@ -121,6 +121,8 @@ int pe_get_driver_ctx(
 	const char *			pretty;
 	int				fdout;
 
+	(void)envp;
+
 	options = pe_default_options;
 
 	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
