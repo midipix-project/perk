@@ -22,7 +22,7 @@ static inline uint16_t pe_read_short(const unsigned char * raw)
 
 static inline uint32_t pe_swap_long(uint32_t x)
 {
-	return x<<24 | (x<<8) & 0xff0000 | (x>>8) & 0xff00 | x>>24;
+	return x<<24 | ((x<<8) & 0xff0000) | ((x>>8) & 0xff00) | x>>24;
 }
 
 static inline uint32_t pe_read_long(const unsigned char * raw)
