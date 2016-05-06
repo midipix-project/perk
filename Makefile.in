@@ -21,6 +21,7 @@ CFLAGS_SYSROOT 		= @cflags_sysroot@
 CFLAGS_OS		= @cflags_os@
 CFLAGS_SITE		= @cflags_site@
 CFLAGS_PATH 		= @cflags_path@
+CFLAGS_STRICT 		= @cflags_strict@
 CFLAGS_UTIL 		= @cflags_util@
 
 LDFLAGS_COMMON 		= @ldflags_common@
@@ -29,6 +30,7 @@ LDFLAGS_CMDLINE 	= @ldflags_cmdline@
 LDFLAGS_CONFIG 		= @ldflags_config@
 LDFLAGS_SYSROOT 	= @ldflags_sysroot@
 LDFLAGS_PATH 		= @ldflags_path@
+LDFLAGS_STRICT 		= @ldflags_strict@
 LDFLAGS_UTIL 		= @ldflags_util@
 
 PE_SUBSYSTEM 		= @pe_subsystem@
@@ -292,6 +294,7 @@ clean:		clean-implib
 		@echo CFLAGS_OS:'              '$(CFLAGS_OS)
 		@echo CFLAGS_SITE:'            '$(CFLAGS_SITE)
 		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
+		@echo CFLAGS_STRICT:'          '$(CFLAGS_STRICT)
 		@echo CFLAGS_UTIL:'            '$(CFLAGS_UTIL)
 		@echo
 		@echo LDFLAGS_COMMON:'         '$(LDFLAGS_COMMON)
@@ -300,6 +303,7 @@ clean:		clean-implib
 		@echo LDFLAGS_CONFIG:'         '$(LDFLAGS_CONFIG)
 		@echo LDFLAGS_SYSROOT:'        '$(LDFLAGS_SYSROOT)
 		@echo LDFLAGS_PATH:'           '$(LDFLAGS_PATH)
+		@echo LDFLAGS_STRICT:'         '$(LDFLAGS_STRICT)
 		@echo LDFLAGS_UTIL:'           '$(LDFLAGS_UTIL)
 		@echo
 

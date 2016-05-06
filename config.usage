@@ -26,6 +26,10 @@ supported switches:
 	--shell
 	--debug
 
+	--strict
+	--ccstrict
+	--ldstrict
+
 	--all-static
 	--all-shared
 	--enable-static
@@ -68,6 +72,7 @@ supported variables:
 	CFLAGS_CONFIG
 	CFLAGS_SYSROOT
 	CFLAGS_PATH
+	CFLAGS_STRICT
 	CFLAGS_UTIL
 
 	LDFLAGS
@@ -77,6 +82,7 @@ supported variables:
 	LDFLAGS_CONFIG
 	LDFLAGS_SYSROOT
 	LDFLAGS_PATH
+	LDFLAGS_STRICT
 	LDFLAGS_UTIL
 
 	PE_SUBSYSTEM
