@@ -58,8 +58,6 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 	struct pe_opt_hdr_align *	aalign;
 	struct pe_opt_hdr_img *		aimg;
 	struct pe_opt_hdr_ldr *		aldr;
-	struct pe_opt_hdr_dirs *	adirs;
-	size_t				sdirs;
 
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
 	memset(&m->dirs,0,sizeof(m->dirs));
@@ -72,7 +70,6 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_32.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_32.size_of_image;
 			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_32.loader_flags;
-			adirs	= (struct pe_opt_hdr_dirs *)&p->opt_hdr_32.export_tbl;
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
@@ -80,7 +77,6 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_64.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_64.size_of_image;
 			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_64.loader_flags;
-			adirs	= (struct pe_opt_hdr_dirs *)&p->opt_hdr_64.export_tbl;
 			break;
 
 		default:
