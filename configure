@@ -322,6 +322,18 @@ cross_defaults()
 }
 
 
+config_flags()
+{
+	mb_ldflags_tmp=" $mb_ldflags "
+	mb_ldflags_libs=`echo "$mb_ldflags_tmp" | sed 's/ -static / /g'`
+
+	if [ "$mb_ldflags_tmp" != "$mb_ldflags_libs" ]; then
+		mb_ldflags="$mb_ldflags_libs"
+		mb_ldflags_util="$mb_ldflags_util -static"
+	fi
+}
+
+
 config_copy()
 {
 	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
@@ -522,6 +534,7 @@ cross_defaults
 
 
 # four: config
+config_flags
 config_copy
 config_host
 config_status
