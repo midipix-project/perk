@@ -9,6 +9,7 @@ API_HEADERS = \
 INTERNAL_HEADERS = \
 	$(PROJECT_DIR)/src/internal/argv/argv.h \
 	$(PROJECT_DIR)/src/internal/$(PACKAGE)_driver_impl.h \
+	$(PROJECT_DIR)/src/internal/$(PACKAGE)_endian_impl.h \
 	$(PROJECT_DIR)/src/internal/$(PACKAGE)_output_impl.h \
 	$(PROJECT_DIR)/src/internal/$(PACKAGE)_reader_impl.h \
 
