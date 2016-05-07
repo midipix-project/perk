@@ -50,3 +50,15 @@ app-tag:	PACKAGE_APP = $(DEFAULT_APP)
 app.tag:	$(DEFAULT_APP)
 
 endif
+
+
+
+ifeq ($(CUSTOM_INSTALL_HEADERS),yes)
+
+install-headers:install-headers-custom
+
+else
+
+install-headers:install-headers-default
+
+endif

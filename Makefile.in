@@ -2,6 +2,7 @@ PACKAGE 		= @package@
 NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
 GIT_REFERENCE_DIR	= @git_reference_dir@
+CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
 
 BUILD 			= @build@
 HOST 			= @host@
@@ -124,7 +125,7 @@ app.tag:
 install-libs:	package-install-shared
 install-libs:	package-install-static
 
-install-headers:package-shared package-static
+install-headers-default:
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 

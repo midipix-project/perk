@@ -354,6 +354,7 @@ config_copy()
 			-e 's^@nickname@^'"$mb_nickname"'^g'				\
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
 			-e 's^@git_reference_dir@^'"$mb_git_reference_dir"'^g'		\
+			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
 											\
 			-e 's^@build@^'"$mb_build"'^g'					\
 			-e 's^@host@^'"$mb_host"'^g'					\
