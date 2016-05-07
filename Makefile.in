@@ -369,6 +369,7 @@ clean:		clean-implib
 		default-app shared-app static-app \
 		install-shared install-static \
 		install-headers install-app \
+		install-headers-default install-headers-custom \
 		clean distclean clean-implib version \
 		.display .conf \
 		.display-project .display-env .display-tools .display-flags \
