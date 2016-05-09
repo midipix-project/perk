@@ -26,6 +26,18 @@ endif
 
 
 
+ifeq ($(DISABLE_FRONTEND),yes)
+app-tag:
+package-install-app:
+package-install-extras:
+else
+app-tag:		package-app app.tag
+package-install-app:	install-app
+package-install-extras:	install-extras
+endif
+
+
+
 ifeq ($(ALL_STATIC),yes)
 
 package-app:	static-app

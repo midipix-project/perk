@@ -62,6 +62,7 @@ USER_CXX                = @user_cxx@
 
 ALL_SHARED              = @all_shared@
 ALL_STATIC              = @all_static@
+DISABLE_FRONTEND	= @disable_frontend@
 DISABLE_SHARED          = @disable_shared@
 DISABLE_STATIC          = @disable_static@
 
@@ -110,13 +111,11 @@ lib/%$(OS_ARCHIVE_EXT):
 
 all:		package-shared package-static app
 
-install:	install-app
-install:	install-extras
+install:	package-install-app
+install:	package-install-extras
 install:	install-libs
 
-app:		package-app app-tag
-
-app-tag:	package-app app.tag
+app:		app-tag
 
 app.tag:
 		cp $(PACKAGE_APP) $(APP)
@@ -349,6 +348,7 @@ clean:		clean-implib
 .display-config:
 		@echo ALL_SHARED:'             '$(ALL_SHARED)
 		@echo ALL_STATIC:'             '$(ALL_STATIC)
+		@echo DISABLE_FRONTEND:'       '$(DISABLE_FRONTEND)
 		@echo DISABLE_SHARED:'         '$(DISABLE_SHARED)
 		@echo DISABLE_STATIC:'         '$(DISABLE_STATIC)
 
