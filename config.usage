@@ -37,6 +37,11 @@ supported switches:
 	--disable-static
 	--disable-shared
 
+	--enable-app
+	--enable-frontend
+	--disable-app
+	--disable-frontend
+
 
 supported variables:
 --------------------

@@ -178,6 +178,7 @@ common_defaults()
 	# config
 	[ -z "$mb_all_static" ]		&& mb_all_static='no'
 	[ -z "$mb_all_shared" ]		&& mb_all_shared='no'
+	[ -z "$mb_disable_frontend" ]	&& mb_disable_frontend='no'
 	[ -z "$mb_disable_static" ]	&& mb_disable_static='no'
 	[ -z "$mb_disable_shared" ]	&& mb_disable_shared='no'
 
@@ -416,6 +417,7 @@ config_copy()
 											\
 			-e 's^@all_static@^'"$mb_all_static"'^g'			\
 			-e 's^@all_shared@^'"$mb_all_shared"'^g'			\
+			-e 's^@disable_frontend@^'"$mb_disable_frontend"'^g'		\
 			-e 's^@disable_static@^'"$mb_disable_static"'^g'		\
 			-e 's^@disable_shared@^'"$mb_disable_shared"'^g'		\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
@@ -536,6 +538,18 @@ for arg ; do
 			;;
 		--all-shared)
 			mb_all_shared='yes'
+			;;
+		--disable-frontend)
+			mb_disable_frontend='yes'
+			;;
+		--disable-app)
+			mb_disable_frontend='yes'
+			;;
+		--enable-frontend)
+			mb_disable_frontend='no'
+			;;
+		--enable-app)
+			mb_disable_frontend='no'
 			;;
 		--disable-static)
 			mb_disable_static='yes'
