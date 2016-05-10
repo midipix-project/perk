@@ -79,9 +79,9 @@ include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
-include $(PROJECT_DIR)/project/defs.mk
-include $(PROJECT_DIR)/project/version.mk
-include $(PROJECT_DIR)/project/custom.mk
+include $(PROJECT_DIR)/sofort/defs.mk
+include $(PROJECT_DIR)/sofort/version.mk
+include $(PROJECT_DIR)/sofort/custom.mk
 
 include $(PROJECT_DIR)/project/tree.mk
 include $(PROJECT_DIR)/project/depends.mk
