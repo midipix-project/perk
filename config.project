@@ -2,6 +2,7 @@
 mb_package=perk
 mb_require_out_of_tree=no
 mb_custom_install_headers=no
+mb_avoid_version=no
 
 
 # build

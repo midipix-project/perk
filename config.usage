@@ -5,6 +5,7 @@ supported switches:
 	--help
 
 	--nickname
+	--avoid-version
 
 	--prefix
 	--exec-prefix

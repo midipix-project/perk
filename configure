@@ -119,6 +119,7 @@ common_defaults()
 {
 	# project
 	[ -z "$mb_nickname" ] 		&& mb_nickname=$mb_package
+	[ -z "$mb_avoid_version" ] 	&& mb_avoid_version='no'
 
 	# dirs
 	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
@@ -356,6 +357,7 @@ config_copy()
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
 			-e 's^@git_reference_dir@^'"$mb_git_reference_dir"'^g'		\
 			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
+			-e 's^@avoid_version@^'"$mb_avoid_version"'^g'			\
 											\
 			-e 's^@build@^'"$mb_build"'^g'					\
 			-e 's^@host@^'"$mb_host"'^g'					\
@@ -579,6 +581,9 @@ for arg ; do
 		# project
 		--nickname=*)
 			mb_nickname=${arg#*=}
+			;;
+		--avoid-version)
+			mb_avoid_version='yes'
 			;;
 
 		*)
