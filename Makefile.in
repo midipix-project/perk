@@ -3,6 +3,7 @@ NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
 GIT_REFERENCE_DIR	= @git_reference_dir@
 CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
+AVOID_VERSION		= @avoid_version@
 
 BUILD 			= @build@
 HOST 			= @host@
@@ -128,7 +129,8 @@ install-headers-default:
 		mkdir -p $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 		cp $(API_HEADERS) $(DESTDIR)$(INCLUDEDIR)/$(PACKAGE)
 
-install-shared:	shared install-lib install-soname install-solink install-implib
+install-shared:	shared install-lib install-implib
+install-shared: package-install-soname package-install-solink
 install-shared: install-headers
 
 install-lib:	shared
@@ -149,7 +151,8 @@ install-static-app:	static-app install-app-extras
 
 
 
-shared:		shared-lib shared-soname shared-solink implib
+shared:		shared-lib implib
+shared:		package-shared-soname package-shared-solink
 
 static:		static-lib
 
@@ -365,9 +368,13 @@ clean:		clean-implib
 .PHONY:		all install shared static app \
 		package-app \
 		shared-objs shared-lib \
+		shared-soname shared-solink \
+		package-shared-soname package-shared-solink \
 		static-objs static-lib \
 		default-app shared-app static-app \
 		install-shared install-static \
+		install-soname install-solink \
+		package-install-soname package-install-solink \
 		install-headers install-app \
 		install-headers-default install-headers-custom \
 		clean distclean clean-implib version \

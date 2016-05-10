@@ -4,8 +4,27 @@ CFLAGS_VERSION	+= -D$(VER_NAMESPACE)_TAG_VER_MAJOR=$(VER_MAJOR)
 CFLAGS_VERSION	+= -D$(VER_NAMESPACE)_TAG_VER_MINOR=$(VER_MINOR)
 CFLAGS_VERSION	+= -D$(VER_NAMESPACE)_TAG_VER_PATCH=$(VER_PATCH)
 
+ifeq ($(AVOID_VERSION),yes)
+
+VER_XYZ		=
+VER_SONAME	=
+
+package-shared-soname:
+package-shared-solink:
+package-install-soname:
+package-install-solink:
+
+else
+
 VER_XYZ		= .$(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 VER_SONAME	= .$(VER_MAJOR)
+
+package-shared-soname:	shared-soname
+package-shared-solink:	shared-solink
+package-install-soname:	install-soname
+package-install-solink:	install-solink
+
+
 
 # libfoo.so (common)
 install-solink:		install-lib
@@ -39,4 +58,6 @@ install-soname:		install-lib
 
 $(SHARED_SONAME):	$(SHARED_LIB)
 			cp $(SHARED_LIB) $(SHARED_SONAME)
+endif
+
 endif
