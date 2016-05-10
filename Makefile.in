@@ -94,10 +94,10 @@ include $(PROJECT_DIR)/project/overrides.mk
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag version.tag
+src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag version.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag dirs.tag version.tag
+src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag version.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 lib/%$(OS_LIB_SUFFIX)$(VER_XYZ):
@@ -198,7 +198,7 @@ $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		$(CC) -static -o $@ $^ -l$(PACKAGE) $(LDFLAGS_STATIC)
 
 
-dirs: 		dirs.tag tree.tag
+dirs: 		dirs.tag
 
 dirs.tag:
 		mkdir -p bin
