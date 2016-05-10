@@ -195,7 +195,7 @@ $(SHARED_APP):	$(SHARED_LIB) $(APP_OBJS)
 
 $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		rm -f app.tag
-		$(CC) -static -o $@ $^ -l$(PACKAGE) $(LDFLAGS_STATIC)
+		$(CC) -static -o $@ $^ $(LDFLAGS_STATIC)
 
 
 dirs: 		dirs.tag
