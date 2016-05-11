@@ -5,6 +5,9 @@ LDFLAGS_SHARED	+= $(LDFLAGS_IMPLIB)
 LDFLAGS_SHARED	+= -Wl,-soname
 LDFLAGS_SHARED	+= -Wl,$(DSO_SONAME)
 
+PE_SUBSYSTEM	?= windows
+LDFLAGS_COMMON	+= -Wl,--subsystem=$(PE_SUBSYSTEM)
+
 implib:			implib-ver package-implib-soname package-implib-solink
 
 implib-ver:		shared-lib $(IMPLIB_VER)
