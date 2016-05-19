@@ -30,7 +30,7 @@ init_vars()
 
 	# git
 	if [ -d "$mb_project_dir/.git" ]; then
-		mb_git_reference_dir="\$(PROJECT_DIR)/.git"
+		mb_git_reference_index="\$(PROJECT_DIR)/.git/index"
 	fi
 
 	# project
@@ -355,7 +355,7 @@ config_copy()
 	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
 			-e 's^@nickname@^'"$mb_nickname"'^g'				\
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
-			-e 's^@git_reference_dir@^'"$mb_git_reference_dir"'^g'		\
+			-e 's^@git_reference_index@^'"$mb_git_reference_index"'^g'	\
 			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
 			-e 's^@avoid_version@^'"$mb_avoid_version"'^g'			\
 											\

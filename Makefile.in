@@ -1,7 +1,7 @@
 PACKAGE 		= @package@
 NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
-GIT_REFERENCE_DIR	= @git_reference_dir@
+GIT_REFERENCE_INDEX	= @git_reference_index@
 CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
 AVOID_VERSION		= @avoid_version@
 
@@ -212,7 +212,7 @@ host.tag:	Makefile
 		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
 
-version.tag:	$(GIT_REFERENCE_DIR)
+version.tag:	$(GIT_REFERENCE_INDEX)
 		$(PROJECT_DIR)/sysinfo/version.sh	\
 			-s $(PROJECT_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
