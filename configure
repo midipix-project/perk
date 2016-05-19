@@ -70,6 +70,8 @@ init_vars()
 	mb_cflags_path=$CFLAGS_PATH
 	mb_cflags_strict=$CFLAGS_STRICT
 	mb_cflags_util=$CFLAGS_UTIL
+	mb_cflags_last=$CFLAGS_LAST
+	mb_cflags_once=$CFLAGS_ONCE
 
 	mb_ldflags=$LDFLAGS
 	mb_ldflags_debug=$LDFLAGS_DEBUG
@@ -80,6 +82,8 @@ init_vars()
 	mb_ldflags_path=$LDFLAGS_PATH
 	mb_ldflags_strict=$LDFLAGS_STRICT
 	mb_ldflags_util=$LDFLAGS_UTIL
+	mb_ldflags_last=$LDFLAGS_LAST
+	mb_ldflags_once=$LDFLAGS_ONCE
 
 	mb_pe_subsystem=$PE_SUBSYSTEM
 	mb_pe_image_base=$PE_IMAGE_BASE
@@ -158,6 +162,8 @@ common_defaults()
 	[ -z "$mb_cflags_path" ]	&& mb_cflags_path=$mb_default_cflags_path
 	[ -z "$mb_cflags_strict" ]	&& mb_cflags_strict=$mb_default_cflags_strict
 	[ -z "$mb_cflags_util" ]	&& mb_cflags_util=$mb_default_cflags_util
+	[ -z "$mb_cflags_last" ]	&& mb_cflags_last=$mb_default_cflags_last
+	[ -z "$mb_cflags_once" ]	&& mb_cflags_once=$mb_default_cflags_once
 
 	[ -z "$mb_ldflags_debug" ]	&& mb_ldflags_debug=$mb_default_ldflags_debug
 	[ -z "$mb_ldflags_common" ]	&& mb_ldflags_common=$mb_default_ldflags_common
@@ -167,6 +173,8 @@ common_defaults()
 	[ -z "$mb_ldflags_path" ]	&& mb_ldflags_path=$mb_default_ldflags_path
 	[ -z "$mb_ldflags_strict" ]	&& mb_ldflags_strict=$mb_default_ldflags_strict
 	[ -z "$mb_ldflags_util" ]	&& mb_ldflags_util=$mb_default_ldflags_util
+	[ -z "$mb_ldflags_last" ]	&& mb_ldflags_last=$mb_default_ldflags_last
+	[ -z "$mb_ldflags_once" ]	&& mb_ldflags_once=$mb_default_ldflags_once
 
 	[ -z "$mb_pe_subsystem" ]	&& mb_pe_subsystem=$mb_default_pe_subsystem
 	[ -z "$mb_pe_image_base" ]	&& mb_pe_image_base=$mb_default_pe_image_base
@@ -380,6 +388,8 @@ config_copy()
 			-e 's^@cflags_path@^'"$mb_cflags_path"'^g'			\
 			-e 's^@cflags_strict@^'"$mb_cflags_strict"'^g'			\
 			-e 's^@cflags_util@^'"$mb_cflags_util"'^g'			\
+			-e 's^@cflags_last@^'"$mb_cflags_last"'^g'			\
+			-e 's^@cflags_once@^'"$mb_cflags_once"'^g'			\
 											\
 			-e 's^@ldflags@^'"$mb_ldflags"'^g'				\
 			-e 's^@ldflags_debug@^'"$mb_ldflags_debug"'^g'			\
@@ -390,6 +400,8 @@ config_copy()
 			-e 's^@ldflags_path@^'"$mb_ldflags_path"'^g'			\
 			-e 's^@ldflags_strict@^'"$mb_ldflags_strict"'^g'		\
 			-e 's^@ldflags_util@^'"$mb_ldflags_util"'^g'			\
+			-e 's^@ldflags_last@^'"$mb_ldflags_last"'^g'			\
+			-e 's^@ldflags_once@^'"$mb_ldflags_once"'^g'			\
 											\
 			-e 's^@pe_subsystem@^'"$mb_pe_subsystem"'^g'			\
 			-e 's^@pe_image\_base@^'"$mb_pe_image_base"'^g'			\

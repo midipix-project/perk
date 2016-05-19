@@ -25,6 +25,8 @@ CFLAGS_SITE		= @cflags_site@
 CFLAGS_PATH 		= @cflags_path@
 CFLAGS_STRICT 		= @cflags_strict@
 CFLAGS_UTIL 		= @cflags_util@
+CFLAGS_LAST 		= @cflags_last@
+CFLAGS_ONCE 		= @cflags_once@
 
 LDFLAGS_COMMON 		= @ldflags_common@
 LDFLAGS_DEBUG 		= @ldflags_debug@
@@ -34,6 +36,8 @@ LDFLAGS_SYSROOT 	= @ldflags_sysroot@
 LDFLAGS_PATH 		= @ldflags_path@
 LDFLAGS_STRICT 		= @ldflags_strict@
 LDFLAGS_UTIL 		= @ldflags_util@
+LDFLAGS_LAST 		= @ldflags_last@
+LDFLAGS_ONCE 		= @ldflags_once@
 
 PE_SUBSYSTEM 		= @pe_subsystem@
 PE_IMAGE_BASE 		= @pe_image_base@
@@ -303,6 +307,8 @@ clean:		clean-implib
 		@echo CFLAGS_PATH:'            '$(CFLAGS_PATH)
 		@echo CFLAGS_STRICT:'          '$(CFLAGS_STRICT)
 		@echo CFLAGS_UTIL:'            '$(CFLAGS_UTIL)
+		@echo CFLAGS_LAST:'            '$(CFLAGS_LAST)
+		@echo CFLAGS_ONCE:'            '$(CFLAGS_ONCE)
 		@echo
 		@echo LDFLAGS_COMMON:'         '$(LDFLAGS_COMMON)
 		@echo LDFLAGS_DEBUG:'          '$(LDFLAGS_DEBUG)
@@ -312,6 +318,8 @@ clean:		clean-implib
 		@echo LDFLAGS_PATH:'           '$(LDFLAGS_PATH)
 		@echo LDFLAGS_STRICT:'         '$(LDFLAGS_STRICT)
 		@echo LDFLAGS_UTIL:'           '$(LDFLAGS_UTIL)
+		@echo LDFLAGS_LAST:'           '$(LDFLAGS_LAST)
+		@echo LDFLAGS_ONCE:'           '$(LDFLAGS_ONCE)
 		@echo
 
 .display-pe:
