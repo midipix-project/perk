@@ -30,6 +30,8 @@ mb_default_cflags_sysroot=
 mb_default_cflags_path=
 mb_default_cflags_strict=
 mb_default_cflags_util=
+mb_default_cflags_last=
+mb_default_cflags_once=
 
 mb_default_ldflags_common="-Llib"
 mb_default_ldflags_debug=
@@ -39,6 +41,8 @@ mb_default_ldflags_sysroot=
 mb_default_ldflags_path=
 mb_default_ldflags_strict=
 mb_default_ldflags_util=
+mb_default_ldflags_last=
+mb_default_ldflags_once=
 
 mb_default_pe_subsystem=windows
 mb_default_pe_image_base=
