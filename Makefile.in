@@ -83,6 +83,8 @@ include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 
+include $(PROJECT_DIR)/project/osforce.mk
+
 include $(PROJECT_DIR)/sofort/defs.mk
 include $(PROJECT_DIR)/sofort/version.mk
 include $(PROJECT_DIR)/sofort/custom.mk
