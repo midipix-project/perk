@@ -314,8 +314,7 @@ native_defaults()
 	mb_native_os=`uname | tr '[:upper:]' '[:lower:]'`
 
 	mb_native_os_sizeof_pointer=`$mb_native_cc -dM -E - < /dev/null \
-			| grep __SIZEOF_POINTER__  \
-			| cut -d ' ' -f3`
+			| awk '$2 == "__SIZEOF_POINTER__" { print $3 }'`
 
 	mb_native_os_bits=`expr '8' '*' '0'"$mb_native_os_sizeof_pointer"`
 
