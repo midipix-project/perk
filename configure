@@ -277,19 +277,19 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__clang__' > /dev/null && mb_compiler='clang'
+		$mb_native_cc -dM -E - < /dev/null | grep -q '__clang__' && mb_compiler='clang'
 	fi
 
 	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__GCC' > /dev/null && mb_compiler='gcc'
+		$mb_native_cc -dM -E - < /dev/null | grep -q '__GCC' && mb_compiler='gcc'
 	fi
 
 	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep "^gcc" > /dev/null && mb_compiler='gcc'
+		$mb_native_cc -dM -E - < /dev/null | grep -q "^gcc" && mb_compiler='gcc'
 	fi
 
 	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_compiler='cparser'
+		$mb_native_cc -dM -E - < /dev/null | grep -q '__CPARSER__' && mb_compiler='cparser'
 	fi
 
 	if [ -z "$mb_compiler" ]; then
