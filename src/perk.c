@@ -31,7 +31,7 @@ static const char * const pe_ver_plain[6] = {
 		"",""
 };
 
-static ssize_t perk_version(struct pe_driver_ctx * dctx)
+static ssize_t pe_version(struct pe_driver_ctx * dctx)
 {
 	const struct pe_source_version * verinfo;
 	const char * const * verclr;
@@ -46,7 +46,7 @@ static ssize_t perk_version(struct pe_driver_ctx * dctx)
 			verclr[4],verinfo->commit,verclr[5]);
 }
 
-static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
+static ssize_t pe_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 {
 	if (*fpara) {
 		*fpara = 0;
@@ -59,7 +59,7 @@ static ssize_t perk_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 		return 0;
 }
 
-static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
+static void pe_perform_unit_actions(struct pe_unit_ctx * uctx)
 {
 	int      fpara = 0;
 	uint64_t flags = uctx->cctx->fmtflags;
@@ -71,20 +71,20 @@ static void perk_perform_unit_actions(struct pe_unit_ctx * uctx)
 	}
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
-		perk_paragraph_break(uctx,&fpara);
+		pe_paragraph_break(uctx,&fpara);
 		uctx->status = pe_output_import_libraries(uctx->meta,uctx->cctx,0);
 		uctx->nerrors += !!uctx->status;
 		fpara += (uctx->meta->summary.nimplibs > 0);
 	}
 }
 
-static int perk_exit(struct pe_driver_ctx * dctx, int nerrors)
+static int pe_exit(struct pe_driver_ctx * dctx, int nerrors)
 {
 	pe_free_driver_ctx(dctx);
 	return nerrors ? 2 : 0;
 }
 
-int perk_main(int argc, char ** argv, char ** envp)
+int pe_main(int argc, char ** argv, char ** envp)
 {
 	int			ret;
 	struct pe_driver_ctx *	dctx;
@@ -95,25 +95,25 @@ int perk_main(int argc, char ** argv, char ** envp)
 		return (ret == PERK_USAGE) ? !--argc : 2;
 
 	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
-		if ((perk_version(dctx)) < 0)
-			return perk_exit(dctx,2);
+		if ((pe_version(dctx)) < 0)
+			return pe_exit(dctx,2);
 
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
-			perk_perform_unit_actions(uctx);
+			pe_perform_unit_actions(uctx);
 			ret += uctx->nerrors;
 			pe_free_unit_ctx(uctx);
 		}
 	}
 
-	return perk_exit(dctx,ret);
+	return pe_exit(dctx,ret);
 }
 
 #ifndef PERK_IN_A_BOX
 
 int main(int argc, char ** argv, char ** envp)
 {
-	return perk_main(argc,argv,envp);
+	return pe_main(argc,argv,envp);
 }
 
 #endif
