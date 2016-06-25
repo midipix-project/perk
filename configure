@@ -285,6 +285,10 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_compiler" ]; then
+		$mb_native_cc -dM -E - < /dev/null | grep "^gcc" > /dev/null && mb_compiler='gcc'
+	fi
+
+	if [ -z "$mb_compiler" ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep '__CPARSER__' > /dev/null && mb_compiler='cparser'
 	fi
 
