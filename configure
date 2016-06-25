@@ -16,6 +16,11 @@ error_msg()
 	echo "$@" >&2
 }
 
+warning_msg()
+{
+	echo "$@" >&2
+}
+
 
 init_vars()
 {
@@ -317,8 +322,7 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_native_os_sizeof_pointer" ]; then
-		error_msg "config error: could not determine size of pointer on native system."
-		exit 2
+		warning_msg "config error: could not determine size of pointer on native system."
 	fi
 
 	# fallback os recipe
