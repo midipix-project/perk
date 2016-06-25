@@ -316,7 +316,7 @@ native_defaults()
 	mb_native_os_sizeof_pointer=`$mb_native_cc -dM -E - < /dev/null \
 			| awk '$2 == "__SIZEOF_POINTER__" { print $3 }'`
 
-	mb_native_os_bits=`expr '8' '*' '0'"$mb_native_os_sizeof_pointer"`
+	mb_native_os_bits=$((8 * ${mb_native_os_sizeof_pointer:-0}))
 
 	if [ $mb_native_os_bits = 32 ]; then
 		mb_native_os_underscore='_'
