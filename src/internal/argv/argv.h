@@ -497,6 +497,11 @@ static const char * argv_program_name(const char * program_path)
 
 static void argv_show_error(struct argv_ctx * ctx)
 {
+	char opt_short_name[2] = {0,0};
+
+	if (ctx->erropt && ctx->erropt->short_name)
+		opt_short_name[0] = ctx->erropt->short_name;
+
 	fprintf(stderr,"%s: error: ",ctx->program);
 
 	switch (ctx->errcode) {
@@ -509,21 +514,21 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_OPTARG_NONE:
-			fprintf(stderr,"'%s' is not a valid option value for [%s%c%s%s%s] "
+			fprintf(stderr,"'%s' is not a valid option value for [%s%s%s%s%s] "
 					"(option values may not be specified)\n",
 				ctx->errch,
-				ctx->erropt->short_name ? "-" : "",
-				ctx->erropt->short_name,
-				ctx->erropt->short_name ? "," : "",
+				opt_short_name[0] ? "-" : "",
+				opt_short_name,
+				opt_short_name[0] ? "," : "",
 				ctx->erropt->long_name ? "--" : "",
 				ctx->erropt->long_name);
 			break;
 
 		case ARGV_ERROR_OPTARG_REQUIRED:
-			fprintf(stderr,"option [%s%c%s%s%s] requires %s %s%s%s\n",
-				ctx->erropt->short_name ? "-" : "",
-				ctx->erropt->short_name,
-				ctx->erropt->short_name ? "," : "",
+			fprintf(stderr,"option [%s%s%s%s%s] requires %s %s%s%s\n",
+				opt_short_name[0] ? "-" : "",
+				opt_short_name,
+				opt_short_name[0] ? "," : "",
 				ctx->erropt->long_name ? "--" : "",
 				ctx->erropt->long_name,
 				ctx->erropt->paradigm ? "one of the following values:" : "a value",
@@ -533,11 +538,11 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_OPTARG_PARADIGM:
-			fprintf(stderr,"'%s' is not a valid option value for [%s%c%s%s%s]={%s}\n",
+			fprintf(stderr,"'%s' is not a valid option value for [%s%s%s%s%s]={%s}\n",
 				ctx->errch,
-				ctx->erropt->short_name ? "-" : "",
-				ctx->erropt->short_name,
-				ctx->erropt->short_name ? "," : "",
+				opt_short_name[0] ? "-" : "",
+				opt_short_name,
+				opt_short_name[0] ? "," : "",
 				ctx->erropt->long_name ? "--" : "",
 				ctx->erropt->long_name,
 				ctx->erropt->paradigm);
