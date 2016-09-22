@@ -6,6 +6,7 @@ supported switches:
 
 	--nickname
 	--avoid-version
+	--source-dir
 
 	--prefix
 	--exec-prefix
@@ -47,6 +48,7 @@ supported switches:
 supported variables:
 --------------------
 	NICKNAME
+	SOURCE_DIR
 
 	PREFIX
 	EXEC_PREFIX

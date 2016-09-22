@@ -33,13 +33,9 @@ init_vars()
 		. "$mb_config" || exit 2
 	fi
 
-	# git
-	if [ -d "$mb_project_dir/.git" ]; then
-		mb_git_reference_index="\$(PROJECT_DIR)/.git/index"
-	fi
-
 	# project
 	mb_nickname=$NICKNAME
+	mb_source_dir=$SOURCE_DIR
 
 	# dirs
 	mb_prefix=$PREFIX
@@ -124,10 +120,33 @@ verify_build_directory()
 }
 
 
+verify_source_directory()
+{
+	if [ -z "$mb_source_dir" ]; then
+		if [ "$mb_require_source_dir" = yes ]; then
+			error_msg "$mb_package: specifying an external source directory is required."
+			error_msg "you can set the source directory either via --source-dir=<path>,"
+			error_msg "or by setting the SOURCE_DIR variable."
+			exit 2
+		fi
+	fi
+}
+
+
 common_defaults()
 {
+	# git
+	if [ -n "$mb_source_dir" ]; then
+		if [ -d "$mb_source_dir/.git" ]; then
+			mb_git_reference_dir="\$(SOURCE_DIR)/.git"
+		fi
+	elif [ -d "$mb_project_dir/.git" ]; then
+		mb_git_reference_dir="\$(PROJECT_DIR)/.git"
+	fi
+
 	# project
 	[ -z "$mb_nickname" ] 		&& mb_nickname=$mb_package
+	[ -z "$mb_source_dir" ] 	&& mb_source_dir=$mb_project_dir
 	[ -z "$mb_avoid_version" ] 	&& mb_avoid_version='no'
 
 	# dirs
@@ -370,6 +389,7 @@ config_copy()
 	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
 			-e 's^@nickname@^'"$mb_nickname"'^g'				\
 			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
+			-e 's^@source_dir@^'"$mb_source_dir"'^g'			\
 			-e 's^@git_reference_index@^'"$mb_git_reference_index"'^g'	\
 			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
 			-e 's^@avoid_version@^'"$mb_avoid_version"'^g'			\
@@ -604,6 +624,9 @@ for arg ; do
 		--avoid-version)
 			mb_avoid_version='yes'
 			;;
+		--source-dir=*)
+			mb_source_dir=${arg#*=}
+			;;
 
 		*)
 			error_msg ${arg#}: "unsupported config argument."
@@ -614,14 +637,19 @@ done
 
 
 
-# three: defaults
+# three: validation
+verify_source_directory
+
+
+
+# four: defaults
 common_defaults
 native_defaults
 cross_defaults
 
 
 
-# four: config
+# five: config
 config_flags
 config_copy
 config_support

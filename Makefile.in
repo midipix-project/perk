@@ -1,6 +1,7 @@
 PACKAGE 		= @package@
 NICKNAME 		= @nickname@
 PROJECT_DIR 		= @project_dir@
+SOURCE_DIR 		= @source_dir@
 GIT_REFERENCE_INDEX	= @git_reference_index@
 CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
 AVOID_VERSION		= @avoid_version@
@@ -101,10 +102,10 @@ include $(PROJECT_DIR)/project/overrides.mk
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
 
-src/%.lo: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+src/%.lo: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_SHARED)
 
-src/%.o: 	$(PROJECT_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
+src/%.o: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
 lib/%$(OS_LIB_SUFFIX)$(VER_XYZ):
@@ -220,7 +221,7 @@ host.tag:	Makefile
 
 version.tag:	$(GIT_REFERENCE_INDEX)
 		$(PROJECT_DIR)/sysinfo/version.sh	\
-			-s $(PROJECT_DIR)		\
+			-s $(SOURCE_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
 			-p $(PACKAGE)
 		touch version.tag
