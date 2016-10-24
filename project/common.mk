@@ -2,6 +2,7 @@ COMMON_SRCS = \
 	src/driver/pe_amain.c \
 	src/driver/pe_driver_ctx.c \
 	src/driver/pe_unit_ctx.c \
+	src/internal/perk_errinfo_impl.c \
 	src/logic/pe_get_image_meta.c \
 	src/logic/pe_map_raw_image.c \
 	src/output/pe_output_export_symbols.c \
