@@ -44,4 +44,18 @@ struct pe_unit_ctx_impl {
 	struct pe_unit_ctx	uctx;
 };
 
+
+static inline struct pe_driver_ctx_impl * pe_get_driver_ictx(
+	const struct pe_driver_ctx * dctx)
+{
+        uintptr_t addr;
+
+        if (dctx) {
+                addr = (uintptr_t)dctx - offsetof(struct pe_driver_ctx_impl,ctx);
+                return (struct pe_driver_ctx_impl *)addr;
+        }
+
+        return 0;
+}
+
 #endif
