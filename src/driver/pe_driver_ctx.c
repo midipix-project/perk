@@ -74,6 +74,7 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	size_t				size;
 	struct argv_entry *		entry;
 	const char **			units;
+	int				elements;
 
 	size =  sizeof(struct pe_driver_ctx_alloc);
 	size += (nunits+1)*sizeof(const char *);
@@ -83,6 +84,11 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 
 	if (cctx)
 		memcpy(&ictx->ctx.cctx,cctx,sizeof(*cctx));
+
+	elements = sizeof(ictx->ctx.erribuf) / sizeof(*ictx->ctx.erribuf);
+
+	ictx->ctx.errinfp  = &ictx->ctx.erriptr[0];
+	ictx->ctx.erricap  = &ictx->ctx.erriptr[--elements];
 
 	ictx->meta		= meta;
 	ictx->ctx.cctx.symctx	= &ictx->ctx.symctx;
@@ -96,6 +102,7 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 			*units++ = entry->arg;
 
 	ictx->ctx.ctx.units = ictx->units;
+	ictx->ctx.ctx.errv  = ictx->ctx.errinfp;
 	return &ictx->ctx;
 }
 
