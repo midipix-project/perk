@@ -46,6 +46,12 @@ extern "C" {
 /* unit action flags */
 #define PERK_ACTION_MAP_READWRITE	0x0001
 
+/* error flags */
+#define PERK_ERROR_TOP_LEVEL		0x0001
+#define PERK_ERROR_NESTED		0x0002
+#define PERK_ERROR_CHILD		0x0004
+#define PERK_ERROR_CUSTOM		0x0008
+
 struct pe_source_version {
 	int		major;
 	int		minor;
@@ -120,6 +126,15 @@ struct pe_io_ctx {
 	int				fdtmp;
 };
 
+struct pe_error_info {
+	int				syserror;
+	int				liberror;
+	const char *			function;
+	int				line;
+	unsigned			flags;
+	void *				ctx;
+};
+
 struct pe_common_ctx {
 	uint64_t			drvflags;
 	uint64_t			actflags;
@@ -141,6 +156,7 @@ struct pe_driver_ctx {
 	const char *			program;
 	const char *			module;
 	const struct pe_common_ctx *	cctx;
+	struct pe_error_info **		errv;
 	void *				any;
 	int				status;
 	int				nerrors;
