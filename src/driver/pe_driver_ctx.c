@@ -240,8 +240,8 @@ void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 	uintptr_t			addr;
 
 	if (ctx) {
-		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_alloc,ctx);
-		addr = addr - offsetof(struct pe_driver_ctx_impl,ctx);
+		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_impl,ctx);
+		addr = addr - offsetof(struct pe_driver_ctx_alloc,ctx);
 		ictx = (struct pe_driver_ctx_alloc *)addr;
 		pe_free_driver_ctx_impl(ictx);
 	}
