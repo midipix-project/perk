@@ -40,6 +40,9 @@ int pe_get_unit_ctx(
 	else if (!(ctx = calloc(1,sizeof(*ctx))))
 		return PERK_BUFFER_ERROR(dctx);
 
+	pe_driver_set_ectx(
+		dctx,0,path);
+
 	prot = (dctx->cctx->actflags & PERK_ACTION_MAP_READWRITE)
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
