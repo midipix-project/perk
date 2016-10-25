@@ -22,19 +22,19 @@ enum app_tags {
 };
 
 struct pe_driver_ctx_impl {
-	struct pe_symbol_ctx	symctx;
-	struct pe_output_ctx	outctx;
-	struct pe_linker_ctx	lnkctx;
-	struct pe_server_ctx	srvctx;
-	struct pe_io_ctx	ioctx;
-	struct pe_common_ctx	cctx;
-	struct pe_driver_ctx	ctx;
-	const struct pe_unit_ctx * euctx;
-	const char *		eunit;
-	struct pe_error_info **	errinfp;
-	struct pe_error_info **	erricap;
-	struct pe_error_info *	erriptr[64];
-	struct pe_error_info	erribuf[64];
+	struct pe_symbol_ctx        symctx;
+	struct pe_output_ctx        outctx;
+	struct pe_linker_ctx        lnkctx;
+	struct pe_server_ctx        srvctx;
+	struct pe_io_ctx            ioctx;
+	struct pe_common_ctx        cctx;
+	struct pe_driver_ctx        ctx;
+	const struct pe_unit_ctx *  euctx;
+	const char *                eunit;
+	struct pe_error_info **     errinfp;
+	struct pe_error_info **     erricap;
+	struct pe_error_info *      erriptr[64];
+	struct pe_error_info        erribuf[64];
 };
 
 struct pe_unit_ctx_impl {
