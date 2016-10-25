@@ -832,7 +832,7 @@ static void argv_usage(
 				indent,option->short_name,prefix,option->long_name);
 
 		else if ((fshort || fboth) && option->short_name)
-			sprintf(optstr,"%s-%d",indent,option->short_name);
+			sprintf(optstr,"%s-%c",indent,option->short_name);
 
 		else if (flong && option->long_name)
 			sprintf(optstr,"%s%s%s",
