@@ -9,12 +9,12 @@
 
 int pe_record_error(
 	const struct pe_driver_ctx *,
-	int		syserror,
-	int		liberror,
-	const char *	function,
-	int		line,
-	unsigned	flags,
-	void *		ctx);
+	int		esyscode,
+	int		elibcode,
+	const char *	efunction,
+	int		eline,
+	unsigned	eflags,
+	void *		ectx);
 
 #define PERK_SYSTEM_ERROR(dctx)           \
 	pe_record_error(                  \
@@ -58,11 +58,11 @@ int pe_record_error(
 		PERK_ERROR_TOP_LEVEL,     \
 		0)
 
-#define PERK_CUSTOM_ERROR(dctx,liberror)  \
+#define PERK_CUSTOM_ERROR(dctx,elibcode)  \
 	pe_record_error(                  \
 		dctx,                     \
 		0,                        \
-		liberror,                 \
+		elibcode,                 \
 		__func__,                 \
 		__LINE__,                 \
 		PERK_ERROR_TOP_LEVEL      \

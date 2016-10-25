@@ -139,12 +139,15 @@ struct pe_io_ctx {
 };
 
 struct pe_error_info {
-	int				syserror;
-	int				liberror;
-	const char *			function;
-	int				line;
-	unsigned			flags;
-	void *				ctx;
+	const struct pe_driver_ctx *	edctx;
+	const struct pe_unit_ctx *	euctx;
+	const char *			eunit;
+	int				esyscode;
+	int				elibcode;
+	const char *			efunction;
+	int				eline;
+	unsigned			eflags;
+	void *				eany;
 };
 
 struct pe_common_ctx {

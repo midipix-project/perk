@@ -33,13 +33,13 @@ static const char const * const pe_error_strings[PERK_ERR_CAP] = {
 
 static const char * pe_output_error_header(const struct pe_error_info * erri)
 {
-	if (erri->flags & PERK_ERROR_CHILD)
+	if (erri->eflags & PERK_ERROR_CHILD)
 		return "exec error upon";
 
-	else if (erri->flags & PERK_ERROR_TOP_LEVEL)
+	else if (erri->eflags & PERK_ERROR_TOP_LEVEL)
 		return "error logged in";
 
-	else if (erri->flags & PERK_ERROR_NESTED)
+	else if (erri->eflags & PERK_ERROR_NESTED)
 		return "< returned to >";
 
 	else
@@ -48,22 +48,22 @@ static const char * pe_output_error_header(const struct pe_error_info * erri)
 
 static const char * pe_output_strerror(const struct pe_error_info * erri)
 {
-	if (erri->flags & PERK_ERROR_CUSTOM)
-		return ((erri->liberror < 0) || (erri->liberror >= PERK_ERR_CAP))
+	if (erri->eflags & PERK_ERROR_CUSTOM)
+		return ((erri->elibcode < 0) || (erri->elibcode >= PERK_ERR_CAP))
 			? "internal error: please report to the maintainer"
-			: pe_error_strings[erri->liberror];
+			: pe_error_strings[erri->elibcode];
 
-	else if (erri->flags & PERK_ERROR_NESTED)
+	else if (erri->eflags & PERK_ERROR_NESTED)
 		return "";
 
-	else if (erri->flags & PERK_ERROR_CHILD)
+	else if (erri->eflags & PERK_ERROR_CHILD)
 		return "(see child process error messages)";
 
-	else if (erri->syserror == ENOBUFS)
+	else if (erri->esyscode == ENOBUFS)
 		return "input error: string length exceeds buffer size.";
 
 	else
-		return strerror(erri->syserror);
+		return strerror(erri->esyscode);
 }
 
 static int pe_output_error_record_plain(
@@ -75,8 +75,8 @@ static int pe_output_error_record_plain(
 	if (fprintf(stderr,"%s: %s %s(), line %d%s%s.\n",
 			dctx->program,
 			pe_output_error_header(erri),
-			erri->function,
-			erri->line,
+			erri->efunction,
+			erri->eline,
 			strlen(errdesc) ? ": " : "",
 			errdesc) < 0)
 		return -1;
@@ -103,11 +103,11 @@ static int pe_output_error_record_annotated(
 			aclr_reset,
 
 			aclr_bold,aclr_blue,
-			erri->function,
+			erri->efunction,
 			aclr_reset,
 
 			aclr_bold,aclr_green,
-			erri->line,
+			erri->eline,
 			aclr_reset,
 			strlen(errdesc) ? ": " : "",
 

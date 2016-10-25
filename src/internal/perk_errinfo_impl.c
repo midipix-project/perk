@@ -10,12 +10,12 @@
 
 int pe_record_error(
 	const struct pe_driver_ctx *	dctx,
-	int				syserror,
-	int				liberror,
-	const char *			function,
-	int				line,
-	unsigned			flags,
-	void *				ctx)
+	int				esyscode,
+	int				elibcode,
+	const char *			efunction,
+	int				eline,
+	unsigned			eflags,
+	void *				eany)
 {
 	struct pe_driver_ctx_impl *	ictx;
 	struct pe_error_info *		erri;
@@ -28,12 +28,13 @@ int pe_record_error(
 	*ictx->errinfp = &ictx->erribuf[ictx->errinfp - ictx->erriptr];
 	erri = *ictx->errinfp;
 
-	erri->syserror = syserror;
-	erri->liberror = liberror;
-	erri->function = function;
-	erri->line     = line;
-	erri->flags    = flags;
-	erri->ctx      = ctx;
+	erri->edctx     = dctx;
+	erri->esyscode  = esyscode;
+	erri->elibcode  = elibcode;
+	erri->efunction = efunction;
+	erri->eline     = eline;
+	erri->eflags    = eflags;
+	erri->eany      = eany;
 
 	ictx->errinfp++;
 
