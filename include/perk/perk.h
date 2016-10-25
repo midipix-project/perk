@@ -200,7 +200,7 @@ perk_api void pe_free_unit_ctx		(struct pe_unit_ctx *);
 /* utility api */
 perk_api int  pe_main			(int, char **, char **);
 perk_api int  pe_output_export_symbols	(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
-perk_api int  pe_output_import_libraries(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
+perk_api int  pe_output_import_libraries(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_error_record	(const struct pe_driver_ctx *, const struct pe_error_info *);
 perk_api int  pe_output_error_vector	(const struct pe_driver_ctx *);
 

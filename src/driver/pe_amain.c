@@ -59,7 +59,9 @@ static ssize_t pe_paragraph_break(struct pe_unit_ctx * uctx, int * fpara)
 		return 0;
 }
 
-static void pe_perform_unit_actions(struct pe_unit_ctx * uctx)
+static void pe_perform_unit_actions(
+	const struct pe_driver_ctx *	dctx,
+	struct pe_unit_ctx *		uctx)
 {
 	int      fpara = 0;
 	uint64_t flags = uctx->cctx->fmtflags;
@@ -72,7 +74,7 @@ static void pe_perform_unit_actions(struct pe_unit_ctx * uctx)
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
 		pe_paragraph_break(uctx,&fpara);
-		uctx->status = pe_output_import_libraries(uctx->meta,uctx->cctx,0);
+		uctx->status = pe_output_import_libraries(dctx,uctx->meta,0);
 		uctx->nerrors += !!uctx->status;
 		fpara += (uctx->meta->summary.nimplibs > 0);
 	}
@@ -100,7 +102,7 @@ int pe_main(int argc, char ** argv, char ** envp)
 
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
-			pe_perform_unit_actions(uctx);
+			pe_perform_unit_actions(dctx,uctx);
 			ret += uctx->nerrors;
 			pe_free_unit_ctx(uctx);
 		}

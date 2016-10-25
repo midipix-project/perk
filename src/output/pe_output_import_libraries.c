@@ -13,6 +13,7 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_output_impl.h"
+#include "perk_errinfo_impl.h"
 
 static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
 {
@@ -42,26 +43,31 @@ static int pretty_implib_item(const struct pe_common_ctx * cctx, const char * na
 }
 
 int pe_output_import_libraries(
+	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	m,
-	const struct pe_common_ctx *	cctx,
 	FILE *				fout)
 {
-	FILE *		ftmp;
-	int		i;
-	unsigned	j;
+	FILE *				ftmp;
+	int				i;
+	unsigned			j;
+	const struct pe_common_ctx *	cctx = dctx->cctx;
 
 	if (!m->summary.nimplibs)
 		return 0;
 
 	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
-		return -1;
+		return PERK_SYSTEM_ERROR(dctx);
 
 	if ((pretty_header(cctx,fout)) < 0)
-		return pe_output_epilog(-1,ftmp);
+		return pe_output_epilog(
+			PERK_FILE_ERROR(dctx),
+			ftmp);
 
 	for (i=0; i<m->summary.nimplibs; i++) {
 		if ((pretty_implib_header(cctx,m->idata[i].name,fout)) < 0)
-			return pe_output_epilog(-1,ftmp);
+			return pe_output_epilog(
+				PERK_FILE_ERROR(dctx),
+				ftmp);
 
 		if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
 			for (j=0; j<m->idata[i].count; j++)
@@ -70,8 +76,9 @@ int pe_output_import_libraries(
 							cctx,
 							m->idata[i].items[j].name,
 							fout)) < 0)
-						return pe_output_epilog(-1,ftmp);
-
+						return pe_output_epilog(
+							PERK_FILE_ERROR(dctx),
+							ftmp);
 	}
 
 	return pe_output_epilog(0,ftmp);
