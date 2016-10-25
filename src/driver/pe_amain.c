@@ -93,11 +93,13 @@ int pe_main(int argc, char ** argv, char ** envp)
 	const char **		unit;
 
 	if ((ret = pe_get_driver_ctx(argv,envp,PERK_DRIVER_FLAGS,&dctx)))
-		return (ret == PERK_USAGE) ? !--argc : 2;
+		return (ret == PERK_USAGE)
+			? !--argc
+			: PERK_ERROR;
 
 	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
 		if ((pe_version(dctx)) < 0)
-			return pe_exit(dctx,2);
+			return pe_exit(dctx,PERK_ERROR);
 
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
@@ -106,5 +108,5 @@ int pe_main(int argc, char ** argv, char ** envp)
 		}
 	}
 
-	return pe_exit(dctx,dctx->errv[0] ? 2 : 0);
+	return pe_exit(dctx,dctx->errv[0] ? PERK_ERROR : PERK_OK);
 }

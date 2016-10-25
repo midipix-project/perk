@@ -24,10 +24,7 @@ extern "C" {
 /* status codes */
 #define PERK_OK				0x00
 #define PERK_USAGE			0x01
-#define PERK_BAD_OPT			0x02
-#define PERK_BAD_OPT_VAL		0x03
-#define PERK_IO_ERROR			0xA0
-#define PERK_MAP_ERROR			0xA1
+#define PERK_ERROR			0x02
 
 /* driver flags */
 #define PERK_DRIVER_VERBOSITY_NONE	0x0000
