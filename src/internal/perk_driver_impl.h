@@ -29,6 +29,8 @@ struct pe_driver_ctx_impl {
 	struct pe_io_ctx	ioctx;
 	struct pe_common_ctx	cctx;
 	struct pe_driver_ctx	ctx;
+	const struct pe_unit_ctx * euctx;
+	const char *		eunit;
 	struct pe_error_info **	errinfp;
 	struct pe_error_info **	erricap;
 	struct pe_error_info *	erriptr[64];
@@ -55,6 +57,18 @@ static inline struct pe_driver_ctx_impl * pe_get_driver_ictx(
         }
 
         return 0;
+}
+
+static inline void pe_driver_set_ectx(
+	const struct pe_driver_ctx * dctx,
+	const struct pe_unit_ctx *   uctx,
+	const char *                 unit)
+{
+	struct pe_driver_ctx_impl *  ictx;
+
+	ictx        = pe_get_driver_ictx(dctx);
+	ictx->euctx = uctx;
+	ictx->eunit = unit;
 }
 
 #endif
