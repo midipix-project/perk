@@ -181,7 +181,6 @@ struct pe_unit_ctx {
 	const char * const *		path;
 	const struct pe_raw_image *	map;
 	const struct pe_image_meta *	meta;
-	const struct pe_common_ctx *	cctx;
 	void *				any;
 	int				status;
 	int				nerrors;

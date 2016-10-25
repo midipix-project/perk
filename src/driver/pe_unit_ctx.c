@@ -51,16 +51,12 @@ int pe_get_unit_ctx(
 		return pe_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
-	memcpy(&ctx->cctx,dctx->cctx,
-		sizeof(ctx->cctx));
-
 	ctx->path	= path;
 	ctx->ioctx.prot	= prot;
 
 	ctx->uctx.path	= &ctx->path;
 	ctx->uctx.map	= &ctx->map;
 	ctx->uctx.meta	= ctx->meta;
-	ctx->uctx.cctx	= &ctx->cctx;
 
 	*pctx = &ctx->uctx;
 	return 0;
