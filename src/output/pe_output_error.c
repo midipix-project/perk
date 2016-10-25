@@ -13,6 +13,7 @@
 static const char aclr_reset[]   = "\x1b[0m";
 static const char aclr_bold[]    = "\x1b[1m";
 
+static const char aclr_red[]     = "\x1b[31m";
 static const char aclr_green[]   = "\x1b[32m";
 static const char aclr_blue[]    = "\x1b[34m";
 static const char aclr_magenta[] = "\x1b[35m";
@@ -70,7 +71,18 @@ static int pe_output_error_record_plain(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_error_info *	erri)
 {
+	const char * epath;
 	const char * errdesc = pe_output_strerror(erri);
+
+	epath = erri->euctx
+		? *erri->euctx->path
+		: erri->eunit;
+
+	if (epath && !(erri->eflags & PERK_ERROR_NESTED))
+		if (fprintf(stderr,"%s: [while opening] '%s':\n",
+				dctx->program,
+				epath) < 0)
+			return -1;
 
 	if (fprintf(stderr,"%s: %s %s(), line %d%s%s.\n",
 			dctx->program,
@@ -88,7 +100,29 @@ static int pe_output_error_record_annotated(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_error_info *	erri)
 {
+	const char * epath;
 	const char * errdesc = pe_output_strerror(erri);
+
+	epath = erri->euctx
+		? *erri->euctx->path
+		: erri->eunit;
+
+	if (epath && !(erri->eflags & PERK_ERROR_NESTED))
+		if (fprintf(
+				stderr,
+				"%s%s%s:%s %s[while opening]%s %s%s'%s'%s:\n",
+
+				aclr_bold,aclr_magenta,
+				dctx->program,
+				aclr_reset,
+
+				aclr_bold,
+				aclr_reset,
+
+				aclr_bold,aclr_red,
+				epath,
+				aclr_reset) < 0)
+			return -1;
 
 	if (fprintf(
 			stderr,
