@@ -34,7 +34,8 @@ int pe_get_unit_ctx(
 	int				prot;
 
 	if (!dctx)
-		return PERK_CUSTOM_ERROR(dctx,0);
+		return PERK_CUSTOM_ERROR(
+			dctx,PERK_ERR_NULL_CONTEXT);
 
 	else if (!(ctx = calloc(1,sizeof(*ctx))))
 		return PERK_BUFFER_ERROR(dctx);
@@ -45,7 +46,7 @@ int pe_get_unit_ctx(
 
 	if (pe_map_raw_image(dctx,dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
 		return pe_free_unit_ctx_impl(ctx,
-			PERK_SYSTEM_ERROR(dctx));
+			PERK_NESTED_ERROR(dctx));
 
 	if (pe_get_image_meta(dctx,&ctx->map,&ctx->meta))
 		return pe_free_unit_ctx_impl(ctx,
