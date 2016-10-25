@@ -17,6 +17,20 @@ static const char aclr_green[]   = "\x1b[32m";
 static const char aclr_blue[]    = "\x1b[34m";
 static const char aclr_magenta[] = "\x1b[35m";
 
+static const char const * const pe_error_strings[PERK_ERR_CAP] = {
+	[PERK_ERR_FLOW_ERROR]      = "flow error: unexpected condition or other",
+	[PERK_ERR_FLEE_ERROR]      = "flees and bugs and cats and mice",
+	[PERK_ERR_NULL_CONTEXT]    = "null driver or unit context",
+	[PERK_ERR_NULL_IMAGE]      = "null image base pointer",
+	[PERK_ERR_INVALID_CONTEXT] = "invalid driver or unit context",
+	[PERK_ERR_INVALID_IMAGE]   = "invalid PE image",
+	[PERK_ERR_IMAGE_SIZE_ZERO] = "PE image size cannot be zero",
+	[PERK_ERR_IMAGE_MALFORMED] = "malformed PE image detected",
+	[PERK_ERR_BAD_DOS_HEADER]  = "bad DOS header",
+	[PERK_ERR_BAD_COFF_HEADER] = "bad COFF header",
+	[PERK_ERR_BAD_IMAGE_TYPE]  = "bad PE image type",
+};
+
 static const char * pe_output_error_header(const struct pe_error_info * erri)
 {
 	if (erri->flags & PERK_ERROR_CHILD)
@@ -35,7 +49,9 @@ static const char * pe_output_error_header(const struct pe_error_info * erri)
 static const char * pe_output_strerror(const struct pe_error_info * erri)
 {
 	if (erri->flags & PERK_ERROR_CUSTOM)
-		return "flow error: unexpected condition or other";
+		return ((erri->liberror < 0) || (erri->liberror >= PERK_ERR_CAP))
+			? "internal error: please report to the maintainer"
+			: pe_error_strings[erri->liberror];
 
 	else if (erri->flags & PERK_ERROR_NESTED)
 		return "";
