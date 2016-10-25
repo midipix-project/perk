@@ -11,8 +11,9 @@
 
 #include <perk/perk.h>
 #include "perk_reader_impl.h"
+#include "perk_errinfo_impl.h"
 
-static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
+static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 {
 	int i;
 
@@ -25,7 +26,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int status)
 		free(meta);
 	}
 
-	return status;
+	return ret;
 }
 
 void pe_free_image_meta(struct pe_image_meta * meta)
@@ -58,7 +59,10 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	return -1;
 }
 
-int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta ** meta)
+int pe_get_image_meta(
+	const struct pe_driver_ctx *	dctx,
+	const struct pe_raw_image *	image,
+	struct pe_image_meta ** meta)
 {
 	int i,s,status;
 	unsigned j;
@@ -66,27 +70,31 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 	char * base = image->addr;
 
 	if (!(m = calloc(1,sizeof(*m))))
-		return -1;
+		return PERK_SYSTEM_ERROR(dctx);
 
 	m->ados = (struct pe_image_dos_hdr *)base;
 
 	if ((status = (pe_read_dos_header(m->ados,&m->dos))))
-		return pe_free_image_meta_impl(m,status);
+		return pe_free_image_meta_impl(m,
+			PERK_CUSTOM_ERROR(dctx,status));
 
 	m->acoff = (struct pe_coff_file_hdr *)(base + m->dos.dos_lfanew);
 
 	if ((status = (pe_read_coff_header(m->acoff,&m->coff))))
-		return pe_free_image_meta_impl(m,status);
+		return pe_free_image_meta_impl(m,
+			PERK_CUSTOM_ERROR(dctx,status));
 
 	m->aopt = (union pe_opt_hdr *)((char *)m->acoff + sizeof(m->coff));
 
 	if ((status = (pe_read_optional_header(m->aopt,&m->opt))))
-		return pe_free_image_meta_impl(m,status);
+		return pe_free_image_meta_impl(m,
+			PERK_CUSTOM_ERROR(dctx,status));
 
 	m->asectbl = (struct pe_sec_hdr *)((char *)m->aopt  + m->coff.size_of_opt_hdr);
 
 	if (!(m->sectbl = calloc(m->coff.num_of_sections,sizeof(*(m->sectbl)))))
-		return pe_free_image_meta_impl(m,status);
+		return pe_free_image_meta_impl(m,
+			PERK_SYSTEM_ERROR(dctx));
 
 	for (i=0; i<m->coff.num_of_sections; i++)
 		pe_read_section_header(&m->asectbl[i],&m->sectbl[i]);
@@ -96,7 +104,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 	s = pe_get_block_section_index(m,&m->opt.dirs.export_tbl);
 
 	if ((i >= 0) && (i != s))
-		return pe_free_image_meta_impl(m,PERK_MALFORMED_IMAGE);
+		return pe_free_image_meta_impl(m,
+			PERK_CUSTOM_ERROR(dctx,PERK_MALFORMED_IMAGE));
 
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
@@ -118,7 +127,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
 
 	if ((i >= 0) && (i != s))
-		return pe_free_image_meta_impl(m,PERK_MALFORMED_IMAGE);
+		return pe_free_image_meta_impl(m,
+			PERK_CUSTOM_ERROR(dctx,PERK_MALFORMED_IMAGE));
 
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
@@ -136,7 +146,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 
 		/* import headers */
 		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*(m->idata)))))
-			return pe_free_image_meta_impl(m,status);
+			return pe_free_image_meta_impl(m,
+				PERK_SYSTEM_ERROR(dctx));
 
 		for (i=0; i<m->summary.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
@@ -160,7 +171,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 					m->idata[i].count++;
 
 				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
-					return pe_free_image_meta_impl(m,status);
+					return pe_free_image_meta_impl(m,
+						PERK_SYSTEM_ERROR(dctx));
 			}
 
 			for (j=0; j<m->idata[i].count; j++) {
@@ -168,7 +180,8 @@ int pe_get_image_meta(const struct pe_raw_image * image, struct pe_image_meta **
 						&(m->idata[i].aitems[j]),
 						&(m->idata[i].items[j]),
 						m->opt.std.magic)))
-					return pe_free_image_meta_impl(m,status);
+					return pe_free_image_meta_impl(m,
+						PERK_CUSTOM_ERROR(dctx,status));
 
 				switch (m->opt.std.magic) {
 					case PE_MAGIC_PE32:

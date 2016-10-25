@@ -191,7 +191,7 @@ perk_api int  pe_output_import_libraries(const struct pe_image_meta *, const str
 perk_api int  pe_map_raw_image		(int fd, const char * path, int prot, struct pe_raw_image *);
 perk_api int  pe_unmap_raw_image	(struct pe_raw_image *);
 
-perk_api int  pe_get_image_meta		(const struct pe_raw_image *, struct pe_image_meta **);
+perk_api int  pe_get_image_meta		(const struct pe_driver_ctx *, const struct pe_raw_image *, struct pe_image_meta **);
 perk_api void pe_free_image_meta	(struct pe_image_meta *);
 
 perk_api int  pe_get_named_section_index(const struct pe_image_meta *, const char * name);

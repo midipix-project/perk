@@ -42,7 +42,7 @@ int pe_get_unit_ctx(
 	if (pe_map_raw_image(dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
 		return pe_free_unit_ctx_impl(ctx,-1);
 
-	if (pe_get_image_meta(&ctx->map,&ctx->meta))
+	if (pe_get_image_meta(dctx,&ctx->map,&ctx->meta))
 		return pe_free_unit_ctx_impl(ctx,-1);
 
 	memcpy(&ctx->cctx,dctx->cctx,
