@@ -39,6 +39,10 @@ extern "C" {
 #define PERK_DRIVER_VERSION		0x0010
 #define PERK_DRIVER_DRY_RUN		0x0020
 
+#define PERK_DRIVER_ANNOTATE_ALWAYS	0x1000
+#define PERK_DRIVER_ANNOTATE_NEVER	0x2000
+#define PERK_DRIVER_ANNOTATE_FULL	0x4000
+
 /* unit action flags */
 #define PERK_ACTION_MAP_READWRITE	0x0001
 
@@ -197,6 +201,8 @@ perk_api void pe_free_unit_ctx		(struct pe_unit_ctx *);
 perk_api int  pe_main			(int, char **, char **);
 perk_api int  pe_output_export_symbols	(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
 perk_api int  pe_output_import_libraries(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
+perk_api int  pe_output_error_record	(const struct pe_driver_ctx *, const struct pe_error_info *);
+perk_api int  pe_output_error_vector	(const struct pe_driver_ctx *);
 
 /* high-level api */
 perk_api int  pe_map_raw_image		(const struct pe_driver_ctx *, int fd, const char * path, int prot, struct pe_raw_image *);

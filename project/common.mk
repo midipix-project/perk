@@ -5,6 +5,7 @@ COMMON_SRCS = \
 	src/internal/perk_errinfo_impl.c \
 	src/logic/pe_get_image_meta.c \
 	src/logic/pe_map_raw_image.c \
+	src/output/pe_output_error.c \
 	src/output/pe_output_export_symbols.c \
 	src/output/pe_output_import_libraries.c \
 	src/reader/pe_read_coff_header.c \
