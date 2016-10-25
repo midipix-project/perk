@@ -47,6 +47,18 @@ static const char * pe_output_error_header(const struct pe_error_info * erri)
 		return "distorted state";
 }
 
+static const char * pe_output_unit_header(const struct pe_error_info * erri)
+{
+	if (!(erri->eflags & PERK_ERROR_CUSTOM))
+		return "while opening";
+
+	else if (erri->elibcode == PERK_ERR_IMAGE_SIZE_ZERO)
+		return "while mapping";
+
+	else
+		return "while parsing";
+}
+
 static const char * pe_output_strerror(const struct pe_error_info * erri)
 {
 	if (erri->eflags & PERK_ERROR_CUSTOM)
@@ -79,8 +91,9 @@ static int pe_output_error_record_plain(
 		: erri->eunit;
 
 	if (epath && !(erri->eflags & PERK_ERROR_NESTED))
-		if (fprintf(stderr,"%s: [while opening] '%s':\n",
+		if (fprintf(stderr,"%s: [%s] '%s':\n",
 				dctx->program,
+				pe_output_unit_header(erri),
 				epath) < 0)
 			return -1;
 
@@ -110,13 +123,14 @@ static int pe_output_error_record_annotated(
 	if (epath && !(erri->eflags & PERK_ERROR_NESTED))
 		if (fprintf(
 				stderr,
-				"%s%s%s:%s %s[while opening]%s %s%s'%s'%s:\n",
+				"%s%s%s:%s %s[%s]%s %s%s'%s'%s:\n",
 
 				aclr_bold,aclr_magenta,
 				dctx->program,
 				aclr_reset,
 
 				aclr_bold,
+				pe_output_unit_header(erri),
 				aclr_reset,
 
 				aclr_bold,aclr_red,
