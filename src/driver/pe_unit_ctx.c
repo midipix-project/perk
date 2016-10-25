@@ -12,8 +12,9 @@
 
 #include <perk/perk.h>
 #include "perk_driver_impl.h"
+#include "perk_errinfo_impl.h"
 
-static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int status)
+static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
 {
 	if (ctx) {
 		pe_free_image_meta(ctx->meta);
@@ -21,7 +22,7 @@ static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int status)
 		free(ctx);
 	}
 
-	return status;
+	return ret;
 }
 
 int pe_get_unit_ctx(
@@ -32,18 +33,23 @@ int pe_get_unit_ctx(
 	struct pe_unit_ctx_impl *	ctx;
 	int				prot;
 
-	if (!dctx || !(ctx = calloc(1,sizeof(*ctx))))
-		return -1;
+	if (!dctx)
+		return PERK_CUSTOM_ERROR(dctx,0);
+
+	else if (!(ctx = calloc(1,sizeof(*ctx))))
+		return PERK_BUFFER_ERROR(dctx);
 
 	prot = (dctx->cctx->actflags & PERK_ACTION_MAP_READWRITE)
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
 
 	if (pe_map_raw_image(dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
-		return pe_free_unit_ctx_impl(ctx,-1);
+		return pe_free_unit_ctx_impl(ctx,
+			PERK_SYSTEM_ERROR(dctx));
 
 	if (pe_get_image_meta(dctx,&ctx->map,&ctx->meta))
-		return pe_free_unit_ctx_impl(ctx,-1);
+		return pe_free_unit_ctx_impl(ctx,
+			PERK_NESTED_ERROR(dctx));
 
 	memcpy(&ctx->cctx,dctx->cctx,
 		sizeof(ctx->cctx));
