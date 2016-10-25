@@ -173,8 +173,6 @@ struct pe_driver_ctx {
 	const struct pe_common_ctx *	cctx;
 	struct pe_error_info **		errv;
 	void *				any;
-	int				status;
-	int				nerrors;
 };
 
 struct pe_unit_ctx {
