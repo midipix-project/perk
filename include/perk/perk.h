@@ -180,8 +180,6 @@ struct pe_unit_ctx {
 	const struct pe_raw_image *	map;
 	const struct pe_image_meta *	meta;
 	void *				any;
-	int				status;
-	int				nerrors;
 };
 
 /* package info */
