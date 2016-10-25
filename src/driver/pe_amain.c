@@ -67,23 +67,22 @@ static void pe_perform_unit_actions(
 	uint64_t flags = dctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
-		uctx->status = pe_output_export_symbols(dctx,uctx->meta,0);
-		uctx->nerrors += !!uctx->status;
+		pe_output_export_symbols(dctx,uctx->meta,0);
 		fpara += uctx->meta->summary.nexpsyms;
 	}
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
 		pe_paragraph_break(dctx,&fpara);
-		uctx->status = pe_output_import_libraries(dctx,uctx->meta,0);
-		uctx->nerrors += !!uctx->status;
+		pe_output_import_libraries(dctx,uctx->meta,0);
 		fpara += (uctx->meta->summary.nimplibs > 0);
 	}
 }
 
-static int pe_exit(struct pe_driver_ctx * dctx, int nerrors)
+static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 {
+	pe_output_error_vector(dctx);
 	pe_free_driver_ctx(dctx);
-	return nerrors ? 2 : 0;
+	return ret;
 }
 
 int pe_main(int argc, char ** argv, char ** envp)
@@ -103,10 +102,9 @@ int pe_main(int argc, char ** argv, char ** envp)
 	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
 			pe_perform_unit_actions(dctx,uctx);
-			ret += uctx->nerrors;
 			pe_free_unit_ctx(uctx);
 		}
 	}
 
-	return pe_exit(dctx,ret);
+	return pe_exit(dctx,dctx->errv[0] ? 2 : 0);
 }
