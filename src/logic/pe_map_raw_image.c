@@ -13,12 +13,14 @@
 #include <sys/stat.h>
 
 #include <perk/perk.h>
+#include "perk_errinfo_impl.h"
 
 int pe_map_raw_image(
-	int			fd,
-	const char *		path,
-	int			prot,
-	struct pe_raw_image *	map)
+	const struct pe_driver_ctx *	dctx,
+	int				fd,
+	const char *			path,
+	int				prot,
+	struct pe_raw_image *		map)
 {
 	struct stat	st;
 	bool		fnew;
@@ -28,13 +30,13 @@ int pe_map_raw_image(
 		fd  = open(path,O_RDONLY | O_CLOEXEC);
 
 	if (fd < 0)
-		return -1;
+		return PERK_SYSTEM_ERROR(dctx);
 
 	if ((ret = fstat(fd,&st) < 0) && fnew)
 		close(fd);
 
 	if (ret < 0)
-		return -1;
+		return PERK_SYSTEM_ERROR(dctx);
 
 	map->size = st.st_size;
 	map->addr = mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
@@ -42,7 +44,9 @@ int pe_map_raw_image(
 	if (fnew)
 		close(fd);
 
-	return (map->addr == MAP_FAILED) ? -1 : 0;
+	return (map->addr == MAP_FAILED)
+		? PERK_SYSTEM_ERROR(dctx)
+		: 0;
 }
 
 int pe_unmap_raw_image(struct pe_raw_image * map)

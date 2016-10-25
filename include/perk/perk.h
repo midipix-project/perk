@@ -188,7 +188,7 @@ perk_api int  pe_output_export_symbols	(const struct pe_image_meta *, const stru
 perk_api int  pe_output_import_libraries(const struct pe_image_meta *, const struct pe_common_ctx *, FILE *);
 
 /* high-level api */
-perk_api int  pe_map_raw_image		(int fd, const char * path, int prot, struct pe_raw_image *);
+perk_api int  pe_map_raw_image		(const struct pe_driver_ctx *, int fd, const char * path, int prot, struct pe_raw_image *);
 perk_api int  pe_unmap_raw_image	(struct pe_raw_image *);
 
 perk_api int  pe_get_image_meta		(const struct pe_driver_ctx *, const struct pe_raw_image *, struct pe_image_meta **);

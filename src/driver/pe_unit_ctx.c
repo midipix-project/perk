@@ -43,7 +43,7 @@ int pe_get_unit_ctx(
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
 
-	if (pe_map_raw_image(dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
+	if (pe_map_raw_image(dctx,dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
 		return pe_free_unit_ctx_impl(ctx,
 			PERK_SYSTEM_ERROR(dctx));
 
