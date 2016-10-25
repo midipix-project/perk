@@ -13,6 +13,7 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_output_impl.h"
+#include "perk_errinfo_impl.h"
 
 static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
 {
@@ -32,23 +33,26 @@ static int pretty_export_item(const struct pe_common_ctx * cctx, const char * na
 }
 
 int pe_output_export_symbols(
+	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	m,
-	const struct pe_common_ctx *	cctx,
 	FILE *				fout)
 {
-	FILE *		ftmp;
-	uint32_t 	offset;
-	uint32_t *	symrva;
-	unsigned	i;
+	FILE *				ftmp;
+	uint32_t 			offset;
+	uint32_t *			symrva;
+	unsigned			i;
+	const struct pe_common_ctx *	cctx = dctx->cctx;
 
 	if (!m->hedata)
 		return 0;
 
 	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
-		return -1;
+		return PERK_SYSTEM_ERROR(dctx);
 
 	if ((pretty_header(cctx,fout)) < 0)
-		return pe_output_epilog(-1,ftmp);
+		return pe_output_epilog(
+			PERK_FILE_ERROR(dctx),
+			ftmp);
 
 	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
 	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
@@ -58,7 +62,9 @@ int pe_output_export_symbols(
 				cctx,
 				(char *)((uintptr_t)m->image.addr + symrva[i] - offset),
 				fout)) < 0)
-			return pe_output_epilog(-1,ftmp);
+			return pe_output_epilog(
+				PERK_FILE_ERROR(dctx),
+				ftmp);
 
 	return pe_output_epilog(0,ftmp);
 }

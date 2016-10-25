@@ -67,7 +67,7 @@ static void pe_perform_unit_actions(
 	uint64_t flags = uctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
-		uctx->status = pe_output_export_symbols(uctx->meta,uctx->cctx,0);
+		uctx->status = pe_output_export_symbols(dctx,uctx->meta,0);
 		uctx->nerrors += !!uctx->status;
 		fpara += uctx->meta->summary.nexpsyms;
 	}
