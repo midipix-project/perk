@@ -42,7 +42,8 @@ int pe_map_raw_image(
 		return PERK_SYSTEM_ERROR(dctx);
 
 	else if (st.st_size == 0)
-		return PERK_CUSTOM_ERROR(dctx,0);
+		return PERK_CUSTOM_ERROR(
+			dctx,PERK_ERR_IMAGE_SIZE_ZERO);
 
 	map->size = st.st_size;
 	map->addr = mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
