@@ -13,7 +13,7 @@
 int pe_read_dos_header(const struct pe_image_dos_hdr * p, struct pe_meta_image_dos_hdr * m)
 {
 	if ((p->dos_magic[0] != 'M') || (p->dos_magic[1] != 'Z'))
-		return PERK_BAD_DOS_HEADER;
+		return PERK_ERR_BAD_DOS_HEADER;
 
 	if (PERK_LITTLE_ENDIAN) {
 

@@ -25,7 +25,7 @@ static int pe_read_optional_header_little_endian(const union pe_opt_hdr * p, str
 			memcpy(&m->ldr,&p->opt_hdr_32.loader_flags,sizeof(struct pe_meta_opt_hdr_ldr));
 
 			if (m->ldr.rva_and_sizes > 0x10)
-				return PERK_BAD_IMAGE_TYPE;
+				return PERK_ERR_BAD_IMAGE_TYPE;
 			else
 				memcpy(&m->dirs,&p->opt_hdr_32.export_tbl,sizeof(struct pe_meta_opt_hdr_dirs));
 
@@ -38,14 +38,14 @@ static int pe_read_optional_header_little_endian(const union pe_opt_hdr * p, str
 			memcpy(&m->ldr,&p->opt_hdr_64.loader_flags,sizeof(struct pe_meta_opt_hdr_ldr));
 
 			if (m->ldr.rva_and_sizes > 0x10)
-				return PERK_BAD_IMAGE_TYPE;
+				return PERK_ERR_BAD_IMAGE_TYPE;
 			else
 				memcpy(&m->dirs,&p->opt_hdr_64.export_tbl,sizeof(struct pe_meta_opt_hdr_dirs));
 
 			break;
 
 		default:
-			return PERK_BAD_IMAGE_TYPE;
+			return PERK_ERR_BAD_IMAGE_TYPE;
 	}
 
 	return 0;
@@ -80,7 +80,7 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 			break;
 
 		default:
-			return PERK_BAD_IMAGE_TYPE;
+			return PERK_ERR_BAD_IMAGE_TYPE;
 	}
 
 	/* std */

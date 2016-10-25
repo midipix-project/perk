@@ -47,6 +47,6 @@ int pe_read_import_lookup_item(
 			return 0;
 
 		default:
-			return PERK_BAD_IMAGE_TYPE;
+			return PERK_ERR_BAD_IMAGE_TYPE;
 	}
 }

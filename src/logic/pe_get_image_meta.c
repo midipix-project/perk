@@ -105,7 +105,7 @@ int pe_get_image_meta(
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,PERK_MALFORMED_IMAGE));
+			PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
@@ -128,7 +128,7 @@ int pe_get_image_meta(
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,PERK_MALFORMED_IMAGE));
+			PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
