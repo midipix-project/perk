@@ -138,10 +138,10 @@ common_defaults()
 	# git
 	if [ -n "$mb_source_dir" ]; then
 		if [ -d "$mb_source_dir/.git" ]; then
-			mb_git_reference_index="\$(SOURCE_DIR)/.git"
+			mb_git_reference_index="\$(SOURCE_DIR)/.git/index"
 		fi
 	elif [ -d "$mb_project_dir/.git" ]; then
-		mb_git_reference_index="\$(PROJECT_DIR)/.git"
+		mb_git_reference_index="\$(PROJECT_DIR)/.git/index"
 	fi
 
 	# project
