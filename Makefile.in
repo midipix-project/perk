@@ -260,6 +260,7 @@ clean:		clean-implib
 		@echo PACKAGE:'                '$(PACKAGE)
 		@echo NICKNAME:'               '$(NICKNAME)
 		@echo PROJECT_DIR:'            '$(PROJECT_DIR)
+		@echo SOURCE_DIR:'             '$(SOURCE_DIR)
 		@echo BUILD_DIR:'              '$(CURDIR)
 		@echo
 
