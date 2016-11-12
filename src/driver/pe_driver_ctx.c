@@ -165,6 +165,10 @@ int pe_get_driver_ctx(
 					pretty = entry->arg;
 					break;
 
+				case TAG_IMGTYPE:
+					cctx.fmtflags |= PERK_OUTPUT_IMAGE_TYPE;
+					break;
+
 				case TAG_EXPSYMS:
 					cctx.fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
 					break;
