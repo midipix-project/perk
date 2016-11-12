@@ -83,6 +83,7 @@ install-app-extras:
 include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
 include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
+include $(PROJECT_DIR)/sysinfo/os/$(OS).mk
 
 include $(PROJECT_DIR)/project/osforce.mk
 
