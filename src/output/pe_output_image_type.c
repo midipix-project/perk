@@ -66,6 +66,10 @@ static const char * pretty_framework(const struct pe_unit_ctx * uctx)
 {
 	if (pe_get_named_section_index(uctx->meta,".midipix") >= 0)
 		return "midipix";
+
+	else if (pe_get_named_section_index(uctx->meta,".freestd") >= 0)
+		return "freestd";
+
 	else
 		return "win32";
 }
