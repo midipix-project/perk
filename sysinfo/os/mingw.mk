@@ -10,3 +10,4 @@ OS_SONAME	= copy
 OS_BINFMT	= PE
 
 CFLAGS_PIC	=
+CFLAGS_OS      += -U__STRICT_ANSI__
