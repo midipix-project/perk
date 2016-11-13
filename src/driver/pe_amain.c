@@ -104,7 +104,7 @@ int pe_main(int argc, char ** argv, char ** envp)
 		if ((pe_version(dctx)) < 0)
 			return pe_exit(dctx,PERK_ERROR);
 
-	for (unit=dctx->units; *unit && !dctx->errv[0]; unit++) {
+	for (unit=dctx->units; *unit; unit++) {
 		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
 			pe_perform_unit_actions(dctx,uctx);
 			pe_free_unit_ctx(uctx);
