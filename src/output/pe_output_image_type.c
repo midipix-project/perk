@@ -5,6 +5,7 @@
 /***************************************************************/
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -62,6 +63,12 @@ static const char * pretty_subsystem(const struct pe_unit_ctx * uctx)
 		return pe_subsystem_name[uctx->meta->opt.img.subsystem];
 }
 
+static bool pe_image_is_psxscl(const struct pe_unit_ctx * uctx)
+{
+	return (!uctx->meta->summary.nimplibs
+		&& pe_get_expsym_by_name(uctx->meta,"__psx_init"));
+}
+
 static const char * pretty_framework(const struct pe_unit_ctx * uctx)
 {
 	if (pe_get_named_section_index(uctx->meta,".midipix") >= 0)
@@ -69,6 +76,9 @@ static const char * pretty_framework(const struct pe_unit_ctx * uctx)
 
 	else if (pe_get_named_section_index(uctx->meta,".freestd") >= 0)
 		return "freestd";
+
+	else if (pe_image_is_psxscl(uctx))
+		return "psxscl";
 
 	else
 		return "win32";
