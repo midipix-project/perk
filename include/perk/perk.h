@@ -76,6 +76,13 @@ struct pe_raw_image {
 	size_t	size;
 };
 
+struct pe_expsym {
+	const char *	name;
+	void *		eaddr;
+	void *		maddr;
+	uint32_t	roffset;
+};
+
 struct pe_image_summary {
 	int32_t		nexpsyms;
 	int32_t		nimplibs;
@@ -209,12 +216,8 @@ perk_api void pe_free_image_meta	(struct pe_image_meta *);
 
 perk_api int  pe_get_named_section_index(const struct pe_image_meta *, const char * name);
 perk_api int  pe_get_block_section_index(const struct pe_image_meta *, const struct pe_block *);
-
-perk_api
-const char *  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * name);
-
-perk_api
-const char *  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index);
+perk_api int  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * name, struct pe_expsym * optional);
+perk_api int  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index, struct pe_expsym * optional);
 
 /* low-level api */
 perk_api int  pe_read_dos_header	(const struct pe_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);

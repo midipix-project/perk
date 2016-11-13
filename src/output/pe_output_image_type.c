@@ -66,7 +66,7 @@ static const char * pretty_subsystem(const struct pe_unit_ctx * uctx)
 static bool pe_image_is_psxscl(const struct pe_unit_ctx * uctx)
 {
 	return (!uctx->meta->summary.nimplibs
-		&& pe_get_expsym_by_name(uctx->meta,"__psx_init"));
+		&& !pe_get_expsym_by_name(uctx->meta,"__psx_init",0));
 }
 
 static const char * pretty_framework(const struct pe_unit_ctx * uctx)

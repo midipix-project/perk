@@ -59,9 +59,10 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	return -1;
 }
 
-const char * pe_get_expsym_by_name(
+int pe_get_expsym_by_name(
 	const struct pe_image_meta *	m,
-	const char *			name)
+	const char *			name,
+	struct pe_expsym *		expsym)
 {
 	uint32_t 	offset;
 	uint32_t *	symrva;
@@ -74,29 +75,45 @@ const char * pe_get_expsym_by_name(
 	for (i=0; i<m->edata.num_of_name_ptrs; i++) {
 		sym = (const char *)m->image.addr + symrva[i] - offset;
 
-		if (!(strcmp(sym,name)))
-			return sym;
+		if (!(strcmp(sym,name))) {
+			if (expsym) {
+				expsym->name    = sym;
+				expsym->eaddr   = 0;
+				expsym->maddr   = 0;
+				expsym->roffset = 0;
+			}
+
+			return 0;
+		}
 	}
 
-	return 0;
+	return -1;
 }
 
-const char * pe_get_expsym_by_index(
+int pe_get_expsym_by_index(
 	const struct pe_image_meta *	m,
-	unsigned			index)
+	unsigned			index,
+	struct pe_expsym *		expsym)
 {
 	uint32_t 	offset;
 	uint32_t *	symrva;
-	uintptr_t	addr;
+	uintptr_t	symaddr;
 
 	if (index >= m->edata.num_of_name_ptrs)
-		return 0;
+		return -1;
 
-	offset  = m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
-	symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
-	addr    = (uintptr_t)m->image.addr + symrva[index] - offset;
+	if (expsym) {
+		offset  = m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
 
-	return (const char *)addr;
+		expsym->name    = (const char *)symaddr;
+		expsym->eaddr   = 0;
+		expsym->maddr   = 0;
+		expsym->roffset = 0;
+	}
+
+	return 0;
 }
 
 int pe_get_image_meta(
