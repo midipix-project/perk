@@ -59,6 +59,46 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	return -1;
 }
 
+const char * pe_get_expsym_by_name(
+	const struct pe_image_meta *	m,
+	const char *			name)
+{
+	uint32_t 	offset;
+	uint32_t *	symrva;
+	const char *	sym;
+	unsigned	i;
+
+	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+
+	for (i=0; i<m->edata.num_of_name_ptrs; i++) {
+		sym = (const char *)m->image.addr + symrva[i] - offset;
+
+		if (!(strcmp(sym,name)))
+			return sym;
+	}
+
+	return 0;
+}
+
+const char * pe_get_expsym_by_index(
+	const struct pe_image_meta *	m,
+	unsigned			index)
+{
+	uint32_t 	offset;
+	uint32_t *	symrva;
+	uintptr_t	addr;
+
+	if (index >= m->edata.num_of_name_ptrs)
+		return 0;
+
+	offset  = m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+	symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+	addr    = (uintptr_t)m->image.addr + symrva[index] - offset;
+
+	return (const char *)addr;
+}
+
 int pe_get_image_meta(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_raw_image *	image,
