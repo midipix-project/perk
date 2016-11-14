@@ -91,7 +91,6 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	ictx->ctx.erricap  = &ictx->ctx.erriptr[--elements];
 
 	ictx->meta		= meta;
-	ictx->ctx.cctx.symctx	= &ictx->ctx.symctx;
 	ictx->ctx.cctx.outctx	= &ictx->ctx.outctx;
 	ictx->ctx.cctx.lnkctx	= &ictx->ctx.lnkctx;
 	ictx->ctx.cctx.srvctx	= &ictx->ctx.srvctx;
@@ -227,12 +226,6 @@ static void pe_driver_close_fds(struct pe_common_ctx * cctx)
 
 static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
 {
-	if (ictx->ctx.symctx.append)
-		free(ictx->ctx.symctx.append);
-
-	if (ictx->ctx.symctx.exclude)
-		free(ictx->ctx.symctx.exclude);
-
 	pe_driver_close_fds(&ictx->ctx.cctx);
 	argv_free(ictx->meta);
 	free(ictx);
