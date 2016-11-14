@@ -90,8 +90,7 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	ictx->ctx.errinfp  = &ictx->ctx.erriptr[0];
 	ictx->ctx.erricap  = &ictx->ctx.erriptr[--elements];
 
-	ictx->meta		= meta;
-	ictx->ctx.cctx.ioctx	= &ictx->ctx.ioctx;
+	ictx->meta = meta;
 
 	for (entry=meta->entries,units=ictx->units; entry->fopt || entry->arg; entry++)
 		if (!entry->fopt)
@@ -200,30 +199,12 @@ int pe_get_driver_ctx(
 	ctx->ctx.program	= program;
 	ctx->ctx.cctx		= &ctx->cctx;
 
-	ctx->ioctx.fdout	= cctx.output ? fdout : -1;
-	ctx->ioctx.fdin		= -1;
-	ctx->ioctx.fderr	= -1;
-	ctx->ioctx.fdlog	= -1;
-	ctx->ioctx.fdsrc	= AT_FDCWD;
-	ctx->ioctx.fddst	= AT_FDCWD;
-	ctx->ioctx.fdtmp	= AT_FDCWD;
-
 	*pctx = &ctx->ctx;
 	return PERK_OK;
 }
 
-static void pe_driver_close_fds(struct pe_common_ctx * cctx)
-{
-	if (cctx->ioctx->status && cctx->output)
-		unlinkat(cctx->ioctx->fddst,cctx->output,0);
-
-	if (cctx->ioctx->fdout >= 0)
-		close(cctx->ioctx->fdout);
-}
-
 static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
 {
-	pe_driver_close_fds(&ictx->ctx.cctx);
 	argv_free(ictx->meta);
 	free(ictx);
 }

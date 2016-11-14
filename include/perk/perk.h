@@ -112,19 +112,6 @@ struct pe_image_meta {
 	struct pe_meta_sec_hdr *	hidata;
 };
 
-struct pe_io_ctx {
-	int				status;
-	int				prot;
-	int				mode;
-	int				fdin;
-	int				fdout;
-	int				fderr;
-	int				fdlog;
-	int				fdsrc;
-	int				fddst;
-	int				fdtmp;
-};
-
 struct pe_error_info {
 	const struct pe_driver_ctx *	edctx;
 	const struct pe_unit_ctx *	euctx;
@@ -141,7 +128,6 @@ struct pe_common_ctx {
 	uint64_t			drvflags;
 	uint64_t			actflags;
 	uint64_t			fmtflags;
-	uint64_t			lnkflags;
 	const char *			output;
 	const char *			srcdir;
 	const char *			dstdir;
@@ -150,7 +136,6 @@ struct pe_common_ctx {
 	const struct pe_output_ctx *	outctx;
 	const struct pe_linker_ctx *	lnkctx;
 	const struct pe_server_ctx *	srvctx;
-	const struct pe_io_ctx *	ioctx;
 };
 
 struct pe_driver_ctx {

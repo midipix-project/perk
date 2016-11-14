@@ -46,15 +46,11 @@ static ssize_t pe_version(struct pe_driver_ctx * dctx)
 			verclr[4],verinfo->commit,verclr[5]);
 }
 
-static ssize_t pe_paragraph_break(const struct pe_driver_ctx * dctx, int * fpara)
+static ssize_t pe_paragraph_break(int * fpara)
 {
 	if (*fpara) {
 		*fpara = 0;
-
-		if (dctx->cctx->ioctx->fdout >= 0)
-			return write(dctx->cctx->ioctx->fdout,"\n",1);
-		else
-			return fputc('\n',stdout);
+		return fputc('\n',stdout);
 	} else
 		return 0;
 }
@@ -75,7 +71,7 @@ static void pe_perform_unit_actions(
 	}
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
-		pe_paragraph_break(dctx,&fpara);
+		pe_paragraph_break(&fpara);
 		pe_output_import_libraries(dctx,uctx->meta,0);
 		fpara += (uctx->meta->summary.nimplibs > 0);
 	}

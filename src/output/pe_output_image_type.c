@@ -13,7 +13,6 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
-#include "perk_output_impl.h"
 #include "perk_errinfo_impl.h"
 
 static const char const * pe_subsystem_name[0x10] = {
@@ -141,11 +140,8 @@ int pe_output_image_type(
 	const struct pe_unit_ctx *	uctx,
 	FILE *				fout)
 {
-	FILE *				ftmp;
-	const struct pe_common_ctx *	cctx = dctx->cctx;
-
-	if (!(fout = pe_output_prolog(cctx,fout,&ftmp)))
-		return PERK_SYSTEM_ERROR(dctx);
+	if (!fout)
+		fout = stdout;
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (fprintf(fout,"%s:\n- %s:\n- %s:\n- %s:\n- %s:\n",
@@ -154,19 +150,15 @@ int pe_output_image_type(
 				pretty_type(uctx),
 				pretty_subsystem(uctx),
 				pretty_framework(uctx)) < 0)
-			return pe_output_epilog(
-				PERK_FILE_ERROR(dctx),
-				ftmp);
+			return PERK_FILE_ERROR(dctx);
 	} else {
 		if (fprintf(fout,"%s-%s-%s-%s\n",
 				pretty_abi(uctx),
 				pretty_type(uctx),
 				pretty_subsystem(uctx),
 				pretty_framework(uctx)) < 0)
-			return pe_output_epilog(
-				PERK_FILE_ERROR(dctx),
-				ftmp);
+			return PERK_FILE_ERROR(dctx);
 	}
 
-	return pe_output_epilog(0,ftmp);
+	return 0;
 }

@@ -47,7 +47,7 @@ int pe_get_unit_ctx(
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
 
-	if (pe_map_raw_image(dctx,dctx->cctx->ioctx->fdin,path,prot,&ctx->map))
+	if (pe_map_raw_image(dctx,-1,path,prot,&ctx->map))
 		return pe_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
@@ -56,8 +56,6 @@ int pe_get_unit_ctx(
 			PERK_NESTED_ERROR(dctx));
 
 	ctx->path	= path;
-	ctx->ioctx.prot	= prot;
-
 	ctx->uctx.path	= &ctx->path;
 	ctx->uctx.map	= &ctx->map;
 	ctx->uctx.meta	= ctx->meta;
