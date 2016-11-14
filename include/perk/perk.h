@@ -216,6 +216,10 @@ perk_api void pe_free_image_meta	(struct pe_image_meta *);
 
 perk_api int  pe_get_named_section_index(const struct pe_image_meta *, const char * name);
 perk_api int  pe_get_block_section_index(const struct pe_image_meta *, const struct pe_block *);
+
+perk_api int  pe_get_roffset_from_rva	(const struct pe_image_meta *, uint32_t rva, uint32_t * roffset);
+perk_api int  pe_get_rva_from_roffset	(const struct pe_image_meta *, uint32_t roffset, uint32_t * rva);
+
 perk_api int  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * name, struct pe_expsym * optional);
 perk_api int  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index, struct pe_expsym * optional);
 

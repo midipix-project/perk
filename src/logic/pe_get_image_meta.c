@@ -59,6 +59,49 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	return -1;
 }
 
+int pe_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32_t * roffset)
+{
+	int i;
+	uint32_t low,high;
+
+	for (i=0; i<m->coff.num_of_sections; i++) {
+		low  = m->sectbl[i].virtual_addr;
+		high = low + m->sectbl[i].virtual_size;
+
+		if ((rva >= low) && (rva < high)) {
+			*roffset = (rva - low) + m->sectbl[i].ptr_to_raw_data;
+			return 0;
+		}
+	}
+
+	return -1;
+}
+
+int pe_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, uint32_t * rva)
+{
+	int i;
+	uint32_t low,high,ref;
+
+	for (i=0, ref=-1; i<m->coff.num_of_sections; i++) {
+		low  = m->sectbl[i].ptr_to_raw_data;
+		high = low + m->sectbl[i].virtual_size;
+
+		if ((roffset >= low) && (roffset < high)) {
+			*rva = (roffset - low) + m->sectbl[i].virtual_addr;
+			return 0;
+		} else if (ref > low) {
+			ref = low;
+		}
+	}
+
+	if (roffset < ref) {
+		*rva = roffset;
+		return 0;
+	}
+
+	return -1;
+}
+
 int pe_get_expsym_by_name(
 	const struct pe_image_meta *	m,
 	const char *			name,
