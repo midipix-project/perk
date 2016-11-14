@@ -112,10 +112,6 @@ struct pe_image_meta {
 	struct pe_meta_sec_hdr *	hidata;
 };
 
-struct pe_server_ctx {
-	const char **			attrs;
-};
-
 struct pe_io_ctx {
 	int				status;
 	int				prot;

@@ -91,7 +91,6 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	ictx->ctx.erricap  = &ictx->ctx.erriptr[--elements];
 
 	ictx->meta		= meta;
-	ictx->ctx.cctx.srvctx	= &ictx->ctx.srvctx;
 	ictx->ctx.cctx.ioctx	= &ictx->ctx.ioctx;
 
 	for (entry=meta->entries,units=ictx->units; entry->fopt || entry->arg; entry++)
