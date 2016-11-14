@@ -23,7 +23,6 @@ enum app_tags {
 };
 
 struct pe_driver_ctx_impl {
-	struct pe_output_ctx        outctx;
 	struct pe_linker_ctx        lnkctx;
 	struct pe_server_ctx        srvctx;
 	struct pe_io_ctx            ioctx;

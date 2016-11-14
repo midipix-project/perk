@@ -112,12 +112,6 @@ struct pe_image_meta {
 	struct pe_meta_sec_hdr *	hidata;
 };
 
-struct pe_output_ctx {
-	const char **			attrs;
-	const char *			header;
-	const char *			footer;
-};
-
 struct pe_linker_ctx {
 	const char **			attrs;
 };
