@@ -1,6 +1,7 @@
 tree.tag:
 		mkdir -p src
 		mkdir -p src/driver
+		mkdir -p src/info
 		mkdir -p src/internal
 		mkdir -p src/logic
 		mkdir -p src/output
