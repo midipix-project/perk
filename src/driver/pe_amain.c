@@ -46,35 +46,20 @@ static ssize_t pe_version(struct pe_driver_ctx * dctx)
 			verclr[4],verinfo->commit,verclr[5]);
 }
 
-static ssize_t pe_paragraph_break(int * fpara)
-{
-	if (*fpara) {
-		*fpara = 0;
-		return fputc('\n',stdout);
-	} else
-		return 0;
-}
-
 static void pe_perform_unit_actions(
 	const struct pe_driver_ctx *	dctx,
 	struct pe_unit_ctx *		uctx)
 {
-	int      fpara = 0;
 	uint64_t flags = dctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
 		pe_output_image_category(dctx,uctx,0);
 
-	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
+	if (flags & PERK_OUTPUT_EXPORT_SYMS)
 		pe_output_export_symbols(dctx,uctx->meta,0);
-		fpara += uctx->meta->summary.nexpsyms;
-	}
 
-	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS)) {
-		pe_paragraph_break(&fpara);
+	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS))
 		pe_output_import_libraries(dctx,uctx->meta,0);
-		fpara += (uctx->meta->summary.nimplibs > 0);
-	}
 }
 
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)
