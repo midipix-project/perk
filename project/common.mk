@@ -10,7 +10,7 @@ API_SRCS = \
 	src/logic/pe_map_raw_image.c \
 	src/output/pe_output_error.c \
 	src/output/pe_output_export_symbols.c \
-	src/output/pe_output_image_type.c \
+	src/output/pe_output_image_category.c \
 	src/output/pe_output_import_libraries.c \
 	src/reader/pe_read_coff_header.c \
 	src/reader/pe_read_dos_header.c \

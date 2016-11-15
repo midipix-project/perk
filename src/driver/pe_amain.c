@@ -62,8 +62,8 @@ static void pe_perform_unit_actions(
 	int      fpara = 0;
 	uint64_t flags = dctx->cctx->fmtflags;
 
-	if (flags & PERK_OUTPUT_IMAGE_TYPE)
-		pe_output_image_type(dctx,uctx,0);
+	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
+		pe_output_image_category(dctx,uctx,0);
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS) {
 		pe_output_export_symbols(dctx,uctx->meta,0);

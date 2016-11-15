@@ -14,7 +14,7 @@ const struct argv_option pe_default_options[] = {
 	{"pretty",	'p',TAG_PRETTY,ARGV_OPTARG_REQUIRED,0,"yaml|dlltool",0,
 			"format output for parsing by %s"},
 
-	{"type",	't',TAG_IMGTYPE,ARGV_OPTARG_NONE,0,0,0,
+	{"category",	'c',TAG_CATEGORY,ARGV_OPTARG_NONE,0,0,0,
 			"print image type"},
 
 	{"sections",	's',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,

@@ -10,7 +10,7 @@
 #include <perk/perk_output.h>
 #include "perk_errinfo_impl.h"
 
-int pe_output_image_type(
+int pe_output_image_category(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_unit_ctx *	uctx,
 	FILE *				fout)
