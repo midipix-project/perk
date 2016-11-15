@@ -12,14 +12,13 @@
 
 int pe_output_image_category(
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_unit_ctx *	uctx,
+	const struct pe_image_meta *	meta,
 	FILE *				fout)
 {
 	struct pe_info_string		abi;
 	struct pe_info_string		subtype;
 	struct pe_info_string		subsystem;
 	struct pe_info_string		framework;
-	const struct pe_image_meta *	meta = uctx->meta;
 
 	if (!fout)
 		fout = stdout;

@@ -53,7 +53,7 @@ static void pe_perform_unit_actions(
 	uint64_t flags = dctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
-		pe_output_image_category(dctx,uctx,0);
+		pe_output_image_category(dctx,uctx->meta,0);
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS)
 		pe_output_export_symbols(dctx,uctx->meta,0);
