@@ -29,19 +29,12 @@ static const char * pretty_abi(const struct pe_unit_ctx * uctx)
 	}
 }
 
-static const char * pretty_type(const struct pe_unit_ctx * uctx)
-{
-	if (uctx->meta->coff.characteristics & PE_IMAGE_FILE_DLL)
-		return "dll";
-	else
-		return "exe";
-}
-
 int pe_output_image_type(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_unit_ctx *	uctx,
 	FILE *				fout)
 {
+	struct pe_info_string		subtype;
 	struct pe_info_string		subsystem;
 	struct pe_info_string		framework;
 	const struct pe_image_meta *	meta = uctx->meta;
@@ -49,6 +42,7 @@ int pe_output_image_type(
 	if (!fout)
 		fout = stdout;
 
+	pe_get_image_subtype  (meta,&subtype);
 	pe_get_image_subsystem(meta,&subsystem);
 	pe_get_image_framework(meta,&framework);
 
@@ -56,14 +50,14 @@ int pe_output_image_type(
 		if (fprintf(fout,"%s:\n- %s:\n- %s:\n- %s:\n- %s:\n",
 				*uctx->path,
 				pretty_abi(uctx),
-				pretty_type(uctx),
+				subtype.buffer,
 				subsystem.buffer,
 				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
 	} else {
 		if (fprintf(fout,"%s-%s-%s-%s\n",
 				pretty_abi(uctx),
-				pretty_type(uctx),
+				subtype.buffer,
 				subsystem.buffer,
 				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
