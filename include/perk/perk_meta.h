@@ -7,6 +7,14 @@ extern "C" {
 
 #include <stdint.h>
 
+enum pe_subtype {
+	PE_SUBTYPE_UNRECOGNIZED,
+	PE_SUBTYPE_DLL,
+	PE_SUBTYPE_EXE,
+	PE_SUBTYPE_OBJ,
+	PE_SUBTYPE_CAP
+};
+
 enum pe_framework {
 	PE_FRAMEWORK_UNKNOWN,
 	PE_FRAMEWORK_FREESTD,
