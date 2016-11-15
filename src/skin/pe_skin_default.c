@@ -17,6 +17,9 @@ const struct argv_option pe_default_options[] = {
 	{"type",	't',TAG_IMGTYPE,ARGV_OPTARG_NONE,0,0,0,
 			"print image type"},
 
+	{"sections",	's',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
+			"print image sections"},
+
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,
 			"print exported symbols" },
 
