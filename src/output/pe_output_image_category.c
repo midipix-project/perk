@@ -30,8 +30,7 @@ int pe_output_image_category(
 	pe_get_image_framework(meta,&framework);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
-		if (fprintf(fout,"%s:\n- %s:\n- %s:\n- %s:\n- %s:\n",
-				*uctx->path,
+		if (fprintf(fout,"category:\n- %s:\n- %s:\n- %s:\n- %s:\n",
 				abi.buffer,
 				subtype.buffer,
 				subsystem.buffer,
