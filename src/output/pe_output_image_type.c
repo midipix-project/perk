@@ -4,12 +4,7 @@
 /*  Released under GPLv2 and GPLv3; see COPYING.PERK.          */
 /***************************************************************/
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
-#include <errno.h>
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
