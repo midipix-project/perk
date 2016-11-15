@@ -15,25 +15,12 @@
 #include <perk/perk_output.h>
 #include "perk_errinfo_impl.h"
 
-static const char * pretty_abi(const struct pe_unit_ctx * uctx)
-{
-	switch (uctx->meta->opt.std.magic) {
-		case PE_MAGIC_PE32:
-			return "PE32";
-
-		case PE_MAGIC_PE32_PLUS:
-			return "PE64";
-
-		default:
-			return "INTERNAL_ERROR";
-	}
-}
-
 int pe_output_image_type(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_unit_ctx *	uctx,
 	FILE *				fout)
 {
+	struct pe_info_string		abi;
 	struct pe_info_string		subtype;
 	struct pe_info_string		subsystem;
 	struct pe_info_string		framework;
@@ -42,6 +29,7 @@ int pe_output_image_type(
 	if (!fout)
 		fout = stdout;
 
+	pe_get_image_abi      (meta,&abi);
 	pe_get_image_subtype  (meta,&subtype);
 	pe_get_image_subsystem(meta,&subsystem);
 	pe_get_image_framework(meta,&framework);
@@ -49,14 +37,14 @@ int pe_output_image_type(
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (fprintf(fout,"%s:\n- %s:\n- %s:\n- %s:\n- %s:\n",
 				*uctx->path,
-				pretty_abi(uctx),
+				abi.buffer,
 				subtype.buffer,
 				subsystem.buffer,
 				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
 	} else {
 		if (fprintf(fout,"%s-%s-%s-%s\n",
-				pretty_abi(uctx),
+				abi.buffer,
 				subtype.buffer,
 				subsystem.buffer,
 				framework.buffer) < 0)
