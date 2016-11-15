@@ -7,6 +7,13 @@ extern "C" {
 
 #include <stdint.h>
 
+enum pe_abi {
+	PE_ABI_UNSUPPORTED,
+	PE_ABI_PE32,
+	PE_ABI_PE64,
+	PE_ABI_CAP
+};
+
 enum pe_subtype {
 	PE_SUBTYPE_UNRECOGNIZED,
 	PE_SUBTYPE_DLL,
