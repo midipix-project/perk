@@ -7,6 +7,22 @@ extern "C" {
 
 #include <stdint.h>
 
+enum pe_framework {
+	PE_FRAMEWORK_UNKNOWN,
+	PE_FRAMEWORK_FREESTD,
+	PE_FRAMEWORK_PSXSCL,
+	PE_FRAMEWORK_MIDIPIX,
+	PE_FRAMEWORK_CYGONE,
+	PE_FRAMEWORK_CYGWIN,
+	PE_FRAMEWORK_MINGW,
+	PE_FRAMEWORK_MSYS,
+	PE_FRAMEWORK_SUACON,
+	PE_FRAMEWORK_WINCON,
+	PE_FRAMEWORK_WINCLI,
+	PE_FRAMEWORK_WIN32,
+	PE_FRAMEWORK_CAP
+};
+
 /* generic block info / image directory header */
 struct pe_block {
 	uint32_t	rva;

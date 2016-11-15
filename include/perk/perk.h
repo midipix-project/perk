@@ -154,6 +154,10 @@ struct pe_unit_ctx {
 	void *				any;
 };
 
+struct pe_info_string {
+	char				buffer[128];
+};
+
 /* package info */
 perk_api				const struct pe_source_version * pe_source_version(void);
 
@@ -187,6 +191,9 @@ perk_api int  pe_get_rva_from_roffset	(const struct pe_image_meta *, uint32_t ro
 
 perk_api int  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * name, struct pe_expsym * optional);
 perk_api int  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index, struct pe_expsym * optional);
+
+/* info api */
+perk_api int  pe_get_image_framework	(const struct pe_image_meta *, struct pe_info_string * optional);
 
 /* low-level api */
 perk_api int  pe_read_dos_header	(const struct pe_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);
