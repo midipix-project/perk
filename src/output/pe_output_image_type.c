@@ -62,86 +62,18 @@ static const char * pretty_subsystem(const struct pe_unit_ctx * uctx)
 		return pe_subsystem_name[uctx->meta->opt.img.subsystem];
 }
 
-static bool pe_image_is_psxscl(const struct pe_unit_ctx * uctx)
-{
-	return (!uctx->meta->summary.nimplibs
-		&& !pe_get_expsym_by_name(uctx->meta,"__psx_init",0));
-}
-
-static bool pe_image_is_cygwin(const struct pe_unit_ctx * uctx)
-{
-	int				i;
-	const struct pe_image_meta *	meta = uctx->meta;
-
-	for (i=0; i<uctx->meta->summary.nimplibs; i++)
-		if (!(strcmp(meta->idata[i].name,"cygwin1.dll")))
-			return true;
-
-	return false;
-}
-
-static bool pe_image_is_msys(const struct pe_unit_ctx * uctx)
-{
-	int				i;
-	const struct pe_image_meta *	meta = uctx->meta;
-
-	for (i=0; i<uctx->meta->summary.nimplibs; i++)
-		if (!(strcmp(meta->idata[i].name,"msys-2.0.dll")))
-			return true;
-
-	return false;
-}
-
-static bool pe_image_is_mingw(const struct pe_unit_ctx * uctx)
-{
-	return ((pe_get_named_section_index(uctx->meta,".CRT") >= 0)
-		&& (pe_get_named_section_index(uctx->meta,".bss") >= 0)
-		&& (pe_get_named_section_index(uctx->meta,".tls") >= 0));
-}
-
-static const char * pretty_framework(const struct pe_unit_ctx * uctx)
-{
-	if (pe_get_named_section_index(uctx->meta,".midipix") >= 0)
-		return "midipix";
-
-	else if (pe_get_named_section_index(uctx->meta,".freestd") >= 0)
-		return "freestd";
-
-	else if (pe_get_named_section_index(uctx->meta,".cygheap") >= 0)
-		return "cygone";
-
-	else if (pe_image_is_psxscl(uctx))
-		return "psxscl";
-
-	else if (pe_image_is_cygwin(uctx))
-		return "cygwin";
-
-	else if (pe_image_is_msys(uctx))
-		return "msys";
-
-	else if (pe_image_is_mingw(uctx))
-		return "mingw";
-
-	else if (uctx->meta->opt.img.subsystem == PE_IMAGE_SUBSYSTEM_POSIX_CUI)
-		return "suacon";
-
-	else if (uctx->meta->opt.img.subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_CUI)
-		return "wincon";
-
-	else if (uctx->meta->opt.img.subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_GUI)
-		return "win32";
-
-	else
-		return "unknown";
-}
-
 int pe_output_image_type(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_unit_ctx *	uctx,
 	FILE *				fout)
 {
+	struct pe_info_string		framework;
+	const struct pe_image_meta *	meta = uctx->meta;
+
 	if (!fout)
 		fout = stdout;
+
+	pe_get_image_framework(meta,&framework);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (fprintf(fout,"%s:\n- %s:\n- %s:\n- %s:\n- %s:\n",
@@ -149,14 +81,14 @@ int pe_output_image_type(
 				pretty_abi(uctx),
 				pretty_type(uctx),
 				pretty_subsystem(uctx),
-				pretty_framework(uctx)) < 0)
+				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
 	} else {
 		if (fprintf(fout,"%s-%s-%s-%s\n",
 				pretty_abi(uctx),
 				pretty_type(uctx),
 				pretty_subsystem(uctx),
-				pretty_framework(uctx)) < 0)
+				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
 	}
 
