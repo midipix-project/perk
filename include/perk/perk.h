@@ -193,6 +193,7 @@ perk_api int  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * 
 perk_api int  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index, struct pe_expsym * optional);
 
 /* info api */
+perk_api int  pe_get_image_subsystem	(const struct pe_image_meta *, struct pe_info_string * optional);
 perk_api int  pe_get_image_framework	(const struct pe_image_meta *, struct pe_info_string * optional);
 
 /* low-level api */
