@@ -168,7 +168,7 @@ int pe_get_image_meta(
 	int 			i,s;
 	long			l;
 	unsigned		j;
-	unsigned char *		mark;
+	const unsigned char *	mark;
 	struct pe_image_meta *	m;
 	char *			base;
 
@@ -189,7 +189,7 @@ int pe_get_image_meta(
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	mark  = image->addr + m->coff.ptr_to_sym_tbl;
+	mark  = (const unsigned char *)image->addr + m->coff.ptr_to_sym_tbl;
 	mark += m->coff.num_of_syms * sizeof(struct pe_coff_sym_entry);
 
 	m->coff.ptr_to_string_tbl  = m->coff.ptr_to_sym_tbl;
