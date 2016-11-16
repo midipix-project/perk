@@ -9,7 +9,7 @@
 #include <perk/perk.h>
 #include <perk/perk_meta.h>
 
-static const char const * pe_subsystem_str[0x10] = {
+static const char * const pe_subsystem_str[0x10] = {
 	[PE_IMAGE_SUBSYSTEM_UNKNOWN]                  = "unknown",
 	[PE_IMAGE_SUBSYSTEM_NATIVE]                   = "native",
 	[PE_IMAGE_SUBSYSTEM_WINDOWS_GUI]              = "windows",
