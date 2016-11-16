@@ -129,13 +129,6 @@ struct pe_common_ctx {
 	uint64_t			actflags;
 	uint64_t			fmtflags;
 	const char *			output;
-	const char *			srcdir;
-	const char *			dstdir;
-	const char *			tmpdir;
-	const struct pe_symbol_ctx *	symctx;
-	const struct pe_output_ctx *	outctx;
-	const struct pe_linker_ctx *	lnkctx;
-	const struct pe_server_ctx *	srvctx;
 };
 
 struct pe_driver_ctx {
