@@ -79,6 +79,8 @@ struct pe_meta_coff_file_hdr {
 	uint32_t	num_of_syms;
 	uint16_t	size_of_opt_hdr;
 	uint16_t	characteristics;
+	uint32_t	ptr_to_string_tbl;
+	uint32_t	size_of_string_tbl;
 };
 
 
