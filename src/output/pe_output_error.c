@@ -18,7 +18,7 @@ static const char aclr_green[]   = "\x1b[32m";
 static const char aclr_blue[]    = "\x1b[34m";
 static const char aclr_magenta[] = "\x1b[35m";
 
-static const char const * const pe_error_strings[PERK_ERR_CAP] = {
+static const char * const pe_error_strings[PERK_ERR_CAP] = {
 	[PERK_ERR_FLOW_ERROR]      = "flow error: unexpected condition or other",
 	[PERK_ERR_FLEE_ERROR]      = "flees and bugs and cats and mice",
 	[PERK_ERR_NULL_CONTEXT]    = "null driver or unit context",
