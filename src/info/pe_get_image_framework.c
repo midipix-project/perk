@@ -10,7 +10,7 @@
 #include <perk/perk.h>
 #include <perk/perk_meta.h>
 
-static const char const * pe_framework_str[PE_FRAMEWORK_CAP] = {
+static const char * const pe_framework_str[PE_FRAMEWORK_CAP] = {
 	[PE_FRAMEWORK_UNKNOWN]  = "unknown",
 	[PE_FRAMEWORK_FREESTD]  = "freestd",
 	[PE_FRAMEWORK_PSXSCL]   = "psxscl",
