@@ -15,17 +15,17 @@ const struct argv_option pe_default_options[] = {
 			"print image category"},
 
 	{"sections",	's',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
-			"print image sections"},
+			"list image sections"},
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,
-			"print exported symbols" },
+			"list exported symbols" },
 
 	{"implibs",	'i',TAG_IMPLIBS,ARGV_OPTARG_NONE,0,0,0,
 			"list direct dependency libraries"},
 
 	{"impsyms",	'I',TAG_IMPSYMS,ARGV_OPTARG_NONE,0,0,0,
 			"list direct dependency libraries "
-			"along with required symbols"},
+			"along with imported symbols"},
 
 	{0,0,0,0,0,0,0,0}
 };
