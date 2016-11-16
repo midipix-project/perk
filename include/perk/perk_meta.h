@@ -246,6 +246,18 @@ struct pe_meta_import_hdr {
 };
 
 
+/* coff: symbol table entry */
+struct pe_meta_coff_sym_entry {
+	char		name[16];
+	char *		long_name;
+	uint32_t	value;
+	int16_t		section_number;
+	uint16_t	type;
+	unsigned char	storage_class;
+	unsigned char	num_of_aux_symbols;
+};
+
+
 #ifdef __cplusplus
 }
 #endif
