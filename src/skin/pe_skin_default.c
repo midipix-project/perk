@@ -12,7 +12,7 @@ const struct argv_option pe_default_options[] = {
 			"format output for parsing by %s"},
 
 	{"category",	'c',TAG_CATEGORY,ARGV_OPTARG_NONE,0,0,0,
-			"print image type"},
+			"print image category"},
 
 	{"sections",	's',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
 			"print image sections"},
