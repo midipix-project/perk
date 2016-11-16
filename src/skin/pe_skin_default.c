@@ -14,7 +14,7 @@ const struct argv_option pe_default_options[] = {
 	{"category",	'y',TAG_CATEGORY,ARGV_OPTARG_NONE,0,0,0,
 			"print image category"},
 
-	{"sections",	's',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
+	{"sections",	'c',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
 			"list image sections"},
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,
