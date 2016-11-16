@@ -12,21 +12,13 @@
 
 int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_hdr * m)
 {
-	if (PERK_LITTLE_ENDIAN) {
+	m->import_lookup_tbl_rva	= pe_read_long(p->import_lookup_tbl_rva);
+	m->time_date_stamp		= pe_read_long(p->time_date_stamp);
+	m->forwarder_chain		= pe_read_long(p->forwarder_chain);
+	m->name_rva			= pe_read_long(p->name_rva);
+	m->import_addr_tbl_rva		= pe_read_long(p->import_addr_tbl_rva);
 
-		memcpy(m,p,sizeof(*p));
-
-	} else {
-
-		m->import_lookup_tbl_rva	= pe_read_long(p->import_lookup_tbl_rva);
-		m->time_date_stamp		= pe_read_long(p->time_date_stamp);
-		m->forwarder_chain		= pe_read_long(p->forwarder_chain);
-		m->name_rva			= pe_read_long(p->name_rva);
-		m->import_addr_tbl_rva		= pe_read_long(p->import_addr_tbl_rva);
-
-	}
-
-	m->name  = 0;
+	m->name   = 0;
 	m->aitems = 0;
 
 	return 0;
