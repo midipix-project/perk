@@ -121,7 +121,6 @@ int pe_get_driver_ctx(
 	size_t				nunits;
 	const char *			program;
 	const char *			pretty;
-	int				fdout;
 
 	(void)envp;
 
@@ -132,7 +131,6 @@ int pe_get_driver_ctx(
 
 	pretty	= 0;
 	nunits	= 0;
-	fdout	= 0;
 	program = argv_program_name(argv[0]);
 	memset(&cctx,0,sizeof(cctx));
 	cctx.drvflags = flags;
@@ -150,10 +148,6 @@ int pe_get_driver_ctx(
 
 				case TAG_VERSION:
 					cctx.drvflags |= PERK_DRIVER_VERSION;
-					break;
-
-				case TAG_OUTPUT:
-					cctx.output = entry->arg;
 					break;
 
 				case TAG_PRETTY:
@@ -184,20 +178,12 @@ int pe_get_driver_ctx(
 			nunits++;
 	}
 
-	if (cctx.output && ((fdout = open(cctx.output,
-			O_CREAT|O_TRUNC|O_WRONLY|O_NOCTTY|O_NOFOLLOW,
-			S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH)) < 0))
-		return pe_get_driver_ctx_fail(meta);
-
 	if (pretty && !strcmp(pretty,"yaml"))
 		cctx.fmtflags |= PERK_PRETTY_YAML;
 	else if (pretty && !strcmp(pretty,"dlltool"))
 		cctx.fmtflags |= PERK_PRETTY_DLLTOOL;
 
-	if (!(ctx = pe_driver_ctx_alloc(meta,&cctx,nunits)) && cctx.output)
-		close(fdout);
-
-	if (!ctx)
+	if (!(ctx = pe_driver_ctx_alloc(meta,&cctx,nunits)))
 		return pe_get_driver_ctx_fail(meta);
 
 	ctx->ctx.program	= program;

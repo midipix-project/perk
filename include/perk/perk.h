@@ -128,7 +128,6 @@ struct pe_common_ctx {
 	uint64_t			drvflags;
 	uint64_t			actflags;
 	uint64_t			fmtflags;
-	const char *			output;
 };
 
 struct pe_driver_ctx {

@@ -8,9 +8,6 @@ const struct argv_option pe_default_options[] = {
 	{"help",	'h',TAG_HELP,ARGV_OPTARG_OPTIONAL,0,"short|long",0,
 			"show usage information [listing %s options only]"},
 
-	{"output",	'o',TAG_OUTPUT,ARGV_OPTARG_REQUIRED,0,0,"<file>",
-			"write output to %s"},
-
 	{"pretty",	'p',TAG_PRETTY,ARGV_OPTARG_REQUIRED,0,"yaml|dlltool",0,
 			"format output for parsing by %s"},
 

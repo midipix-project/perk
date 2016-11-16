@@ -14,7 +14,6 @@ extern const struct argv_option pe_default_options[];
 enum app_tags {
 	TAG_HELP,
 	TAG_VERSION,
-	TAG_OUTPUT,
 	TAG_PRETTY,
 	TAG_CATEGORY,
 	TAG_SECTIONS,
