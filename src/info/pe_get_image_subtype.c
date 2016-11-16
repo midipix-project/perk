@@ -11,7 +11,7 @@
 
 /* todo: object, unrecognized */
 
-static const char const * pe_subtype_str[PE_SUBTYPE_CAP] = {
+static const char * const pe_subtype_str[PE_SUBTYPE_CAP] = {
 	[PE_SUBTYPE_UNRECOGNIZED]   = "UNRECOGNIZED",
 	[PE_SUBTYPE_DLL]            = "dll",
 	[PE_SUBTYPE_EXE]            = "exe",
