@@ -16,7 +16,6 @@ int pe_read_section_header(const struct pe_sec_hdr * p, struct pe_meta_sec_hdr *
 	memset(m,0,sizeof(m->name));
 	memcpy(m,p,sizeof(p->name));
 
-	/* todo: long name support */
 	m->long_name = 0;
 
 	if (PERK_LITTLE_ENDIAN) {
