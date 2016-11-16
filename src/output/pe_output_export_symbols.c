@@ -36,6 +36,7 @@ int pe_output_export_symbols(
 	const struct pe_image_meta *	m,
 	FILE *				fout)
 {
+	char *				mark;
 	uint32_t 			offset;
 	uint32_t *			symrva;
 	unsigned			i;
@@ -50,13 +51,14 @@ int pe_output_export_symbols(
 	if ((pretty_header(cctx,fout)) < 0)
 		return PERK_FILE_ERROR(dctx);
 
+	mark	= m->image.addr;
 	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+	symrva	= (uint32_t *)(mark + m->edata.name_ptr_rva - offset);
 
 	for (i=0; i<m->edata.num_of_name_ptrs; i++)
 		if ((pretty_export_item(
 				cctx,
-				(char *)((uintptr_t)m->image.addr + symrva[i] - offset),
+				&mark[symrva[i] - offset],
 				fout)) < 0)
 			return PERK_FILE_ERROR(dctx);
 
