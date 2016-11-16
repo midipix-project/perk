@@ -236,8 +236,10 @@ int pe_get_image_meta(
 		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
 	}
 
-	if (m->aedata)
+	if (m->aedata) {
 		pe_read_export_header(m->aedata,&m->edata);
+		m->summary.nexpsyms = m->edata.num_of_name_ptrs;
+	}
 
 	/* .idata */
 	struct pe_import_hdr * 		pidata;
