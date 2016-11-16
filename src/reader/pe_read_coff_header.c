@@ -12,9 +12,8 @@
 
 int pe_read_coff_header(const struct pe_coff_file_hdr * p, struct pe_meta_coff_file_hdr * m)
 {
-	uint16_t * pzero = (uint16_t *)&p->signature[2];
-
-	if ((p->signature[0] != 'P') || (p->signature[1] != 'E') || *pzero)
+	if ((p->signature[0] != 'P') || (p->signature[1] != 'E')
+			|| p->signature[2] || p->signature[3])
 		return PERK_ERR_BAD_COFF_HEADER;
 
 	if (PERK_LITTLE_ENDIAN) {
