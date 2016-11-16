@@ -164,27 +164,30 @@ int pe_get_image_meta(
 	const struct pe_raw_image *	image,
 	struct pe_image_meta ** meta)
 {
-	int i,s,status;
-	long l;
-	unsigned j;
-	unsigned char * mark;
-	struct pe_image_meta * m;
-	char * base = image->addr;
+	int			ret;
+	int 			i,s;
+	long			l;
+	unsigned		j;
+	unsigned char *		mark;
+	struct pe_image_meta *	m;
+	char *			base;
+
+	base = image->addr;
 
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
 
 	m->ados = (struct pe_image_dos_hdr *)base;
 
-	if ((status = (pe_read_dos_header(m->ados,&m->dos))))
-		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,status));
+	if ((ret = (pe_read_dos_header(m->ados,&m->dos))))
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,ret));
 
 	m->acoff = (struct pe_coff_file_hdr *)(base + m->dos.dos_lfanew);
 
-	if ((status = (pe_read_coff_header(m->acoff,&m->coff))))
-		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,status));
+	if ((ret = (pe_read_coff_header(m->acoff,&m->coff))))
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,ret));
 
 	mark  = image->addr + m->coff.ptr_to_sym_tbl;
 	mark += m->coff.num_of_syms * sizeof(struct pe_coff_sym_entry);
@@ -193,17 +196,19 @@ int pe_get_image_meta(
 	m->coff.ptr_to_string_tbl += m->coff.num_of_syms * sizeof(struct pe_coff_sym_entry);
 	m->coff.size_of_string_tbl = pe_read_long(mark);
 
-	m->aopt = (union pe_opt_hdr *)((char *)m->acoff + sizeof(*m->acoff));
+	mark    = &m->acoff->signature[0];
+	m->aopt = (union pe_opt_hdr *)(mark + sizeof(*m->acoff));
 
-	if ((status = (pe_read_optional_header(m->aopt,&m->opt))))
-		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,status));
+	if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	m->asectbl = (struct pe_sec_hdr *)((char *)m->aopt  + m->coff.size_of_opt_hdr);
+	mark       = &m->aopt->opt_hdr_32.magic[0];
+	m->asectbl = (struct pe_sec_hdr *)(mark + m->coff.size_of_opt_hdr);
 
 	if (!(m->sectbl = calloc(m->coff.num_of_sections,sizeof(*(m->sectbl)))))
-		return pe_free_image_meta_impl(m,
-			PERK_SYSTEM_ERROR(dctx));
+		return pe_free_image_meta_impl(
+			m,PERK_SYSTEM_ERROR(dctx));
 
 	for (i=0; i<m->coff.num_of_sections; i++) {
 		pe_read_section_header(&m->asectbl[i],&m->sectbl[i]);
@@ -219,8 +224,8 @@ int pe_get_image_meta(
 	s = pe_get_block_section_index(m,&m->opt.dirs.export_tbl);
 
 	if ((i >= 0) && (i != s))
-		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
@@ -242,8 +247,8 @@ int pe_get_image_meta(
 	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
 
 	if ((i >= 0) && (i != s))
-		return pe_free_image_meta_impl(m,
-			PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
@@ -256,13 +261,13 @@ int pe_get_image_meta(
 
 	if (m->aidata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pidata->name_rva[0]; pidata++,m->summary.nimplibs++)
-			(void)0;
+		for (pidata=m->aidata; pidata->name_rva[0]; pidata++)
+			m->summary.nimplibs++;
 
 		/* import headers */
-		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*(m->idata)))))
-			return pe_free_image_meta_impl(m,
-				PERK_SYSTEM_ERROR(dctx));
+		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*m->idata))))
+			return pe_free_image_meta_impl(
+				m,PERK_SYSTEM_ERROR(dctx));
 
 		for (i=0; i<m->summary.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
@@ -286,17 +291,17 @@ int pe_get_image_meta(
 					m->idata[i].count++;
 
 				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
-					return pe_free_image_meta_impl(m,
-						PERK_SYSTEM_ERROR(dctx));
+					return pe_free_image_meta_impl(
+						m,PERK_SYSTEM_ERROR(dctx));
 			}
 
 			for (j=0; j<m->idata[i].count; j++) {
-				if ((status = pe_read_import_lookup_item(
+				if ((ret = pe_read_import_lookup_item(
 						&(m->idata[i].aitems[j]),
 						&(m->idata[i].items[j]),
 						m->opt.std.magic)))
-					return pe_free_image_meta_impl(m,
-						PERK_CUSTOM_ERROR(dctx,status));
+					return pe_free_image_meta_impl(
+						m,PERK_CUSTOM_ERROR(dctx,ret));
 
 				switch (m->opt.std.magic) {
 					case PE_MAGIC_PE32:
