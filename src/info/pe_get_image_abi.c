@@ -9,7 +9,7 @@
 #include <perk/perk.h>
 #include <perk/perk_meta.h>
 
-static const char const * pe_abi_str[PE_ABI_CAP] = {
+static const char * const pe_abi_str[PE_ABI_CAP] = {
 	[PE_ABI_UNSUPPORTED]    = "UNSUPPORTED",
 	[PE_ABI_PE32]           = "PE32",
 	[PE_ABI_PE64]           = "PE64",
