@@ -8,5 +8,4 @@ PE Resource Kit
   with a host-native meta representation of the
   image's internal structures.
 
-* when built as an application, output requested
-  information about a given PE image.
+* pretty print requested PE image information.
