@@ -82,7 +82,7 @@ int pe_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, ui
 	int i;
 	uint32_t low,high,ref;
 
-	for (i=0, ref=-1; i<m->coff.num_of_sections; i++) {
+	for (i=0, ref=~0; i<m->coff.num_of_sections; i++) {
 		low  = m->sectbl[i].ptr_to_raw_data;
 		high = low + m->sectbl[i].virtual_size;
 
