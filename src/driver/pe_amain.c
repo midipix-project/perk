@@ -61,6 +61,9 @@ static void pe_perform_unit_actions(
 	if (flags & PERK_OUTPUT_IMAGE_SYMBOLS)
 		pe_output_image_symbols(dctx,uctx->meta,0);
 
+	if (flags & PERK_OUTPUT_IMAGE_STRINGS)
+		pe_output_image_strings(dctx,uctx->meta,0);
+
 	if (flags & PERK_OUTPUT_EXPORT_SYMS)
 		pe_output_export_symbols(dctx,uctx->meta,0);
 
