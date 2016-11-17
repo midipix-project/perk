@@ -20,6 +20,9 @@ const struct argv_option pe_default_options[] = {
 	{"symbols",	'm',TAG_SYMBOLS,ARGV_OPTARG_NONE,0,0,0,
 			"list symbols found in the coff symbol table"},
 
+	{"strings",	's',TAG_STRINGS,ARGV_OPTARG_NONE,0,0,0,
+			"list strings found in the coff string table"},
+
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,
 			"list exported symbols" },
 

@@ -166,6 +166,10 @@ int pe_get_driver_ctx(
 					cctx.fmtflags |= PERK_OUTPUT_IMAGE_SYMBOLS;
 					break;
 
+				case TAG_STRINGS:
+					cctx.fmtflags |= PERK_OUTPUT_IMAGE_STRINGS;
+					break;
+
 				case TAG_EXPSYMS:
 					cctx.fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
 					break;
