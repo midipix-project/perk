@@ -10,48 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-static int pe_read_optional_header_little_endian(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
-{
-	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
-	memset(&m->dirs,0,sizeof(m->dirs));
-
-	memcpy(&m->std,p,sizeof(struct pe_meta_opt_hdr_std));
-
-	switch (m->std.magic) {
-		case PE_MAGIC_PE32:
-			memcpy(&m->vers,&p->opt_hdr_32.major_os_ver,sizeof(struct pe_meta_opt_hdr_vers));
-			memcpy(&m->align,&p->opt_hdr_32.section_align,sizeof(struct pe_meta_opt_hdr_align));
-			memcpy(&m->img,&p->opt_hdr_32.size_of_image,sizeof(struct pe_meta_opt_hdr_img));
-			memcpy(&m->ldr,&p->opt_hdr_32.loader_flags,sizeof(struct pe_meta_opt_hdr_ldr));
-
-			if (m->ldr.rva_and_sizes > 0x10)
-				return PERK_ERR_BAD_IMAGE_TYPE;
-			else
-				memcpy(&m->dirs,&p->opt_hdr_32.export_tbl,sizeof(struct pe_meta_opt_hdr_dirs));
-
-			break;
-
-		case PE_MAGIC_PE32_PLUS:
-			memcpy(&m->vers,&p->opt_hdr_64.major_os_ver,sizeof(struct pe_meta_opt_hdr_vers));
-			memcpy(&m->align,&p->opt_hdr_64.section_align,sizeof(struct pe_meta_opt_hdr_align));
-			memcpy(&m->img,&p->opt_hdr_64.size_of_image,sizeof(struct pe_meta_opt_hdr_img));
-			memcpy(&m->ldr,&p->opt_hdr_64.loader_flags,sizeof(struct pe_meta_opt_hdr_ldr));
-
-			if (m->ldr.rva_and_sizes > 0x10)
-				return PERK_ERR_BAD_IMAGE_TYPE;
-			else
-				memcpy(&m->dirs,&p->opt_hdr_64.export_tbl,sizeof(struct pe_meta_opt_hdr_dirs));
-
-			break;
-
-		default:
-			return PERK_ERR_BAD_IMAGE_TYPE;
-	}
-
-	return 0;
-}
-
-static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+static int pe_read_optional_header_structs(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
 	unsigned int			i;
 	struct pe_block *		pdir;
@@ -65,10 +24,9 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
 
-	astd = (struct pe_opt_hdr_std *)p;
-
 	switch (m->std.magic) {
 		case PE_MAGIC_PE32:
+			astd	= (struct pe_opt_hdr_std *)p;
 			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_32.major_os_ver;
 			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_32.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_32.size_of_image;
@@ -76,6 +34,7 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
+			astd	= (struct pe_opt_hdr_std *)p;
 			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_64.major_os_ver;
 			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_64.section_align;
 			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_64.size_of_image;
@@ -144,13 +103,8 @@ int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr *
 {
 	int ret;
 
-	if (PERK_LITTLE_ENDIAN) {
-		if ((ret = pe_read_optional_header_little_endian(p,m)))
-			return ret;
-	} else {
-		if ((ret = pe_read_optional_header_big_endian(p,m)))
-			return ret;
-	}
+	if ((ret = pe_read_optional_header_structs(p,m)))
+		return ret;
 
 	switch (m->std.magic) {
 		case PE_MAGIC_PE32:
