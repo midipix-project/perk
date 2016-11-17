@@ -53,6 +53,10 @@ static int pe_read_optional_header_little_endian(const union pe_opt_hdr * p, str
 
 static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
+	unsigned int			i;
+	struct pe_block *		pdir;
+	const  unsigned char *		mark;
+
 	struct pe_opt_hdr_std *		astd;
 	struct pe_opt_hdr_vers *	avers;
 	struct pe_opt_hdr_align *	aalign;
@@ -60,7 +64,6 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 	struct pe_opt_hdr_ldr *		aldr;
 
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
-	memset(&m->dirs,0,sizeof(m->dirs));
 
 	astd = (struct pe_opt_hdr_std *)p;
 
@@ -118,6 +121,21 @@ static int pe_read_optional_header_big_endian(const union pe_opt_hdr * p, struct
 	/* ldr */
 	m->ldr.loader_flags			= pe_read_long(aldr->loader_flags);
 	m->ldr.rva_and_sizes			= pe_read_long(aldr->rva_and_sizes);
+
+	/* dirs */
+	if (m->ldr.rva_and_sizes > 0x10)
+		return PERK_ERR_BAD_IMAGE_TYPE;
+
+	if (m->ldr.rva_and_sizes < 0x10)
+		memset(&m->dirs,0,sizeof(m->dirs));
+
+	mark = p->opt_hdr_64.export_tbl;
+	pdir = &m->dirs.export_tbl;
+
+	for (i=0; i<m->ldr.rva_and_sizes; i++) {
+		pdir[i].rva  = pe_read_long(&mark[i*8]);
+		pdir[i].size = pe_read_long(&mark[i*8+4]);
+	}
 
 	return 0;
 }
