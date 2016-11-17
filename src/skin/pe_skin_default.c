@@ -17,7 +17,7 @@ const struct argv_option pe_default_options[] = {
 	{"sections",	'c',TAG_SECTIONS,ARGV_OPTARG_NONE,0,0,0,
 			"list image sections"},
 
-	{"symbols",	's',TAG_SYMBOLS,ARGV_OPTARG_NONE,0,0,0,
+	{"symbols",	'm',TAG_SYMBOLS,ARGV_OPTARG_NONE,0,0,0,
 			"list symbols found in the coff symbol table"},
 
 	{"expsyms",	'e',TAG_EXPSYMS,ARGV_OPTARG_NONE,0,0,0,
