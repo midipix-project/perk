@@ -168,6 +168,8 @@ perk_api int  pe_output_image_symbols	(const struct pe_driver_ctx *, const struc
 perk_api int  pe_output_image_strings	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_export_symbols	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_import_libraries(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+
+/* error trace api */
 perk_api int  pe_output_error_record	(const struct pe_driver_ctx *, const struct pe_error_info *);
 perk_api int  pe_output_error_vector	(const struct pe_driver_ctx *);
 
