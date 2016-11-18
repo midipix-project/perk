@@ -19,7 +19,7 @@ int pe_output_image_symbols(
 {
 	unsigned			i,bias;
 	uint32_t			roffset;
-	struct pe_coff_sym_entry *	symtbl;
+	struct pe_coff_symbol *		symtbl;
 	char				buf[24];
 	char *				mark;
 	const char *			name;
@@ -36,7 +36,7 @@ int pe_output_image_symbols(
 	}
 
 	mark   = (char *)meta->image.addr;
-	symtbl = (struct pe_coff_sym_entry *)(mark + meta->coff.ptr_to_sym_tbl);
+	symtbl = (struct pe_coff_symbol *)(mark + meta->coff.ptr_to_sym_tbl);
 
 	for (i=0,bias=0; i<meta->coff.num_of_syms; i++,bias=0) {
 		if (symtbl[i].storage_class[0] == PE_IMAGE_SYM_CLASS_FILE)

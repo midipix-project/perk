@@ -249,7 +249,7 @@ struct pe_meta_import_hdr {
 
 
 /* coff: symbol table entry */
-struct pe_meta_coff_sym_entry {
+struct pe_meta_coff_symbol {
 	char		name[24];
 	char *		long_name;
 	uint32_t	value;

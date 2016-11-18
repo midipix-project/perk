@@ -287,7 +287,7 @@ struct pe_hint_name_entry {
 };
 
 
-struct pe_coff_sym_entry {
+struct pe_coff_symbol {
 	unsigned char	name				[0x08];		/* 0x00 */
 	unsigned char	value				[0x04];		/* 0x08 */
 	unsigned char	section_number			[0x02];		/* 0x0c */
