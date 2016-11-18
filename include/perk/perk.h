@@ -204,6 +204,9 @@ perk_api int  pe_read_export_header	(const struct pe_export_hdr *,		struct pe_me
 perk_api int  pe_read_import_header	(const struct pe_import_hdr *,		struct pe_meta_import_hdr *);
 perk_api int  pe_read_import_lookup	(const union  pe_import_lookup_item *,	struct pe_meta_import_lookup_item *, uint32_t magic);
 
+perk_api int  pe_read_coff_symbol	(const struct pe_coff_symbol *,		struct pe_meta_coff_symbol *,
+					 const struct pe_meta_coff_file_hdr *,	void * base);
+
 #ifdef __cplusplus
 }
 #endif
