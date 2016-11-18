@@ -298,7 +298,7 @@ int pe_get_image_meta(
 			}
 
 			for (j=0; j<m->idata[i].count; j++) {
-				if ((ret = pe_read_import_lookup_item(
+				if ((ret = pe_read_import_lookup(
 						&(m->idata[i].aitems[j]),
 						&(m->idata[i].items[j]),
 						m->opt.std.magic)))

@@ -24,7 +24,7 @@ int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_
 	return 0;
 }
 
-int pe_read_import_lookup_item(
+int pe_read_import_lookup(
 	const union pe_import_lookup_item * p,
 	struct pe_meta_import_lookup_item * m,
 	uint32_t magic)
