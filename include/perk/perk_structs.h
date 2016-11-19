@@ -287,7 +287,7 @@ struct pe_raw_hint_name_entry {
 };
 
 
-struct pe_coff_symbol {
+struct pe_raw_coff_symbol {
 	unsigned char	name				[0x08];		/* 0x00 */
 	unsigned char	value				[0x04];		/* 0x08 */
 	unsigned char	section_number			[0x02];		/* 0x0c */
@@ -296,7 +296,7 @@ struct pe_coff_symbol {
 	unsigned char	num_of_aux_symbols		[0x01];		/* 0x11 */
 };
 
-struct pe_coff_symbol_name {
+struct pe_raw_coff_symbol_name {
 	union {
 		unsigned char		short_name	[0x08];		/* 0x00 */
 

@@ -11,7 +11,7 @@
 #include "perk_reader_impl.h"
 
 int pe_read_coff_symbol(
-	const struct pe_coff_symbol *		p,
+	const struct pe_raw_coff_symbol *	p,
 	struct pe_meta_coff_symbol *		m,
 	const struct pe_meta_coff_file_hdr *	coff,
 	void *					base)

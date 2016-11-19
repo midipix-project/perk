@@ -190,10 +190,10 @@ int pe_get_image_meta(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
 	mark  = (const unsigned char *)image->addr + m->coff.ptr_to_sym_tbl;
-	mark += m->coff.num_of_syms * sizeof(struct pe_coff_symbol);
+	mark += m->coff.num_of_syms * sizeof(struct pe_raw_coff_symbol);
 
 	m->coff.ptr_to_string_tbl  = m->coff.ptr_to_sym_tbl;
-	m->coff.ptr_to_string_tbl += m->coff.num_of_syms * sizeof(struct pe_coff_symbol);
+	m->coff.ptr_to_string_tbl += m->coff.num_of_syms * sizeof(struct pe_raw_coff_symbol);
 	m->coff.size_of_string_tbl = pe_read_long(mark);
 
 	mark    = &m->acoff->signature[0];

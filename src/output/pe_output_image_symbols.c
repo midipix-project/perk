@@ -19,7 +19,7 @@ int pe_output_image_symbols(
 {
 	unsigned			i;
 	char *				mark;
-	struct pe_coff_symbol *		symtbl;
+	struct pe_raw_coff_symbol *	symtbl;
 	struct pe_meta_coff_symbol	symrec;
 	const char * 			dash = "";
 
@@ -34,7 +34,7 @@ int pe_output_image_symbols(
 	}
 
 	mark   = (char *)meta->image.addr;
-	symtbl = (struct pe_coff_symbol *)(mark + meta->coff.ptr_to_sym_tbl);
+	symtbl = (struct pe_raw_coff_symbol *)(mark + meta->coff.ptr_to_sym_tbl);
 
 	for (i=0; i<meta->coff.num_of_syms; i++) {
 		pe_read_coff_symbol(
