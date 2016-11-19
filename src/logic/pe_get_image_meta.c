@@ -197,7 +197,7 @@ int pe_get_image_meta(
 	m->coff.size_of_string_tbl = pe_read_long(mark);
 
 	mark    = &m->acoff->signature[0];
-	m->aopt = (union pe_opt_hdr *)(mark + sizeof(*m->acoff));
+	m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
 
 	if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
 		return pe_free_image_meta_impl(

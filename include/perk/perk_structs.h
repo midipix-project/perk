@@ -40,7 +40,7 @@ struct pe_raw_coff_file_hdr {
 };
 
 
-struct pe_opt_hdr_std {
+struct pe_raw_opt_hdr_std {
 	unsigned char	magic				[0x02];		/* 0x00 */
 	unsigned char	major_linker_ver		[0x01];		/* 0x02 */
 	unsigned char	minor_linker_ver		[0x01];		/* 0x03 */
@@ -51,12 +51,12 @@ struct pe_opt_hdr_std {
 	unsigned char	base_of_code			[0x04];		/* 0x14 */
 };
 
-struct pe_opt_hdr_align {
+struct pe_raw_opt_hdr_align {
 	unsigned char	section_align			[0x04];		/* 0x20 */
 	unsigned char	file_align			[0x04];         /* 0x24 */
 };
 
-struct pe_opt_hdr_vers {
+struct pe_raw_opt_hdr_vers {
 	unsigned char	major_os_ver			[0x02];		/* 0x28 */
 	unsigned char	minor_os_ver			[0x02];		/* 0x2a */
 	unsigned char	major_image_ver			[0x02];		/* 0x2c */
@@ -66,7 +66,7 @@ struct pe_opt_hdr_vers {
 	unsigned char	win32_ver			[0x04];		/* 0x34 */
 };
 
-struct pe_opt_hdr_img {
+struct pe_raw_opt_hdr_img {
 	unsigned char	size_of_image			[0x04];		/* 0x38 */
 	unsigned char	size_of_headers			[0x04];		/* 0x3c */
 	unsigned char	checksum			[0x04];		/* 0x40 */
@@ -74,12 +74,12 @@ struct pe_opt_hdr_img {
 	unsigned char	dll_characteristics		[0x02];		/* 0x46 */
 };
 
-struct pe_opt_hdr_ldr {
+struct pe_raw_opt_hdr_ldr {
 	unsigned char	loader_flags			[0x04];
 	unsigned char	rva_and_sizes			[0x04];
 };
 
-struct pe_opt_hdr_dirs {
+struct pe_raw_opt_hdr_dirs {
 	unsigned char	export_tbl			[0x08];
 	unsigned char	import_tbl			[0x08];
 	unsigned char	resource_tbl			[0x08];
@@ -98,7 +98,7 @@ struct pe_opt_hdr_dirs {
 	unsigned char	reserved			[0x08];
 };
 
-struct pe_data_dirs {
+struct pe_raw_data_dirs {
 	unsigned char	rva_and_sizes			[0x04];
 	unsigned char	export_tbl			[0x08];
 	unsigned char	import_tbl			[0x08];
@@ -118,7 +118,7 @@ struct pe_data_dirs {
 	unsigned char	reserved			[0x08];
 };
 
-struct pe_opt_hdr_32 {
+struct pe_raw_opt_hdr_32 {
 	unsigned char	magic				[0x02];		/* 0x00 */
 	unsigned char	major_linker_ver		[0x01];		/* 0x02 */
 	unsigned char	minor_linker_ver		[0x01];		/* 0x03 */
@@ -168,7 +168,7 @@ struct pe_opt_hdr_32 {
 };
 
 
-struct pe_opt_hdr_64 {
+struct pe_raw_opt_hdr_64 {
 	unsigned char	magic				[0x02];		/* 0x00 */
 	unsigned char	major_linker_ver		[0x01];		/* 0x02 */
 	unsigned char	minor_linker_ver		[0x01];		/* 0x03 */
@@ -217,9 +217,9 @@ struct pe_opt_hdr_64 {
 };
 
 
-union pe_opt_hdr {
-	struct pe_opt_hdr_32	opt_hdr_32;
-	struct pe_opt_hdr_64	opt_hdr_64;
+union pe_raw_opt_hdr {
+	struct pe_raw_opt_hdr_32    opt_hdr_32;
+	struct pe_raw_opt_hdr_64    opt_hdr_64;
 };
 
 

@@ -10,35 +10,35 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-static int pe_read_optional_header_structs(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
 	unsigned int			i;
 	struct pe_block *		pdir;
 	const  unsigned char *		mark;
 
-	struct pe_opt_hdr_std *		astd;
-	struct pe_opt_hdr_vers *	avers;
-	struct pe_opt_hdr_align *	aalign;
-	struct pe_opt_hdr_img *		aimg;
-	struct pe_opt_hdr_ldr *		aldr;
+	struct pe_raw_opt_hdr_std *	astd;
+	struct pe_raw_opt_hdr_vers *	avers;
+	struct pe_raw_opt_hdr_align *	aalign;
+	struct pe_raw_opt_hdr_img *	aimg;
+	struct pe_raw_opt_hdr_ldr *	aldr;
 
 	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
 
 	switch (m->std.magic) {
 		case PE_MAGIC_PE32:
-			astd	= (struct pe_opt_hdr_std *)p;
-			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_32.major_os_ver;
-			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_32.section_align;
-			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_32.size_of_image;
-			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_32.loader_flags;
+			astd	= (struct pe_raw_opt_hdr_std *)p;
+			avers	= (struct pe_raw_opt_hdr_vers *)&p->opt_hdr_32.major_os_ver;
+			aalign	= (struct pe_raw_opt_hdr_align *)&p->opt_hdr_32.section_align;
+			aimg	= (struct pe_raw_opt_hdr_img *)&p->opt_hdr_32.size_of_image;
+			aldr	= (struct pe_raw_opt_hdr_ldr *)&p->opt_hdr_32.loader_flags;
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
-			astd	= (struct pe_opt_hdr_std *)p;
-			avers	= (struct pe_opt_hdr_vers *)&p->opt_hdr_64.major_os_ver;
-			aalign	= (struct pe_opt_hdr_align *)&p->opt_hdr_64.section_align;
-			aimg	= (struct pe_opt_hdr_img *)&p->opt_hdr_64.size_of_image;
-			aldr	= (struct pe_opt_hdr_ldr *)&p->opt_hdr_64.loader_flags;
+			astd	= (struct pe_raw_opt_hdr_std *)p;
+			avers	= (struct pe_raw_opt_hdr_vers *)&p->opt_hdr_64.major_os_ver;
+			aalign	= (struct pe_raw_opt_hdr_align *)&p->opt_hdr_64.section_align;
+			aimg	= (struct pe_raw_opt_hdr_img *)&p->opt_hdr_64.size_of_image;
+			aldr	= (struct pe_raw_opt_hdr_ldr *)&p->opt_hdr_64.loader_flags;
 			break;
 
 		default:
@@ -99,7 +99,7 @@ static int pe_read_optional_header_structs(const union pe_opt_hdr * p, struct pe
 	return 0;
 }
 
-int pe_read_optional_header(const union pe_opt_hdr * p, struct pe_meta_opt_hdr * m)
+int pe_read_optional_header(const union pe_raw_opt_hdr * p, struct pe_meta_opt_hdr * m)
 {
 	int ret;
 
