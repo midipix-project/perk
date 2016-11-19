@@ -243,7 +243,7 @@ int pe_get_image_meta(
 
 	/* .idata */
 	struct pe_import_hdr * 		pidata;
-	union  pe_import_lookup_item *	pitem;
+	union  pe_import_lookup *	pitem;
 
 	i = pe_get_named_section_index(m,".idata");
 	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
@@ -278,7 +278,7 @@ int pe_get_image_meta(
 						+ m->idata[i].name_rva - m->hidata->virtual_addr;
 
 			if (m->idata[i].import_lookup_tbl_rva)
-				m->idata[i].aitems = (union pe_import_lookup_item *)(base + m->hidata->ptr_to_raw_data
+				m->idata[i].aitems = (union pe_import_lookup *)(base + m->hidata->ptr_to_raw_data
 							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
 			/* items */

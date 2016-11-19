@@ -220,7 +220,7 @@ union pe_meta_export_addr_tbl {
 
 
 /* image: import table entry lookup item */
-struct pe_meta_import_lookup_item {
+struct pe_meta_import_lookup {
 	union {
 		uint64_t	import_lookup_entry_64;
 		uint32_t	import_lookup_entry_32;
@@ -243,8 +243,8 @@ struct pe_meta_import_hdr {
 	uint32_t				import_addr_tbl_rva;
 	uint32_t				count;
 	char *					name;
-	struct pe_meta_import_lookup_item *	items;
-	union pe_import_lookup_item *		aitems;
+	struct pe_meta_import_lookup *		items;
+	union pe_import_lookup *		aitems;
 };
 
 

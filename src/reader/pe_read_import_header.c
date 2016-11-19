@@ -25,8 +25,8 @@ int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_
 }
 
 int pe_read_import_lookup(
-	const union pe_import_lookup_item * p,
-	struct pe_meta_import_lookup_item * m,
+	const union pe_import_lookup * p,
+	struct pe_meta_import_lookup * m,
 	uint32_t magic)
 {
 	switch (magic) {
