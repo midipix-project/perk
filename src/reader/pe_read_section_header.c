@@ -10,7 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_section_header(const struct pe_sec_hdr * p, struct pe_meta_sec_hdr * m)
+int pe_read_section_header(const struct pe_raw_sec_hdr * p, struct pe_meta_sec_hdr * m)
 {
 	/* name: meta struct conveniently contains null termination */
 	memset(m,0,sizeof(m->name));

@@ -229,7 +229,7 @@ struct pe_raw_image_data_dir {
 };
 
 
-struct pe_sec_hdr {
+struct pe_raw_sec_hdr {
 	unsigned char	name				[0x08];		/* 0x00 */
 	unsigned char	virtual_size			[0x04];		/* 0x08 */
 	unsigned char	virtual_addr			[0x04];		/* 0x0c */
