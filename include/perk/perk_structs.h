@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-struct pe_image_dos_hdr {
+struct pe_raw_image_dos_hdr {
 	unsigned char	dos_magic			[0x02];		/* 0x00 */
 	unsigned char	dos_cblp			[0x02];		/* 0x02 */
 	unsigned char	dos_cp				[0x02];		/* 0x04 */

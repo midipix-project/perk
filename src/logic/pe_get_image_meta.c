@@ -177,7 +177,7 @@ int pe_get_image_meta(
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
 
-	m->ados = (struct pe_image_dos_hdr *)base;
+	m->ados = (struct pe_raw_image_dos_hdr *)base;
 
 	if ((ret = (pe_read_dos_header(m->ados,&m->dos))))
 		return pe_free_image_meta_impl(

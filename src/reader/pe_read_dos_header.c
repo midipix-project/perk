@@ -10,7 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_dos_header(const struct pe_image_dos_hdr * p, struct pe_meta_image_dos_hdr * m)
+int pe_read_dos_header(const struct pe_raw_image_dos_hdr * p, struct pe_meta_image_dos_hdr * m)
 {
 	if ((p->dos_magic[0] != 'M') || (p->dos_magic[1] != 'Z'))
 		return PERK_ERR_BAD_DOS_HEADER;
