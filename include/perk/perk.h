@@ -83,7 +83,7 @@ struct pe_expsym {
 	uint32_t	roffset;
 };
 
-struct pe_image_summary {
+struct pe_meta_summary {
 	int32_t		nexpsyms;
 	int32_t		nimplibs;
 	int32_t		nrelocs;
@@ -91,7 +91,7 @@ struct pe_image_summary {
 
 struct pe_image_meta {
 	struct pe_raw_image		image;
-	struct pe_image_summary		summary;
+	struct pe_meta_summary		summary;
 
 	struct pe_meta_image_dos_hdr	dos;
 	struct pe_meta_coff_file_hdr	coff;
