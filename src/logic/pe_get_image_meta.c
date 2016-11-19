@@ -183,7 +183,7 @@ int pe_get_image_meta(
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	m->acoff = (struct pe_coff_file_hdr *)(base + m->dos.dos_lfanew);
+	m->acoff = (struct pe_raw_coff_file_hdr *)(base + m->dos.dos_lfanew);
 
 	if ((ret = (pe_read_coff_header(m->acoff,&m->coff))))
 		return pe_free_image_meta_impl(

@@ -10,7 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_coff_header(const struct pe_coff_file_hdr * p, struct pe_meta_coff_file_hdr * m)
+int pe_read_coff_header(const struct pe_raw_coff_file_hdr * p, struct pe_meta_coff_file_hdr * m)
 {
 	if ((p->signature[0] != 'P') || (p->signature[1] != 'E')
 			|| p->signature[2] || p->signature[3])
