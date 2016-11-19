@@ -243,7 +243,7 @@ struct pe_raw_sec_hdr {
 };
 
 
-struct pe_export_hdr {
+struct pe_raw_export_hdr {
 	unsigned char	export_flags			[0x04];		/* 0x00 */
 	unsigned char	time_date_stamp			[0x04];		/* 0x04 */
 	unsigned char	major_ver			[0x02];		/* 0x08 */
@@ -258,7 +258,7 @@ struct pe_export_hdr {
 };
 
 
-union pe_export_addr_tbl {
+union pe_raw_export_addr_tbl {
 	unsigned char	  export_rva			[0x04];		/* 0x00 */
 	unsigned char	  forwarder_rva			[0x04];		/* 0x00 */
 };

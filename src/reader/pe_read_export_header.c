@@ -10,7 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_export_header(const struct pe_export_hdr * p, struct pe_meta_export_hdr * m)
+int pe_read_export_header(const struct pe_raw_export_hdr * p, struct pe_meta_export_hdr * m)
 {
 	m->export_flags		= pe_read_long(p->export_flags);
 	m->time_date_stamp	= pe_read_long(p->time_date_stamp);

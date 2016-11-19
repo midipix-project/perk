@@ -229,11 +229,11 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
-		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
 				+ m->opt.dirs.export_tbl.rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hedata = &m->sectbl[i];
-		m->aedata = (struct pe_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
 	}
 
 	if (m->aedata) {
