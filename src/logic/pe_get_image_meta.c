@@ -242,8 +242,8 @@ int pe_get_image_meta(
 	}
 
 	/* .idata */
-	struct pe_import_hdr * 		pidata;
-	union  pe_import_lookup *	pitem;
+	struct pe_raw_import_hdr * 	pidata;
+	union  pe_raw_import_lookup *	pitem;
 
 	i = pe_get_named_section_index(m,".idata");
 	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
@@ -254,11 +254,11 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
-		m->aidata = (struct pe_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
 				+ m->opt.dirs.import_tbl.rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hidata = &m->sectbl[i];
-		m->aidata = (struct pe_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
 	}
 
 	if (m->aidata) {
@@ -278,7 +278,7 @@ int pe_get_image_meta(
 						+ m->idata[i].name_rva - m->hidata->virtual_addr;
 
 			if (m->idata[i].import_lookup_tbl_rva)
-				m->idata[i].aitems = (union pe_import_lookup *)(base + m->hidata->ptr_to_raw_data
+				m->idata[i].aitems = (union pe_raw_import_lookup *)(base + m->hidata->ptr_to_raw_data
 							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
 
 			/* items */
@@ -316,8 +316,8 @@ int pe_get_image_meta(
 				}
 
 				if (!m->idata[i].items[j].flags) {
-					struct pe_hint_name_entry * pentry =
-						(struct pe_hint_name_entry *)(base + m->hidata->ptr_to_raw_data
+					struct pe_raw_hint_name_entry * pentry =
+						(struct pe_raw_hint_name_entry *)(base + m->hidata->ptr_to_raw_data
 							+ m->idata[i].items[j].u.hint_name_tbl_rva - m->hidata->virtual_addr);
 
 					m->idata[i].items[j].name = (char *)pentry->name;

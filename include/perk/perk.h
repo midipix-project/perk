@@ -103,12 +103,12 @@ struct pe_image_meta {
 	union  pe_raw_opt_hdr *		aopt;
 	struct pe_raw_sec_hdr *		asectbl;
 	struct pe_raw_export_hdr *	aedata;
+	struct pe_raw_import_hdr *	aidata;
 
 	struct pe_meta_export_hdr	edata;
 	struct pe_meta_sec_hdr *	hedata;
 
 	struct pe_meta_import_hdr *	idata;
-	struct pe_import_hdr *		aidata;
 	struct pe_meta_sec_hdr *	hidata;
 };
 
@@ -201,12 +201,12 @@ perk_api int  pe_read_coff_header	(const struct pe_raw_coff_file_hdr *,	struct p
 perk_api int  pe_read_optional_header	(const union  pe_raw_opt_hdr *,		struct pe_meta_opt_hdr *);
 perk_api int  pe_read_section_header	(const struct pe_raw_sec_hdr *,		struct pe_meta_sec_hdr *);
 perk_api int  pe_read_export_header	(const struct pe_raw_export_hdr *,	struct pe_meta_export_hdr *);
-perk_api int  pe_read_import_header	(const struct pe_import_hdr *,		struct pe_meta_import_hdr *);
+perk_api int  pe_read_import_header	(const struct pe_raw_import_hdr *,	struct pe_meta_import_hdr *);
 
 perk_api int  pe_read_coff_symbol	(const struct pe_coff_symbol *,		struct pe_meta_coff_symbol *,
 					 const struct pe_meta_coff_file_hdr *,	void * base);
 
-perk_api int  pe_read_import_lookup	(const union  pe_import_lookup *,	struct pe_meta_import_lookup *,
+perk_api int  pe_read_import_lookup	(const union  pe_raw_import_lookup *,	struct pe_meta_import_lookup *,
 					 uint32_t magic);
 
 #ifdef __cplusplus

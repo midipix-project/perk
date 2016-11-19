@@ -264,7 +264,7 @@ union pe_raw_export_addr_tbl {
 };
 
 
-union pe_import_lookup {
+union pe_raw_import_lookup {
 	unsigned char	import_lookup_entry_64		[0x08];		/* 0x00 */
 	unsigned char	import_lookup_entry_32		[0x04];		/* 0x00 */
 	unsigned char	hint_name_tbl_rva		[0x04];		/* 0x00 */
@@ -272,7 +272,7 @@ union pe_import_lookup {
 };
 
 
-struct pe_import_hdr {
+struct pe_raw_import_hdr {
 	unsigned char	import_lookup_tbl_rva		[0x04];		/* 0x00 */
 	unsigned char	time_date_stamp			[0x04];		/* 0x04 */
 	unsigned char	forwarder_chain			[0x04];		/* 0x08 */
@@ -281,7 +281,7 @@ struct pe_import_hdr {
 };
 
 
-struct pe_hint_name_entry {
+struct pe_raw_hint_name_entry {
 	unsigned char	hint				[0x02];		/* 0x00 */
 	unsigned char	name				[0x02];		/* 0x02 */
 };

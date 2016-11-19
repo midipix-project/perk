@@ -10,7 +10,7 @@
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 
-int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_hdr * m)
+int pe_read_import_header(const struct pe_raw_import_hdr * p, struct pe_meta_import_hdr * m)
 {
 	m->import_lookup_tbl_rva	= pe_read_long(p->import_lookup_tbl_rva);
 	m->time_date_stamp		= pe_read_long(p->time_date_stamp);
@@ -25,7 +25,7 @@ int pe_read_import_header(const struct pe_import_hdr * p, struct pe_meta_import_
 }
 
 int pe_read_import_lookup(
-	const union pe_import_lookup * p,
+	const union pe_raw_import_lookup * p,
 	struct pe_meta_import_lookup * m,
 	uint32_t magic)
 {
