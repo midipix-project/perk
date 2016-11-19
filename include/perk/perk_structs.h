@@ -296,6 +296,16 @@ struct pe_coff_symbol {
 	unsigned char	num_of_aux_symbols		[0x01];		/* 0x11 */
 };
 
+struct pe_coff_symbol_name {
+	union {
+		unsigned char		short_name	[0x08];		/* 0x00 */
+
+		struct {
+			unsigned char	zeroes		[0x04];		/* 0x00 */
+			unsigned char	offset		[0x04];		/* 0x04 */
+		} long_name;
+	};
+};
 
 #ifdef __cplusplus
 }
