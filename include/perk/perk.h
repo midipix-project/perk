@@ -90,26 +90,26 @@ struct pe_meta_summary {
 };
 
 struct pe_image_meta {
-	struct pe_raw_image		image;
 	struct pe_meta_summary		summary;
-
 	struct pe_meta_image_dos_hdr	dos;
 	struct pe_meta_coff_file_hdr	coff;
 	struct pe_meta_opt_hdr		opt;
 	struct pe_meta_sec_hdr *	sectbl;
-
-	struct pe_raw_image_dos_hdr *	ados;
-	struct pe_raw_coff_file_hdr *	acoff;
-	union  pe_raw_opt_hdr *		aopt;
-	struct pe_raw_sec_hdr *		asectbl;
-	struct pe_raw_export_hdr *	aedata;
-	struct pe_raw_import_hdr *	aidata;
 
 	struct pe_meta_export_hdr	edata;
 	struct pe_meta_sec_hdr *	hedata;
 
 	struct pe_meta_import_hdr *	idata;
 	struct pe_meta_sec_hdr *	hidata;
+
+	struct pe_raw_image		image;
+	struct pe_raw_image_dos_hdr *	ados;
+	struct pe_raw_coff_file_hdr *	acoff;
+	union  pe_raw_opt_hdr *		aopt;
+	struct pe_raw_sec_hdr *		asectbl;
+
+	struct pe_raw_export_hdr *	aedata;
+	struct pe_raw_import_hdr *	aidata;
 };
 
 struct pe_error_info {
