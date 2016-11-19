@@ -19,9 +19,9 @@
 
 /* perk_api */
 #ifndef PERK_APP
-#if     defined (PERK_BUILD)
+#if     defined (PERK_EXPORT)
 #define perk_api perk_export
-#elif   defined (PERK_SHARED)
+#elif   defined (PERK_IMPORT)
 #define perk_api perk_import
 #elif   defined (PERK_STATIC)
 #define perk_api
