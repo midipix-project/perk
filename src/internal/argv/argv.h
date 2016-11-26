@@ -692,8 +692,7 @@ static struct argv_meta * argv_get(
 	argv_scan(argv,options,&ctx,0);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
-		if (!ctx.program)
-			ctx.program = argv_program_name(argv[0]);
+		ctx.program = argv_program_name(argv[0]);
 
 		if (ctx.flags & ARGV_VERBOSITY_ERRORS)
 			argv_show_error(&ctx);
@@ -708,9 +707,7 @@ static struct argv_meta * argv_get(
 	argv_scan(meta->argv,options,&ctx,meta);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
-		if (!ctx.program)
-			ctx.program = argv[0];
-
+		ctx.program = argv[0];
 		ctx.errcode = ARGV_ERROR_INTERNAL;
 		argv_show_error(&ctx);
 		argv_free(meta);
