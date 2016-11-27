@@ -66,8 +66,8 @@ install-implib-soname:	implib-soname
 
 install-implib-solink:	implib-soname
 			mkdir -p $(DESTDIR)$(LIBDIR)
-			rm -f $@.tmp
-			ln -s $(IMP_SONAME) $@.tmp
-			mv $@.tmp $(DESTDIR)$(LIBDIR)/$(IMP_SOLINK)
+			rm -f $(IMPLIB_SOLINK).tmp
+			ln -s $(IMP_SONAME) $(IMPLIB_SOLINK).tmp
+			mv $(IMPLIB_SOLINK).tmp $(DESTDIR)$(LIBDIR)/$(IMP_SOLINK)
 
 endif
