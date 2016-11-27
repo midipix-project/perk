@@ -45,9 +45,9 @@ $(SHARED_SONAME):	$(SHARED_LIB)
 			mv $@.tmp $@
 
 install-soname:		install-lib
-			rm -f $@.tmp
-			ln -s $(DSO_VER) $@.tmp
-			mv $@.tmp $(DESTDIR)$(LIBDIR)/$(DSO_SONAME)
+			rm -f $(SHARED_SONAME).tmp
+			ln -s $(DSO_VER) $(SHARED_SONAME).tmp
+			mv $(SHARED_SONAME).tmp $(DESTDIR)$(LIBDIR)/$(DSO_SONAME)
 endif
 
 
