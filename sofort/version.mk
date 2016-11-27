@@ -28,9 +28,9 @@ package-install-solink:	install-solink
 
 # libfoo.so (common)
 install-solink:		install-lib
-			rm -f $@.tmp
-			ln -s $(DSO_VER) $@.tmp
-			mv $@.tmp $(DESTDIR)$(LIBDIR)/$(DSO_SOLINK)
+			rm -f $(SHARED_SOLINK).tmp
+			ln -s $(DSO_VER) $(SHARED_SOLINK).tmp
+			mv $(SHARED_SOLINK).tmp $(DESTDIR)$(LIBDIR)/$(DSO_SOLINK)
 
 $(SHARED_SOLINK):	$(SHARED_LIB)
 			rm -f $@.tmp
