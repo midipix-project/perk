@@ -108,21 +108,21 @@ int pe_read_optional_header(const union pe_raw_opt_hdr * p, struct pe_meta_opt_h
 
 	switch (m->std.coh_magic) {
 		case PE_MAGIC_PE32:
-			m->mem.base_of_data		= pe_read_long(p->opt_hdr_32.base_of_data);
-			m->mem.image_base		= pe_read_long(p->opt_hdr_32.image_base);
-			m->mem.size_of_stack_reserve	= pe_read_long(p->opt_hdr_32.size_of_stack_reserve);
-			m->mem.size_of_stack_commit	= pe_read_long(p->opt_hdr_32.size_of_stack_commit);
-			m->mem.size_of_heap_reserve	= pe_read_long(p->opt_hdr_32.size_of_heap_reserve);
-			m->mem.size_of_heap_commit	= pe_read_long(p->opt_hdr_32.size_of_heap_commit);
+			m->mem.coh_base_of_data             = pe_read_long(p->opt_hdr_32.base_of_data);
+			m->mem.coh_image_base               = pe_read_long(p->opt_hdr_32.image_base);
+			m->mem.coh_size_of_stack_reserve    = pe_read_long(p->opt_hdr_32.size_of_stack_reserve);
+			m->mem.coh_size_of_stack_commit     = pe_read_long(p->opt_hdr_32.size_of_stack_commit);
+			m->mem.coh_size_of_heap_reserve     = pe_read_long(p->opt_hdr_32.size_of_heap_reserve);
+			m->mem.coh_size_of_heap_commit      = pe_read_long(p->opt_hdr_32.size_of_heap_commit);
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
-			m->mem.base_of_data		= (uint64_t)-1;
-			m->mem.image_base		= pe_read_quad(p->opt_hdr_64.image_base);
-			m->mem.size_of_stack_reserve	= pe_read_quad(p->opt_hdr_64.size_of_stack_reserve);
-			m->mem.size_of_stack_commit	= pe_read_quad(p->opt_hdr_64.size_of_stack_commit);
-			m->mem.size_of_heap_reserve	= pe_read_quad(p->opt_hdr_64.size_of_heap_reserve);
-			m->mem.size_of_heap_commit	= pe_read_quad(p->opt_hdr_64.size_of_heap_commit);
+			m->mem.coh_base_of_data             = (uint64_t)-1;
+			m->mem.coh_image_base               = pe_read_quad(p->opt_hdr_64.image_base);
+			m->mem.coh_size_of_stack_reserve    = pe_read_quad(p->opt_hdr_64.size_of_stack_reserve);
+			m->mem.coh_size_of_stack_commit     = pe_read_quad(p->opt_hdr_64.size_of_stack_commit);
+			m->mem.coh_size_of_heap_reserve     = pe_read_quad(p->opt_hdr_64.size_of_heap_reserve);
+			m->mem.coh_size_of_heap_commit      = pe_read_quad(p->opt_hdr_64.size_of_heap_commit);
 			break;
 	}
 
