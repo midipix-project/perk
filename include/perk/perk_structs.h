@@ -224,8 +224,8 @@ union pe_raw_opt_hdr {
 
 
 struct pe_raw_image_data_dir {
-	unsigned char	rva				[0x04];		/* 0x00 */
-	unsigned char	size				[0x04];		/* 0x04 */
+	unsigned char	dh_rva				[0x04];		/* 0x00 */
+	unsigned char	dh_size				[0x04];		/* 0x04 */
 };
 
 
