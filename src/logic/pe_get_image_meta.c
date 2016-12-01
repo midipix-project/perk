@@ -203,7 +203,7 @@ int pe_get_image_meta(
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	mark       = &m->aopt->opt_hdr_32.magic[0];
+	mark       = &m->aopt->opt_hdr_32.coh_magic[0];
 	m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.cfh_size_of_opt_hdr);
 
 	if (!(m->sectbl = calloc(m->coff.cfh_num_of_sections,sizeof(*(m->sectbl)))))
