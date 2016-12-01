@@ -144,12 +144,12 @@ struct pe_meta_opt_hdr_dirs {
 };
 
 struct pe_meta_opt_hdr_mem_32 {
-	uint32_t	base_of_data;
-	uint32_t	image_base;
-	uint32_t	size_of_stack_reserve;
-	uint32_t	size_of_stack_commit;
-	uint32_t	size_of_heap_reserve;
-	uint32_t	size_of_heap_commit;
+	uint32_t	coh_base_of_data;
+	uint32_t	coh_image_base;
+	uint32_t	coh_size_of_stack_reserve;
+	uint32_t	coh_size_of_stack_commit;
+	uint32_t	coh_size_of_heap_reserve;
+	uint32_t	coh_size_of_heap_commit;
 };
 
 struct pe_meta_opt_hdr_mem_64 {
