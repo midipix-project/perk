@@ -170,13 +170,13 @@ struct pe_meta_opt_hdr_mem {
 };
 
 struct pe_meta_opt_hdr {
-	struct pe_meta_opt_hdr_std	std;
-	struct pe_meta_opt_hdr_vers	vers;
-	struct pe_meta_opt_hdr_align	align;
-	struct pe_meta_opt_hdr_img	img;
-	struct pe_meta_opt_hdr_ldr	ldr;
-	struct pe_meta_opt_hdr_mem	mem;
-	struct pe_meta_opt_hdr_dirs	dirs;
+	struct pe_meta_opt_hdr_std	oh_std;
+	struct pe_meta_opt_hdr_vers	oh_vers;
+	struct pe_meta_opt_hdr_align	oh_align;
+	struct pe_meta_opt_hdr_img	oh_img;
+	struct pe_meta_opt_hdr_ldr	oh_ldr;
+	struct pe_meta_opt_hdr_mem	oh_mem;
+	struct pe_meta_opt_hdr_dirs	oh_dirs;
 };
 
 

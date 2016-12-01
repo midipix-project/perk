@@ -26,14 +26,14 @@ int pe_get_image_subsystem(const struct pe_image_meta * m, struct pe_info_string
 {
 	int subsystem;
 
-	if (m->opt.img.coh_subsystem >= 0x10)
+	if (m->opt.oh_img.coh_subsystem >= 0x10)
 		subsystem = -1;
 
-	else if (!pe_subsystem_str[m->opt.img.coh_subsystem])
+	else if (!pe_subsystem_str[m->opt.oh_img.coh_subsystem])
 		subsystem = -1;
 
 	else
-		subsystem = m->opt.img.coh_subsystem;
+		subsystem = m->opt.oh_img.coh_subsystem;
 
 	if ((subsystem < 0) && infostr) {
 		strcpy(infostr->buffer,"INVALID");
