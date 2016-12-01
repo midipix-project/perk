@@ -31,9 +31,9 @@ int pe_output_image_sections(
 	for (i=0; i<meta->coff.cfh_num_of_sections; i++)
 		if (fprintf(fout,"%s%s\n",
 				dash,
-				meta->sectbl[i].long_name
-					? meta->sectbl[i].long_name
-					: meta->sectbl[i].name) < 0)
+				meta->sectbl[i].sh_long_name
+					? meta->sectbl[i].sh_long_name
+					: meta->sectbl[i].sh_name) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 	return 0;

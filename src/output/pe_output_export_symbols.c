@@ -52,7 +52,7 @@ int pe_output_export_symbols(
 		return PERK_FILE_ERROR(dctx);
 
 	mark	= m->image.addr;
-	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)(mark + m->edata.name_ptr_rva - offset);
 
 	for (i=0; i<m->edata.num_of_name_ptrs; i++)

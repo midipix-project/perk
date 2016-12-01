@@ -182,17 +182,17 @@ struct pe_meta_opt_hdr {
 
 /* section header */
 struct pe_meta_sec_hdr {
-	char		name[16];
-	char *		long_name;
-	uint32_t	virtual_size;
-	uint32_t	virtual_addr;
-	uint32_t	size_of_raw_data;
-	uint32_t	ptr_to_raw_data;
-	uint32_t	ptr_to_relocs;
-	uint32_t	ptr_to_line_nums;
-	uint16_t	num_of_relocs;
-	uint16_t	num_of_line_nums;
-	uint32_t	characteristics;
+	char		sh_name[16];
+	char *		sh_long_name;
+	uint32_t	sh_virtual_size;
+	uint32_t	sh_virtual_addr;
+	uint32_t	sh_size_of_raw_data;
+	uint32_t	sh_ptr_to_raw_data;
+	uint32_t	sh_ptr_to_relocs;
+	uint32_t	sh_ptr_to_line_nums;
+	uint16_t	sh_num_of_relocs;
+	uint16_t	sh_num_of_line_nums;
+	uint32_t	sh_characteristics;
 };
 
 

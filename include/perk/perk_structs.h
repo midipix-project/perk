@@ -230,16 +230,16 @@ struct pe_raw_image_data_dir {
 
 
 struct pe_raw_sec_hdr {
-	unsigned char	name				[0x08];		/* 0x00 */
-	unsigned char	virtual_size			[0x04];		/* 0x08 */
-	unsigned char	virtual_addr			[0x04];		/* 0x0c */
-	unsigned char	size_of_raw_data		[0x04];		/* 0x10 */
-	unsigned char	ptr_to_raw_data			[0x04];		/* 0x14 */
-	unsigned char	ptr_to_relocs			[0x04];		/* 0x18 */
-	unsigned char	ptr_to_line_nums		[0x04];		/* 0x1c */
-	unsigned char	num_of_relocs			[0x02];		/* 0x20 */
-	unsigned char	num_of_line_nums		[0x02];		/* 0x22 */
-	unsigned char	characteristics			[0x04];		/* 0x24 */
+	unsigned char	sh_name				[0x08];		/* 0x00 */
+	unsigned char	sh_virtual_size			[0x04];		/* 0x08 */
+	unsigned char	sh_virtual_addr			[0x04];		/* 0x0c */
+	unsigned char	sh_size_of_raw_data		[0x04];		/* 0x10 */
+	unsigned char	sh_ptr_to_raw_data		[0x04];		/* 0x14 */
+	unsigned char	sh_ptr_to_relocs		[0x04];		/* 0x18 */
+	unsigned char	sh_ptr_to_line_nums		[0x04];		/* 0x1c */
+	unsigned char	sh_num_of_relocs		[0x02];		/* 0x20 */
+	unsigned char	sh_num_of_line_nums		[0x02];		/* 0x22 */
+	unsigned char	sh_characteristics		[0x04];		/* 0x24 */
 };
 
 

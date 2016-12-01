@@ -37,7 +37,7 @@ void pe_free_image_meta(struct pe_image_meta * meta)
 int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
 {
 	int i; for (i=0; i<m->coff.cfh_num_of_sections; i++)
-		if (!(strcmp(name,m->sectbl[i].name)))
+		if (!(strcmp(name,m->sectbl[i].sh_name)))
 			return i;
 
 	return -1;
@@ -49,8 +49,8 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	uint32_t low,high;
 
 	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].virtual_addr;
-		high = low + m->sectbl[i].virtual_size;
+		low  = m->sectbl[i].sh_virtual_addr;
+		high = low + m->sectbl[i].sh_virtual_size;
 
 		if ((block->dh_rva >= low) && (block->dh_rva + block->dh_size <= high))
 			return i;
@@ -65,11 +65,11 @@ int pe_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32
 	uint32_t low,high;
 
 	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].virtual_addr;
-		high = low + m->sectbl[i].virtual_size;
+		low  = m->sectbl[i].sh_virtual_addr;
+		high = low + m->sectbl[i].sh_virtual_size;
 
 		if ((rva >= low) && (rva < high)) {
-			*roffset = (rva - low) + m->sectbl[i].ptr_to_raw_data;
+			*roffset = (rva - low) + m->sectbl[i].sh_ptr_to_raw_data;
 			return 0;
 		}
 	}
@@ -83,11 +83,11 @@ int pe_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, ui
 	uint32_t low,high,ref;
 
 	for (i=0, ref=~0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].ptr_to_raw_data;
-		high = low + m->sectbl[i].virtual_size;
+		low  = m->sectbl[i].sh_ptr_to_raw_data;
+		high = low + m->sectbl[i].sh_virtual_size;
 
 		if ((roffset >= low) && (roffset < high)) {
-			*rva = (roffset - low) + m->sectbl[i].virtual_addr;
+			*rva = (roffset - low) + m->sectbl[i].sh_virtual_addr;
 			return 0;
 		} else if (ref > low) {
 			ref = low;
@@ -112,7 +112,7 @@ int pe_get_expsym_by_name(
 	const char *	sym;
 	unsigned	i;
 
-	offset	= m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
 
 	for (i=0; i<m->edata.num_of_name_ptrs; i++) {
@@ -146,7 +146,7 @@ int pe_get_expsym_by_index(
 		return -1;
 
 	if (expsym) {
-		offset  = m->hedata->virtual_addr - m->hedata->ptr_to_raw_data;
+		offset  = m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
 		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
 		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
 
@@ -213,10 +213,10 @@ int pe_get_image_meta(
 	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
 		pe_read_section_header(&m->asectbl[i],&m->sectbl[i]);
 
-		if (m->sectbl[i].name[0] == '/')
-			if ((l = strtol(&m->sectbl[i].name[1],0,10)) > 0)
+		if (m->sectbl[i].sh_name[0] == '/')
+			if ((l = strtol(&m->sectbl[i].sh_name[1],0,10)) > 0)
 				if (l < m->coff.cfh_size_of_str_tbl)
-					m->sectbl[i].long_name = base + m->coff.cfh_ptr_to_str_tbl + l;
+					m->sectbl[i].sh_long_name = base + m->coff.cfh_ptr_to_str_tbl + l;
 	}
 
 	/* .edata */
@@ -229,11 +229,11 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.oh_dirs.coh_export_tbl.dh_rva - m->sectbl[s].virtual_addr);
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].sh_ptr_to_raw_data
+				+ m->opt.oh_dirs.coh_export_tbl.dh_rva - m->sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
 		m->hedata = &m->sectbl[i];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].sh_ptr_to_raw_data);
 	}
 
 	if (m->aedata) {
@@ -254,11 +254,11 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.oh_dirs.coh_import_tbl.dh_rva - m->sectbl[s].virtual_addr);
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].sh_ptr_to_raw_data
+				+ m->opt.oh_dirs.coh_import_tbl.dh_rva - m->sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
 		m->hidata = &m->sectbl[i];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].sh_ptr_to_raw_data);
 	}
 
 	if (m->aidata) {
@@ -274,12 +274,12 @@ int pe_get_image_meta(
 		for (i=0; i<m->summary.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
 
-			m->idata[i].name = base + m->hidata->ptr_to_raw_data
-						+ m->idata[i].name_rva - m->hidata->virtual_addr;
+			m->idata[i].name = base + m->hidata->sh_ptr_to_raw_data
+						+ m->idata[i].name_rva - m->hidata->sh_virtual_addr;
 
 			if (m->idata[i].import_lookup_tbl_rva)
-				m->idata[i].aitems = (union pe_raw_import_lookup *)(base + m->hidata->ptr_to_raw_data
-							+ m->idata[i].import_lookup_tbl_rva - m->hidata->virtual_addr);
+				m->idata[i].aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
+							+ m->idata[i].import_lookup_tbl_rva - m->hidata->sh_virtual_addr);
 
 			/* items */
 			uint32_t * hint;
@@ -317,8 +317,8 @@ int pe_get_image_meta(
 
 				if (!m->idata[i].items[j].flags) {
 					struct pe_raw_hint_name_entry * pentry =
-						(struct pe_raw_hint_name_entry *)(base + m->hidata->ptr_to_raw_data
-							+ m->idata[i].items[j].u.hint_name_tbl_rva - m->hidata->virtual_addr);
+						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
+							+ m->idata[i].items[j].u.hint_name_tbl_rva - m->hidata->sh_virtual_addr);
 
 					m->idata[i].items[j].name = (char *)pentry->name;
 				}
