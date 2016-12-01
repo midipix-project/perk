@@ -57,13 +57,13 @@ struct pe_raw_opt_hdr_align {
 };
 
 struct pe_raw_opt_hdr_vers {
-	unsigned char	major_os_ver			[0x02];		/* 0x28 */
-	unsigned char	minor_os_ver			[0x02];		/* 0x2a */
-	unsigned char	major_image_ver			[0x02];		/* 0x2c */
-	unsigned char	minor_image_ver			[0x02];		/* 0x2e */
-	unsigned char	major_subsys_ver		[0x02];		/* 0x30 */
-	unsigned char	minor_subsys_ver		[0x02];		/* 0x32 */
-	unsigned char	win32_ver			[0x04];		/* 0x34 */
+	unsigned char	coh_major_os_ver		[0x02];		/* 0x28 */
+	unsigned char	coh_minor_os_ver		[0x02];		/* 0x2a */
+	unsigned char	coh_major_image_ver		[0x02];		/* 0x2c */
+	unsigned char	coh_minor_image_ver		[0x02];		/* 0x2e */
+	unsigned char	coh_major_subsys_ver		[0x02];		/* 0x30 */
+	unsigned char	coh_minor_subsys_ver		[0x02];		/* 0x32 */
+	unsigned char	coh_win32_ver			[0x04];		/* 0x34 */
 };
 
 struct pe_raw_opt_hdr_img {

@@ -56,14 +56,14 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	m->std.coh_base_of_code			= pe_read_long(astd->coh_base_of_code);
 
 	/* vers */
-	m->vers.major_os_ver			= pe_read_short(avers->major_os_ver);
-	m->vers.minor_os_ver			= pe_read_short(avers->minor_os_ver);
-	m->vers.major_image_ver			= pe_read_short(avers->major_image_ver);
-	m->vers.minor_image_ver			= pe_read_short(avers->minor_image_ver);
-	m->vers.major_subsys_ver		= pe_read_short(avers->major_subsys_ver);
-	m->vers.minor_subsys_ver		= pe_read_short(avers->minor_subsys_ver);
+	m->vers.coh_major_os_ver		= pe_read_short(avers->coh_major_os_ver);
+	m->vers.coh_minor_os_ver		= pe_read_short(avers->coh_minor_os_ver);
+	m->vers.coh_major_image_ver		= pe_read_short(avers->coh_major_image_ver);
+	m->vers.coh_minor_image_ver		= pe_read_short(avers->coh_minor_image_ver);
+	m->vers.coh_major_subsys_ver		= pe_read_short(avers->coh_major_subsys_ver);
+	m->vers.coh_minor_subsys_ver		= pe_read_short(avers->coh_minor_subsys_ver);
 
-	m->vers.win32_ver			= pe_read_long(avers->win32_ver);
+	m->vers.coh_win32_ver			= pe_read_long(avers->coh_win32_ver);
 
 	/* align */
 	m->align.coh_section_align		= pe_read_long(aalign->coh_section_align);

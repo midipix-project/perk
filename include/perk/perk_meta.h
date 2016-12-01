@@ -102,13 +102,13 @@ struct pe_meta_opt_hdr_align {
 };
 
 struct pe_meta_opt_hdr_vers {
-	uint16_t	major_os_ver;
-	uint16_t	minor_os_ver;
-	uint16_t	major_image_ver;
-	uint16_t	minor_image_ver;
-	uint16_t	major_subsys_ver;
-	uint16_t	minor_subsys_ver;
-	uint32_t	win32_ver;
+	uint16_t	coh_major_os_ver;
+	uint16_t	coh_minor_os_ver;
+	uint16_t	coh_major_image_ver;
+	uint16_t	coh_minor_image_ver;
+	uint16_t	coh_major_subsys_ver;
+	uint16_t	coh_minor_subsys_ver;
+	uint32_t	coh_win32_ver;
 };
 
 struct pe_meta_opt_hdr_img {
