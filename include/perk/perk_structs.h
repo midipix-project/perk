@@ -67,11 +67,11 @@ struct pe_raw_opt_hdr_vers {
 };
 
 struct pe_raw_opt_hdr_img {
-	unsigned char	size_of_image			[0x04];		/* 0x38 */
-	unsigned char	size_of_headers			[0x04];		/* 0x3c */
-	unsigned char	checksum			[0x04];		/* 0x40 */
-	unsigned char	subsystem			[0x02];		/* 0x44 */
-	unsigned char	dll_characteristics		[0x02];		/* 0x46 */
+	unsigned char	coh_size_of_image		[0x04];		/* 0x38 */
+	unsigned char	coh_size_of_headers		[0x04];		/* 0x3c */
+	unsigned char	coh_checksum			[0x04];		/* 0x40 */
+	unsigned char	coh_subsystem			[0x02];		/* 0x44 */
+	unsigned char	coh_dll_characteristics		[0x02];		/* 0x46 */
 };
 
 struct pe_raw_opt_hdr_ldr {

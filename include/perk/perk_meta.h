@@ -112,11 +112,11 @@ struct pe_meta_opt_hdr_vers {
 };
 
 struct pe_meta_opt_hdr_img {
-	uint32_t	size_of_image;
-	uint32_t	size_of_headers;
-	uint32_t	checksum;
-	uint16_t	subsystem;
-	uint16_t	dll_characteristics;
+	uint32_t	coh_size_of_image;
+	uint32_t	coh_size_of_headers;
+	uint32_t	coh_checksum;
+	uint16_t	coh_subsystem;
+	uint16_t	coh_dll_characteristics;
 };
 
 struct pe_meta_opt_hdr_ldr {

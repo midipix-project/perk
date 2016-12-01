@@ -70,12 +70,12 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	m->align.coh_file_align			= pe_read_long(aalign->coh_file_align);
 
 	/* img */
-	m->img.size_of_image			= pe_read_long(aimg->size_of_image);
-	m->img.size_of_headers			= pe_read_long(aimg->size_of_headers);
-	m->img.checksum				= pe_read_long(aimg->checksum);
+	m->img.coh_size_of_image		= pe_read_long(aimg->coh_size_of_image);
+	m->img.coh_size_of_headers		= pe_read_long(aimg->coh_size_of_headers);
+	m->img.coh_checksum			= pe_read_long(aimg->coh_checksum);
 
-	m->img.subsystem			= pe_read_short(aimg->subsystem);
-	m->img.dll_characteristics		= pe_read_short(aimg->dll_characteristics);
+	m->img.coh_subsystem			= pe_read_short(aimg->coh_subsystem);
+	m->img.coh_dll_characteristics		= pe_read_short(aimg->coh_dll_characteristics);
 
 	/* ldr */
 	m->ldr.loader_flags			= pe_read_long(aldr->loader_flags);
