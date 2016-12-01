@@ -28,7 +28,7 @@ int pe_output_image_sections(
 		dash = "- ";
 	}
 
-	for (i=0; i<meta->coff.num_of_sections; i++)
+	for (i=0; i<meta->coff.cfh_num_of_sections; i++)
 		if (fprintf(fout,"%s%s\n",
 				dash,
 				meta->sectbl[i].long_name

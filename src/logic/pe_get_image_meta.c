@@ -36,7 +36,7 @@ void pe_free_image_meta(struct pe_image_meta * meta)
 
 int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
 {
-	int i; for (i=0; i<m->coff.num_of_sections; i++)
+	int i; for (i=0; i<m->coff.cfh_num_of_sections; i++)
 		if (!(strcmp(name,m->sectbl[i].name)))
 			return i;
 
@@ -48,7 +48,7 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	int i;
 	uint32_t low,high;
 
-	for (i=0; i<m->coff.num_of_sections; i++) {
+	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
 		low  = m->sectbl[i].virtual_addr;
 		high = low + m->sectbl[i].virtual_size;
 
@@ -64,7 +64,7 @@ int pe_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32
 	int i;
 	uint32_t low,high;
 
-	for (i=0; i<m->coff.num_of_sections; i++) {
+	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
 		low  = m->sectbl[i].virtual_addr;
 		high = low + m->sectbl[i].virtual_size;
 
@@ -82,7 +82,7 @@ int pe_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, ui
 	int i;
 	uint32_t low,high,ref;
 
-	for (i=0, ref=~0; i<m->coff.num_of_sections; i++) {
+	for (i=0, ref=~0; i<m->coff.cfh_num_of_sections; i++) {
 		low  = m->sectbl[i].ptr_to_raw_data;
 		high = low + m->sectbl[i].virtual_size;
 
@@ -189,14 +189,14 @@ int pe_get_image_meta(
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	mark  = (const unsigned char *)image->addr + m->coff.ptr_to_sym_tbl;
-	mark += m->coff.num_of_syms * sizeof(struct pe_raw_coff_symbol);
+	mark  = (const unsigned char *)image->addr + m->coff.cfh_ptr_to_sym_tbl;
+	mark += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
 
-	m->coff.ptr_to_string_tbl  = m->coff.ptr_to_sym_tbl;
-	m->coff.ptr_to_string_tbl += m->coff.num_of_syms * sizeof(struct pe_raw_coff_symbol);
-	m->coff.size_of_string_tbl = pe_read_long(mark);
+	m->coff.cfh_ptr_to_str_tbl  = m->coff.cfh_ptr_to_sym_tbl;
+	m->coff.cfh_ptr_to_str_tbl += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
+	m->coff.cfh_size_of_str_tbl = pe_read_long(mark);
 
-	mark    = &m->acoff->signature[0];
+	mark    = &m->acoff->cfh_signature[0];
 	m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
 
 	if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
@@ -204,19 +204,19 @@ int pe_get_image_meta(
 			m,PERK_CUSTOM_ERROR(dctx,ret));
 
 	mark       = &m->aopt->opt_hdr_32.magic[0];
-	m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.size_of_opt_hdr);
+	m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.cfh_size_of_opt_hdr);
 
-	if (!(m->sectbl = calloc(m->coff.num_of_sections,sizeof(*(m->sectbl)))))
+	if (!(m->sectbl = calloc(m->coff.cfh_num_of_sections,sizeof(*(m->sectbl)))))
 		return pe_free_image_meta_impl(
 			m,PERK_SYSTEM_ERROR(dctx));
 
-	for (i=0; i<m->coff.num_of_sections; i++) {
+	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
 		pe_read_section_header(&m->asectbl[i],&m->sectbl[i]);
 
 		if (m->sectbl[i].name[0] == '/')
 			if ((l = strtol(&m->sectbl[i].name[1],0,10)) > 0)
-				if (l < m->coff.size_of_string_tbl)
-					m->sectbl[i].long_name = base + m->coff.ptr_to_string_tbl + l;
+				if (l < m->coff.cfh_size_of_str_tbl)
+					m->sectbl[i].long_name = base + m->coff.cfh_ptr_to_str_tbl + l;
 	}
 
 	/* .edata */

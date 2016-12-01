@@ -33,9 +33,9 @@ int pe_output_image_strings(
 	}
 
 	mark  = (char *)meta->image.addr;
-	mark += meta->coff.ptr_to_string_tbl;
+	mark += meta->coff.cfh_ptr_to_str_tbl;
 
-	cap   = mark + meta->coff.size_of_string_tbl;
+	cap   = mark + meta->coff.cfh_size_of_str_tbl;
 	mark += sizeof(uint32_t);
 
 	for (ch=mark; ch<cap; ) {

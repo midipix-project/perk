@@ -47,8 +47,8 @@ int pe_read_coff_symbol(
 		mark	= (char *)base;
 		roffset	= pe_read_long(&p->name[4]);
 
-		if (roffset < coff->size_of_string_tbl)
-			m->long_name = mark + coff->ptr_to_string_tbl + roffset;
+		if (roffset < coff->cfh_size_of_str_tbl)
+			m->long_name = mark + coff->cfh_ptr_to_str_tbl + roffset;
 	}
 
 	return 0;

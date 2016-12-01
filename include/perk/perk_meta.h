@@ -71,16 +71,16 @@ struct pe_meta_image_dos_hdr {
 
 /* pe/coff file header */
 struct pe_meta_coff_file_hdr {
-	unsigned char	signature[4];
-	uint16_t	machine;
-	uint16_t	num_of_sections;
-	uint32_t	time_date_stamp;
-	uint32_t	ptr_to_sym_tbl;
-	uint32_t	num_of_syms;
-	uint16_t	size_of_opt_hdr;
-	uint16_t	characteristics;
-	uint32_t	ptr_to_string_tbl;
-	uint32_t	size_of_string_tbl;
+	unsigned char	cfh_signature[4];
+	uint16_t	cfh_machine;
+	uint16_t	cfh_num_of_sections;
+	uint32_t	cfh_time_date_stamp;
+	uint32_t	cfh_ptr_to_sym_tbl;
+	uint32_t	cfh_num_of_syms;
+	uint16_t	cfh_size_of_opt_hdr;
+	uint16_t	cfh_characteristics;
+	uint32_t	cfh_ptr_to_str_tbl;
+	uint32_t	cfh_size_of_str_tbl;
 };
 
 
