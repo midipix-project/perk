@@ -78,20 +78,20 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	m->img.coh_dll_characteristics		= pe_read_short(aimg->coh_dll_characteristics);
 
 	/* ldr */
-	m->ldr.loader_flags			= pe_read_long(aldr->loader_flags);
-	m->ldr.rva_and_sizes			= pe_read_long(aldr->rva_and_sizes);
+	m->ldr.coh_loader_flags			= pe_read_long(aldr->coh_loader_flags);
+	m->ldr.coh_rva_and_sizes		= pe_read_long(aldr->coh_rva_and_sizes);
 
 	/* dirs */
-	if (m->ldr.rva_and_sizes > 0x10)
+	if (m->ldr.coh_rva_and_sizes > 0x10)
 		return PERK_ERR_BAD_IMAGE_TYPE;
 
-	if (m->ldr.rva_and_sizes < 0x10)
+	if (m->ldr.coh_rva_and_sizes < 0x10)
 		memset(&m->dirs,0,sizeof(m->dirs));
 
 	mark = p->opt_hdr_64.export_tbl;
 	pdir = &m->dirs.export_tbl;
 
-	for (i=0; i<m->ldr.rva_and_sizes; i++) {
+	for (i=0; i<m->ldr.coh_rva_and_sizes; i++) {
 		pdir[i].rva  = pe_read_long(&mark[i*8]);
 		pdir[i].size = pe_read_long(&mark[i*8+4]);
 	}

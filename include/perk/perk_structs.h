@@ -75,8 +75,8 @@ struct pe_raw_opt_hdr_img {
 };
 
 struct pe_raw_opt_hdr_ldr {
-	unsigned char	loader_flags			[0x04];
-	unsigned char	rva_and_sizes			[0x04];
+	unsigned char	coh_loader_flags		[0x04];
+	unsigned char	coh_rva_and_sizes		[0x04];
 };
 
 struct pe_raw_opt_hdr_dirs {

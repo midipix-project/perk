@@ -120,8 +120,8 @@ struct pe_meta_opt_hdr_img {
 };
 
 struct pe_meta_opt_hdr_ldr {
-	uint32_t	loader_flags;
-	uint32_t	rva_and_sizes;
+	uint32_t	coh_loader_flags;
+	uint32_t	coh_rva_and_sizes;
 };
 
 struct pe_meta_opt_hdr_dirs {
