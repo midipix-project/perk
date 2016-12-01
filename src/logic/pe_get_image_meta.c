@@ -113,9 +113,9 @@ int pe_get_expsym_by_name(
 	unsigned	i;
 
 	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.eh_name_ptr_rva - offset));
 
-	for (i=0; i<m->edata.num_of_name_ptrs; i++) {
+	for (i=0; i<m->edata.eh_num_of_name_ptrs; i++) {
 		sym = (const char *)m->image.addr + symrva[i] - offset;
 
 		if (!(strcmp(sym,name))) {
@@ -142,12 +142,12 @@ int pe_get_expsym_by_index(
 	uint32_t *	symrva;
 	uintptr_t	symaddr;
 
-	if (index >= m->edata.num_of_name_ptrs)
+	if (index >= m->edata.eh_num_of_name_ptrs)
 		return -1;
 
 	if (expsym) {
 		offset  = m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
-		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.name_ptr_rva - offset));
+		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.eh_name_ptr_rva - offset));
 		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
 
 		expsym->name    = (const char *)symaddr;
@@ -238,7 +238,7 @@ int pe_get_image_meta(
 
 	if (m->aedata) {
 		pe_read_export_header(m->aedata,&m->edata);
-		m->summary.nexpsyms = m->edata.num_of_name_ptrs;
+		m->summary.nexpsyms = m->edata.eh_num_of_name_ptrs;
 	}
 
 	/* .idata */

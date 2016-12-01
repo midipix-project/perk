@@ -198,17 +198,17 @@ struct pe_meta_sec_hdr {
 
 /* .edata section header*/
 struct pe_meta_export_hdr {
-	uint32_t	export_flags;
-	uint32_t	time_date_stamp;
-	uint16_t	major_ver;
-	uint16_t	minor_ver;
-	uint32_t	name_rva;
-	uint32_t	ordinal_base;
-	uint32_t	addr_tbl_entries;
-	uint32_t	num_of_name_ptrs;
-	uint32_t	export_addr_tbl_rva;
-	uint32_t	name_ptr_rva;
-	uint32_t	ordinal_tbl_rva;
+	uint32_t	eh_export_flags;
+	uint32_t	eh_time_date_stamp;
+	uint16_t	eh_major_ver;
+	uint16_t	eh_minor_ver;
+	uint32_t	eh_name_rva;
+	uint32_t	eh_ordinal_base;
+	uint32_t	eh_addr_tbl_entries;
+	uint32_t	eh_num_of_name_ptrs;
+	uint32_t	eh_export_addr_tbl_rva;
+	uint32_t	eh_name_ptr_rva;
+	uint32_t	eh_ordinal_tbl_rva;
 };
 
 

@@ -244,17 +244,17 @@ struct pe_raw_sec_hdr {
 
 
 struct pe_raw_export_hdr {
-	unsigned char	export_flags			[0x04];		/* 0x00 */
-	unsigned char	time_date_stamp			[0x04];		/* 0x04 */
-	unsigned char	major_ver			[0x02];		/* 0x08 */
-	unsigned char	minor_ver			[0x02];		/* 0x0a */
-	unsigned char	name_rva			[0x04];		/* 0x0c */
-	unsigned char	ordinal_base			[0x04];		/* 0x10 */
-	unsigned char	addr_tbl_entries		[0x04];		/* 0x14 */
-	unsigned char	num_of_name_ptrs		[0x04];		/* 0x18 */
-	unsigned char	export_addr_tbl_rva		[0x04];		/* 0x1c */
-	unsigned char	name_ptr_rva			[0x04];		/* 0x20 */
-	unsigned char	ordinal_tbl_rva			[0x04];		/* 0x24 */
+	unsigned char	eh_export_flags			[0x04];		/* 0x00 */
+	unsigned char	eh_time_date_stamp		[0x04];		/* 0x04 */
+	unsigned char	eh_major_ver			[0x02];		/* 0x08 */
+	unsigned char	eh_minor_ver			[0x02];		/* 0x0a */
+	unsigned char	eh_name_rva			[0x04];		/* 0x0c */
+	unsigned char	eh_ordinal_base			[0x04];		/* 0x10 */
+	unsigned char	eh_addr_tbl_entries		[0x04];		/* 0x14 */
+	unsigned char	eh_num_of_name_ptrs		[0x04];		/* 0x18 */
+	unsigned char	eh_export_addr_tbl_rva		[0x04];		/* 0x1c */
+	unsigned char	eh_name_ptr_rva			[0x04];		/* 0x20 */
+	unsigned char	eh_ordinal_tbl_rva		[0x04];		/* 0x24 */
 };
 
 
