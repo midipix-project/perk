@@ -259,8 +259,8 @@ struct pe_raw_export_hdr {
 
 
 union pe_raw_export_addr_tbl {
-	unsigned char	  export_rva			[0x04];		/* 0x00 */
-	unsigned char	  forwarder_rva			[0x04];		/* 0x00 */
+	unsigned char	  ee_export_rva			[0x04];		/* 0x00 */
+	unsigned char	  ee_forwarder_rva		[0x04];		/* 0x00 */
 };
 
 

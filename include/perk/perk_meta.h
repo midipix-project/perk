@@ -214,8 +214,8 @@ struct pe_meta_export_hdr {
 
 /* export rva */
 union pe_meta_export_addr_tbl {
-		uint32_t	  export_rva;
-		uint32_t	  forwarder_rva;
+		uint32_t	ee_export_rva;
+		uint32_t	ee_forwarder_rva;
 };
 
 
