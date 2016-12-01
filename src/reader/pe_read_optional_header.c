@@ -89,7 +89,7 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 		memset(&m->dirs,0,sizeof(m->dirs));
 
 	mark = p->opt_hdr_64.export_tbl;
-	pdir = &m->dirs.export_tbl;
+	pdir = &m->dirs.coh_export_tbl;
 
 	for (i=0; i<m->ldr.coh_rva_and_sizes; i++) {
 		pdir[i].dh_rva  = pe_read_long(&mark[i*8]);

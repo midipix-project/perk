@@ -221,7 +221,7 @@ int pe_get_image_meta(
 
 	/* .edata */
 	i = pe_get_named_section_index(m,".edata");
-	s = pe_get_block_section_index(m,&m->opt.dirs.export_tbl);
+	s = pe_get_block_section_index(m,&m->opt.dirs.coh_export_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
@@ -230,7 +230,7 @@ int pe_get_image_meta(
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.dirs.export_tbl.dh_rva - m->sectbl[s].virtual_addr);
+				+ m->opt.dirs.coh_export_tbl.dh_rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hedata = &m->sectbl[i];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
@@ -246,7 +246,7 @@ int pe_get_image_meta(
 	union  pe_raw_import_lookup *	pitem;
 
 	i = pe_get_named_section_index(m,".idata");
-	s = pe_get_block_section_index(m,&m->opt.dirs.import_tbl);
+	s = pe_get_block_section_index(m,&m->opt.dirs.coh_import_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
@@ -255,7 +255,7 @@ int pe_get_image_meta(
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.dirs.import_tbl.dh_rva - m->sectbl[s].virtual_addr);
+				+ m->opt.dirs.coh_import_tbl.dh_rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hidata = &m->sectbl[i];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);

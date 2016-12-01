@@ -80,22 +80,22 @@ struct pe_raw_opt_hdr_ldr {
 };
 
 struct pe_raw_opt_hdr_dirs {
-	unsigned char	export_tbl			[0x08];
-	unsigned char	import_tbl			[0x08];
-	unsigned char	resource_tbl			[0x08];
-	unsigned char	exception_tbl			[0x08];
-	unsigned char	certificate_tbl			[0x08];
-	unsigned char	base_reloc_tbl			[0x08];
-	unsigned char	debug				[0x08];
-	unsigned char	arch				[0x08];
-	unsigned char	global_ptr			[0x08];
-	unsigned char	tls_tbl				[0x08];
-	unsigned char	load_config_tbl			[0x08];
-	unsigned char	bound_import			[0x08];
-	unsigned char	iat				[0x08];
-	unsigned char	delay_import_descriptor		[0x08];
-	unsigned char	clr_runtime_hdr			[0x08];
-	unsigned char	reserved			[0x08];
+	unsigned char	coh_export_tbl			[0x08];
+	unsigned char	coh_import_tbl			[0x08];
+	unsigned char	coh_resource_tbl		[0x08];
+	unsigned char	coh_exception_tbl		[0x08];
+	unsigned char	coh_certificate_tbl		[0x08];
+	unsigned char	coh_base_reloc_tbl		[0x08];
+	unsigned char	coh_debug			[0x08];
+	unsigned char	coh_arch			[0x08];
+	unsigned char	coh_global_ptr			[0x08];
+	unsigned char	coh_tls_tbl			[0x08];
+	unsigned char	coh_load_config_tbl		[0x08];
+	unsigned char	coh_bound_import		[0x08];
+	unsigned char	coh_iat				[0x08];
+	unsigned char	coh_delay_import_descriptor	[0x08];
+	unsigned char	coh_clr_runtime_hdr		[0x08];
+	unsigned char	coh_reserved			[0x08];
 };
 
 struct pe_raw_data_dirs {

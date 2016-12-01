@@ -125,22 +125,22 @@ struct pe_meta_opt_hdr_ldr {
 };
 
 struct pe_meta_opt_hdr_dirs {
-	struct pe_block	export_tbl;
-	struct pe_block	import_tbl;
-	struct pe_block	resource_tbl;
-	struct pe_block	exception_tbl;
-	struct pe_block	certificate_tbl;
-	struct pe_block	base_reloc_tbl;
-	struct pe_block	debug;
-	struct pe_block	arch;
-	struct pe_block	global_ptr;
-	struct pe_block	tls_tbl;
-	struct pe_block	load_config_tbl;
-	struct pe_block	bound_import;
-	struct pe_block	iat;
-	struct pe_block	delay_import_descriptor;
-	struct pe_block	clr_runtime_hdr;
-	struct pe_block	reserved;
+	struct pe_block	coh_export_tbl;
+	struct pe_block	coh_import_tbl;
+	struct pe_block	coh_resource_tbl;
+	struct pe_block	coh_exception_tbl;
+	struct pe_block	coh_certificate_tbl;
+	struct pe_block	coh_base_reloc_tbl;
+	struct pe_block	coh_debug;
+	struct pe_block	coh_arch;
+	struct pe_block	coh_global_ptr;
+	struct pe_block	coh_tls_tbl;
+	struct pe_block	coh_load_config_tbl;
+	struct pe_block	coh_bound_import;
+	struct pe_block	coh_iat;
+	struct pe_block	coh_delay_import_descriptor;
+	struct pe_block	coh_clr_runtime_hdr;
+	struct pe_block	coh_reserved;
 };
 
 struct pe_meta_opt_hdr_mem_32 {
