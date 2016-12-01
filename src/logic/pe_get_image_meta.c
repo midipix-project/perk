@@ -301,11 +301,11 @@ int pe_get_image_meta(
 				if ((ret = pe_read_import_lookup(
 						&(m->idata[i].aitems[j]),
 						&(m->idata[i].items[j]),
-						m->opt.std.magic)))
+						m->opt.std.coh_magic)))
 					return pe_free_image_meta_impl(
 						m,PERK_CUSTOM_ERROR(dctx,ret));
 
-				switch (m->opt.std.magic) {
+				switch (m->opt.std.coh_magic) {
 					case PE_MAGIC_PE32:
 						m->idata[i].items[j].flags = m->idata[i].items[j].u.import_lookup_entry_32;
 						break;

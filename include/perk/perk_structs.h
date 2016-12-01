@@ -41,14 +41,14 @@ struct pe_raw_coff_file_hdr {
 
 
 struct pe_raw_opt_hdr_std {
-	unsigned char	magic				[0x02];		/* 0x00 */
-	unsigned char	major_linker_ver		[0x01];		/* 0x02 */
-	unsigned char	minor_linker_ver		[0x01];		/* 0x03 */
-	unsigned char	size_of_code			[0x04];		/* 0x04 */
-	unsigned char	size_of_initialized_data	[0x04];		/* 0x08 */
-	unsigned char	size_of_uninitialized_data	[0x04];		/* 0x0c */
-	unsigned char	entry_point			[0x04];		/* 0x10 */
-	unsigned char	base_of_code			[0x04];		/* 0x14 */
+	unsigned char	coh_magic			[0x02];		/* 0x00 */
+	unsigned char	coh_major_linker_ver		[0x01];		/* 0x02 */
+	unsigned char	coh_minor_linker_ver		[0x01];		/* 0x03 */
+	unsigned char	coh_size_of_code		[0x04];		/* 0x04 */
+	unsigned char	coh_size_of_inited_data		[0x04];		/* 0x08 */
+	unsigned char	coh_size_of_uninited_data	[0x04];		/* 0x0c */
+	unsigned char	coh_entry_point			[0x04];		/* 0x10 */
+	unsigned char	coh_base_of_code		[0x04];		/* 0x14 */
 };
 
 struct pe_raw_opt_hdr_align {

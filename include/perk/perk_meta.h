@@ -86,14 +86,14 @@ struct pe_meta_coff_file_hdr {
 
 /* image optional header */
 struct pe_meta_opt_hdr_std {
-	uint16_t	magic;
-	uint8_t		major_linker_ver;
-	uint8_t		minor_linker_ver;
-	uint32_t	size_of_code;
-	uint32_t	size_of_initialized_data;
-	uint32_t	size_of_uninitialized_data;
-	uint32_t	entry_point;
-	uint32_t	base_of_code;
+	uint16_t	coh_magic;
+	uint8_t		coh_major_linker_ver;
+	uint8_t		coh_minor_linker_ver;
+	uint32_t	coh_size_of_code;
+	uint32_t	coh_size_of_inited_data;
+	uint32_t	coh_size_of_uninited_data;
+	uint32_t	coh_entry_point;
+	uint32_t	coh_base_of_code;
 };
 
 struct pe_meta_opt_hdr_vers {

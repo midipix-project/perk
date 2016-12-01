@@ -22,9 +22,9 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	struct pe_raw_opt_hdr_img *	aimg;
 	struct pe_raw_opt_hdr_ldr *	aldr;
 
-	m->std.magic = pe_read_short(p->opt_hdr_32.magic);
+	m->std.coh_magic = pe_read_short(p->opt_hdr_32.magic);
 
-	switch (m->std.magic) {
+	switch (m->std.coh_magic) {
 		case PE_MAGIC_PE32:
 			astd	= (struct pe_raw_opt_hdr_std *)p;
 			avers	= (struct pe_raw_opt_hdr_vers *)&p->opt_hdr_32.major_os_ver;
@@ -46,14 +46,14 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	}
 
 	/* std */
-	m->std.major_linker_ver			= astd->major_linker_ver[0];
-	m->std.minor_linker_ver			= astd->minor_linker_ver[0];
+	m->std.coh_major_linker_ver		= astd->coh_major_linker_ver[0];
+	m->std.coh_minor_linker_ver		= astd->coh_minor_linker_ver[0];
 
-	m->std.size_of_code			= pe_read_long(astd->size_of_code);
-	m->std.size_of_initialized_data		= pe_read_long(astd->size_of_initialized_data);
-	m->std.size_of_uninitialized_data	= pe_read_long(astd->size_of_uninitialized_data);
-	m->std.entry_point			= pe_read_long(astd->entry_point);
-	m->std.base_of_code			= pe_read_long(astd->base_of_code);
+	m->std.coh_size_of_code			= pe_read_long(astd->coh_size_of_code);
+	m->std.coh_size_of_inited_data		= pe_read_long(astd->coh_size_of_inited_data);
+	m->std.coh_size_of_uninited_data	= pe_read_long(astd->coh_size_of_uninited_data);
+	m->std.coh_entry_point			= pe_read_long(astd->coh_entry_point);
+	m->std.coh_base_of_code			= pe_read_long(astd->coh_base_of_code);
 
 	/* vers */
 	m->vers.major_os_ver			= pe_read_short(avers->major_os_ver);
@@ -106,7 +106,7 @@ int pe_read_optional_header(const union pe_raw_opt_hdr * p, struct pe_meta_opt_h
 	if ((ret = pe_read_optional_header_structs(p,m)))
 		return ret;
 
-	switch (m->std.magic) {
+	switch (m->std.coh_magic) {
 		case PE_MAGIC_PE32:
 			m->mem.base_of_data		= pe_read_long(p->opt_hdr_32.base_of_data);
 			m->mem.image_base		= pe_read_long(p->opt_hdr_32.image_base);
