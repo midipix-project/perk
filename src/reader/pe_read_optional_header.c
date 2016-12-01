@@ -66,8 +66,8 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	m->vers.win32_ver			= pe_read_long(avers->win32_ver);
 
 	/* align */
-	m->align.section_align			= pe_read_long(aalign->section_align);
-	m->align.file_align			= pe_read_long(aalign->file_align);
+	m->align.coh_section_align		= pe_read_long(aalign->coh_section_align);
+	m->align.coh_file_align			= pe_read_long(aalign->coh_file_align);
 
 	/* img */
 	m->img.size_of_image			= pe_read_long(aimg->size_of_image);

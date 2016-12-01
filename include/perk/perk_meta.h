@@ -107,8 +107,8 @@ struct pe_meta_opt_hdr_vers {
 };
 
 struct pe_meta_opt_hdr_align {
-	uint32_t	section_align;
-	uint32_t	file_align;
+	uint32_t	coh_section_align;
+	uint32_t	coh_file_align;
 };
 
 struct pe_meta_opt_hdr_img {

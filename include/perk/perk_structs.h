@@ -52,8 +52,8 @@ struct pe_raw_opt_hdr_std {
 };
 
 struct pe_raw_opt_hdr_align {
-	unsigned char	section_align			[0x04];		/* 0x20 */
-	unsigned char	file_align			[0x04];         /* 0x24 */
+	unsigned char	coh_section_align		[0x04];		/* 0x20 */
+	unsigned char	coh_file_align			[0x04];         /* 0x24 */
 };
 
 struct pe_raw_opt_hdr_vers {
