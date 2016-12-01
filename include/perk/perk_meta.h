@@ -222,15 +222,15 @@ union pe_meta_export_addr_tbl {
 /* image: import table entry lookup item */
 struct pe_meta_import_lookup {
 	union {
-		uint64_t	import_lookup_entry_64;
-		uint32_t	import_lookup_entry_32;
-		uint32_t	hint_name_tbl_rva;
-		uint16_t	ordinal_number;
+		uint64_t	ii_import_lookup_entry_64;
+		uint32_t	ii_import_lookup_entry_32;
+		uint32_t	ii_hint_name_tbl_rva;
+		uint16_t	ii_ordinal_number;
 	} u;
 
-	uint32_t	flags;
-	uint16_t	hint;
-	char *		name;
+	uint32_t	ii_flags;
+	uint16_t	ii_hint;
+	char *		ii_name;
 };
 
 

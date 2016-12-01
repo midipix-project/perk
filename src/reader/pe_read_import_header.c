@@ -31,11 +31,11 @@ int pe_read_import_lookup(
 {
 	switch (magic) {
 		case PE_MAGIC_PE32:
-			m->u.import_lookup_entry_64 = pe_read_long(p->import_lookup_entry_32);
+			m->u.ii_import_lookup_entry_64 = pe_read_long(p->ii_import_lookup_entry_32);
 			return 0;
 
 		case PE_MAGIC_PE32_PLUS:
-			m->u.import_lookup_entry_64 = pe_read_quad(p->import_lookup_entry_64);
+			m->u.ii_import_lookup_entry_64 = pe_read_quad(p->ii_import_lookup_entry_64);
 			return 0;
 
 		default:

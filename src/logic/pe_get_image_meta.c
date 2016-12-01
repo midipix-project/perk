@@ -287,9 +287,9 @@ int pe_get_image_meta(
 
 			if (m->idata[i].import_lookup_tbl_rva) {
 				pitem = m->idata[i].aitems;
-				hint  = (uint32_t *)pitem->hint_name_tbl_rva;
+				hint  = (uint32_t *)pitem->ii_hint_name_tbl_rva;
 
-				for (; *hint; hint=(uint32_t *)((++pitem)->hint_name_tbl_rva))
+				for (; *hint; hint=(uint32_t *)((++pitem)->ii_hint_name_tbl_rva))
 					m->idata[i].count++;
 
 				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
@@ -307,20 +307,20 @@ int pe_get_image_meta(
 
 				switch (m->opt.oh_std.coh_magic) {
 					case PE_MAGIC_PE32:
-						m->idata[i].items[j].flags = m->idata[i].items[j].u.import_lookup_entry_32;
+						m->idata[i].items[j].ii_flags = m->idata[i].items[j].u.ii_import_lookup_entry_32;
 						break;
 
 					case PE_MAGIC_PE32_PLUS:
-						m->idata[i].items[j].flags = (m->idata[i].items[j].u.import_lookup_entry_64 >> 32);
+						m->idata[i].items[j].ii_flags = (m->idata[i].items[j].u.ii_import_lookup_entry_64 >> 32);
 						break;
 				}
 
-				if (!m->idata[i].items[j].flags) {
+				if (!m->idata[i].items[j].ii_flags) {
 					struct pe_raw_hint_name_entry * pentry =
 						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->idata[i].items[j].u.hint_name_tbl_rva - m->hidata->sh_virtual_addr);
+							+ m->idata[i].items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
 
-					m->idata[i].items[j].name = (char *)pentry->name;
+					m->idata[i].items[j].ii_name = (char *)pentry->name;
 				}
 			}
 		}

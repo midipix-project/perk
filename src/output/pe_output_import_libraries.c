@@ -65,10 +65,10 @@ int pe_output_import_libraries(
 
 		if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
 			for (j=0; j<m->idata[i].count; j++)
-				if (m->idata[i].items[j].name)
+				if (m->idata[i].items[j].ii_name)
 					if ((pretty_implib_item(
 							cctx,
-							m->idata[i].items[j].name,
+							m->idata[i].items[j].ii_name,
 							fout)) < 0)
 						return PERK_FILE_ERROR(dctx);
 	}
