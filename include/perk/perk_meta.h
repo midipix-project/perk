@@ -96,6 +96,11 @@ struct pe_meta_opt_hdr_std {
 	uint32_t	coh_base_of_code;
 };
 
+struct pe_meta_opt_hdr_align {
+	uint32_t	coh_section_align;
+	uint32_t	coh_file_align;
+};
+
 struct pe_meta_opt_hdr_vers {
 	uint16_t	major_os_ver;
 	uint16_t	minor_os_ver;
@@ -104,11 +109,6 @@ struct pe_meta_opt_hdr_vers {
 	uint16_t	major_subsys_ver;
 	uint16_t	minor_subsys_ver;
 	uint32_t	win32_ver;
-};
-
-struct pe_meta_opt_hdr_align {
-	uint32_t	coh_section_align;
-	uint32_t	coh_file_align;
 };
 
 struct pe_meta_opt_hdr_img {
