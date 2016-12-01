@@ -40,8 +40,8 @@ enum pe_framework {
 
 /* generic block info / image directory header */
 struct pe_block {
-	uint32_t	rva;
-	uint32_t	size;
+	uint32_t	dh_rva;
+	uint32_t	dh_size;
 };
 
 

@@ -52,7 +52,7 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 		low  = m->sectbl[i].virtual_addr;
 		high = low + m->sectbl[i].virtual_size;
 
-		if ((block->rva >= low) && (block->rva + block->size <= high))
+		if ((block->dh_rva >= low) && (block->dh_rva + block->dh_size <= high))
 			return i;
 	}
 
@@ -230,7 +230,7 @@ int pe_get_image_meta(
 	if (s >= 0) {
 		m->hedata = &m->sectbl[s];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.dirs.export_tbl.rva - m->sectbl[s].virtual_addr);
+				+ m->opt.dirs.export_tbl.dh_rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hedata = &m->sectbl[i];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
@@ -255,7 +255,7 @@ int pe_get_image_meta(
 	if (s >= 0) {
 		m->hidata = &m->sectbl[s];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].ptr_to_raw_data
-				+ m->opt.dirs.import_tbl.rva - m->sectbl[s].virtual_addr);
+				+ m->opt.dirs.import_tbl.dh_rva - m->sectbl[s].virtual_addr);
 	} else if (i >= 0) {
 		m->hidata = &m->sectbl[i];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].ptr_to_raw_data);
