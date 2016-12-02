@@ -19,7 +19,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 
 	if (meta) {
 		for (i=0; i<meta->summary.nimplibs; i++)
-			free(meta->idata[i].items);
+			free(meta->idata[i].ih_items);
 
 		free(meta->idata);
 		free(meta->sectbl);
@@ -263,7 +263,7 @@ int pe_get_image_meta(
 
 	if (m->aidata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pidata->name_rva[0]; pidata++)
+		for (pidata=m->aidata; pidata->ih_name_rva[0]; pidata++)
 			m->summary.nimplibs++;
 
 		/* import headers */
@@ -274,53 +274,55 @@ int pe_get_image_meta(
 		for (i=0; i<m->summary.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
 
-			m->idata[i].name = base + m->hidata->sh_ptr_to_raw_data
-						+ m->idata[i].name_rva - m->hidata->sh_virtual_addr;
+			m->idata[i].ih_name = base + m->hidata->sh_ptr_to_raw_data
+						   + m->idata[i].ih_name_rva
+						   - m->hidata->sh_virtual_addr;
 
-			if (m->idata[i].import_lookup_tbl_rva)
-				m->idata[i].aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->idata[i].import_lookup_tbl_rva - m->hidata->sh_virtual_addr);
+			if (m->idata[i].ih_import_lookup_tbl_rva)
+				m->idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
+							+ m->idata[i].ih_import_lookup_tbl_rva
+							- m->hidata->sh_virtual_addr);
 
 			/* items */
 			uint32_t * hint;
-			m->idata[i].count = 0;
+			m->idata[i].ih_count = 0;
 
-			if (m->idata[i].import_lookup_tbl_rva) {
-				pitem = m->idata[i].aitems;
+			if (m->idata[i].ih_import_lookup_tbl_rva) {
+				pitem = m->idata[i].ih_aitems;
 				hint  = (uint32_t *)pitem->ii_hint_name_tbl_rva;
 
 				for (; *hint; hint=(uint32_t *)((++pitem)->ii_hint_name_tbl_rva))
-					m->idata[i].count++;
+					m->idata[i].ih_count++;
 
-				if (!(m->idata[i].items = calloc(m->idata[i].count,sizeof(*(m->idata[i].items)))))
+				if (!(m->idata[i].ih_items = calloc(m->idata[i].ih_count,sizeof(*(m->idata[i].ih_items)))))
 					return pe_free_image_meta_impl(
 						m,PERK_SYSTEM_ERROR(dctx));
 			}
 
-			for (j=0; j<m->idata[i].count; j++) {
+			for (j=0; j<m->idata[i].ih_count; j++) {
 				if ((ret = pe_read_import_lookup(
-						&(m->idata[i].aitems[j]),
-						&(m->idata[i].items[j]),
+						&(m->idata[i].ih_aitems[j]),
+						&(m->idata[i].ih_items[j]),
 						m->opt.oh_std.coh_magic)))
 					return pe_free_image_meta_impl(
 						m,PERK_CUSTOM_ERROR(dctx,ret));
 
 				switch (m->opt.oh_std.coh_magic) {
 					case PE_MAGIC_PE32:
-						m->idata[i].items[j].ii_flags = m->idata[i].items[j].u.ii_import_lookup_entry_32;
+						m->idata[i].ih_items[j].ii_flags = m->idata[i].ih_items[j].u.ii_import_lookup_entry_32;
 						break;
 
 					case PE_MAGIC_PE32_PLUS:
-						m->idata[i].items[j].ii_flags = (m->idata[i].items[j].u.ii_import_lookup_entry_64 >> 32);
+						m->idata[i].ih_items[j].ii_flags = (m->idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 32);
 						break;
 				}
 
-				if (!m->idata[i].items[j].ii_flags) {
+				if (!m->idata[i].ih_items[j].ii_flags) {
 					struct pe_raw_hint_name_entry * pentry =
 						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->idata[i].items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
+							+ m->idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
 
-					m->idata[i].items[j].ii_name = (char *)pentry->name;
+					m->idata[i].ih_items[j].ii_name = (char *)pentry->name;
 				}
 			}
 		}

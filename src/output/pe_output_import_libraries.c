@@ -60,15 +60,15 @@ int pe_output_import_libraries(
 		return PERK_FILE_ERROR(dctx);
 
 	for (i=0; i<m->summary.nimplibs; i++) {
-		if ((pretty_implib_header(cctx,m->idata[i].name,fout)) < 0)
+		if ((pretty_implib_header(cctx,m->idata[i].ih_name,fout)) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 		if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
-			for (j=0; j<m->idata[i].count; j++)
-				if (m->idata[i].items[j].ii_name)
+			for (j=0; j<m->idata[i].ih_count; j++)
+				if (m->idata[i].ih_items[j].ii_name)
 					if ((pretty_implib_item(
 							cctx,
-							m->idata[i].items[j].ii_name,
+							m->idata[i].ih_items[j].ii_name,
 							fout)) < 0)
 						return PERK_FILE_ERROR(dctx);
 	}

@@ -236,15 +236,15 @@ struct pe_meta_import_lookup {
 
 /* image: import directory table entry */
 struct pe_meta_import_hdr {
-	uint32_t				import_lookup_tbl_rva;
-	uint32_t				time_date_stamp;
-	uint32_t				forwarder_chain;
-	uint32_t				name_rva;
-	uint32_t				import_addr_tbl_rva;
-	uint32_t				count;
-	char *					name;
-	struct pe_meta_import_lookup *		items;
-	union pe_raw_import_lookup *		aitems;
+	uint32_t				ih_import_lookup_tbl_rva;
+	uint32_t				ih_time_date_stamp;
+	uint32_t				ih_forwarder_chain;
+	uint32_t				ih_name_rva;
+	uint32_t				ih_import_addr_tbl_rva;
+	uint32_t				ih_count;
+	char *					ih_name;
+	struct pe_meta_import_lookup *		ih_items;
+	union pe_raw_import_lookup *		ih_aitems;
 };
 
 

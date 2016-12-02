@@ -273,11 +273,11 @@ union pe_raw_import_lookup {
 
 
 struct pe_raw_import_hdr {
-	unsigned char	import_lookup_tbl_rva		[0x04];		/* 0x00 */
-	unsigned char	time_date_stamp			[0x04];		/* 0x04 */
-	unsigned char	forwarder_chain			[0x04];		/* 0x08 */
-	unsigned char	name_rva			[0x04];		/* 0x0c */
-	unsigned char	import_addr_tbl_rva		[0x04];		/* 0x10 */
+	unsigned char	ih_import_lookup_tbl_rva	[0x04];		/* 0x00 */
+	unsigned char	ih_time_date_stamp		[0x04];		/* 0x04 */
+	unsigned char	ih_forwarder_chain		[0x04];		/* 0x08 */
+	unsigned char	ih_name_rva			[0x04];		/* 0x0c */
+	unsigned char	ih_import_addr_tbl_rva		[0x04];		/* 0x10 */
 };
 
 

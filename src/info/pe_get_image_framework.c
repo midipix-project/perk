@@ -36,7 +36,7 @@ static bool pe_image_is_cygwin(const struct pe_image_meta * m)
 	int i;
 
 	for (i=0; i<m->summary.nimplibs; i++)
-		if (!(strcmp(m->idata[i].name,"cygwin1.dll")))
+		if (!(strcmp(m->idata[i].ih_name,"cygwin1.dll")))
 			return true;
 
 	return false;
@@ -47,7 +47,7 @@ static bool pe_image_is_msys(const struct pe_image_meta * m)
 	int i;
 
 	for (i=0; i<m->summary.nimplibs; i++)
-		if (!(strcmp(m->idata[i].name,"msys-2.0.dll")))
+		if (!(strcmp(m->idata[i].ih_name,"msys-2.0.dll")))
 			return true;
 
 	return false;
