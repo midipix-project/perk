@@ -298,11 +298,11 @@ struct pe_raw_coff_symbol {
 
 struct pe_raw_coff_symbol_name {
 	union {
-		unsigned char		short_name	[0x08];		/* 0x00 */
+		unsigned char		cs_short_name	[0x08];		/* 0x00 */
 
 		struct {
-			unsigned char	zeroes		[0x04];		/* 0x00 */
-			unsigned char	offset		[0x04];		/* 0x04 */
+			unsigned char	cs_zeroes	[0x04];		/* 0x00 */
+			unsigned char	cs_offset	[0x04];		/* 0x04 */
 		} long_name;
 	};
 };
