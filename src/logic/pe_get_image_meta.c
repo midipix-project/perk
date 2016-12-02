@@ -322,7 +322,7 @@ int pe_get_image_meta(
 						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
 							+ m->idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
 
-					m->idata[i].ih_items[j].ii_name = (char *)pentry->name;
+					m->idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
 				}
 			}
 		}

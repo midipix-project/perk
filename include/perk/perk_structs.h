@@ -282,8 +282,8 @@ struct pe_raw_import_hdr {
 
 
 struct pe_raw_hint_name_entry {
-	unsigned char	hint				[0x02];		/* 0x00 */
-	unsigned char	name				[0x02];		/* 0x02 */
+	unsigned char	ii_hint				[0x02];		/* 0x00 */
+	unsigned char	ii_name				[0x02];		/* 0x02 */
 };
 
 
