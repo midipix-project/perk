@@ -219,6 +219,20 @@ union pe_meta_export_addr_tbl {
 };
 
 
+/* image: import directory table entry */
+struct pe_meta_import_hdr {
+	uint32_t				ih_import_lookup_tbl_rva;
+	uint32_t				ih_time_date_stamp;
+	uint32_t				ih_forwarder_chain;
+	uint32_t				ih_name_rva;
+	uint32_t				ih_import_addr_tbl_rva;
+	uint32_t				ih_count;
+	char *					ih_name;
+	struct pe_meta_import_lookup *		ih_items;
+	union pe_raw_import_lookup *		ih_aitems;
+};
+
+
 /* image: import table entry lookup item */
 struct pe_meta_import_lookup {
 	union {
@@ -231,20 +245,6 @@ struct pe_meta_import_lookup {
 	uint32_t	ii_flags;
 	uint16_t	ii_hint;
 	char *		ii_name;
-};
-
-
-/* image: import directory table entry */
-struct pe_meta_import_hdr {
-	uint32_t				ih_import_lookup_tbl_rva;
-	uint32_t				ih_time_date_stamp;
-	uint32_t				ih_forwarder_chain;
-	uint32_t				ih_name_rva;
-	uint32_t				ih_import_addr_tbl_rva;
-	uint32_t				ih_count;
-	char *					ih_name;
-	struct pe_meta_import_lookup *		ih_items;
-	union pe_raw_import_lookup *		ih_aitems;
 };
 
 
