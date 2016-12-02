@@ -51,10 +51,12 @@ struct pe_raw_opt_hdr_std {
 	unsigned char	coh_base_of_code		[0x04];		/* 0x14 */
 };
 
+
 struct pe_raw_opt_hdr_align {
 	unsigned char	coh_section_align		[0x04];		/* 0x20 */
 	unsigned char	coh_file_align			[0x04];         /* 0x24 */
 };
+
 
 struct pe_raw_opt_hdr_vers {
 	unsigned char	coh_major_os_ver		[0x02];		/* 0x28 */
@@ -66,6 +68,7 @@ struct pe_raw_opt_hdr_vers {
 	unsigned char	coh_win32_ver			[0x04];		/* 0x34 */
 };
 
+
 struct pe_raw_opt_hdr_img {
 	unsigned char	coh_size_of_image		[0x04];		/* 0x38 */
 	unsigned char	coh_size_of_headers		[0x04];		/* 0x3c */
@@ -74,10 +77,12 @@ struct pe_raw_opt_hdr_img {
 	unsigned char	coh_dll_characteristics		[0x02];		/* 0x46 */
 };
 
+
 struct pe_raw_opt_hdr_ldr {
 	unsigned char	coh_loader_flags		[0x04];
 	unsigned char	coh_rva_and_sizes		[0x04];
 };
+
 
 struct pe_raw_opt_hdr_dirs {
 	unsigned char	coh_export_tbl			[0x08];
@@ -98,6 +103,7 @@ struct pe_raw_opt_hdr_dirs {
 	unsigned char	coh_reserved			[0x08];
 };
 
+
 struct pe_raw_data_dirs {
 	unsigned char	coh_rva_and_sizes		[0x04];
 	unsigned char	coh_export_tbl			[0x08];
@@ -117,6 +123,7 @@ struct pe_raw_data_dirs {
 	unsigned char	coh_clr_runtime_hdr		[0x08];
 	unsigned char	coh_reserved			[0x08];
 };
+
 
 struct pe_raw_opt_hdr_32 {
 	unsigned char	coh_magic			[0x02];		/* 0x00 */
@@ -296,6 +303,7 @@ struct pe_raw_coff_symbol {
 	unsigned char	cs_num_of_aux_symbols		[0x01];		/* 0x11 */
 };
 
+
 struct pe_raw_coff_symbol_name {
 	union {
 		unsigned char		cs_short_name	[0x08];		/* 0x00 */
@@ -306,6 +314,7 @@ struct pe_raw_coff_symbol_name {
 		} long_name;
 	};
 };
+
 
 #ifdef __cplusplus
 }
