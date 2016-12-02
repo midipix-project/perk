@@ -288,12 +288,12 @@ struct pe_raw_hint_name_entry {
 
 
 struct pe_raw_coff_symbol {
-	unsigned char	name				[0x08];		/* 0x00 */
-	unsigned char	value				[0x04];		/* 0x08 */
-	unsigned char	section_number			[0x02];		/* 0x0c */
-	unsigned char	type				[0x02];		/* 0x0e */
-	unsigned char	storage_class			[0x01];		/* 0x10 */
-	unsigned char	num_of_aux_symbols		[0x01];		/* 0x11 */
+	unsigned char	cs_name				[0x08];		/* 0x00 */
+	unsigned char	cs_value			[0x04];		/* 0x08 */
+	unsigned char	cs_section_number		[0x02];		/* 0x0c */
+	unsigned char	cs_type				[0x02];		/* 0x0e */
+	unsigned char	cs_storage_class		[0x01];		/* 0x10 */
+	unsigned char	cs_num_of_aux_symbols		[0x01];		/* 0x11 */
 };
 
 struct pe_raw_coff_symbol_name {

@@ -250,13 +250,13 @@ struct pe_meta_import_hdr {
 
 /* coff: symbol table entry */
 struct pe_meta_coff_symbol {
-	char		name[24];
-	char *		long_name;
-	uint32_t	value;
-	int16_t		section_number;
-	uint16_t	type;
-	unsigned char	storage_class;
-	unsigned char	num_of_aux_symbols;
+	char		cs_name[24];
+	char *		cs_long_name;
+	uint32_t	cs_value;
+	int16_t		cs_section_number;
+	uint16_t	cs_type;
+	unsigned char	cs_storage_class;
+	unsigned char	cs_num_of_aux_symbols;
 };
 
 
