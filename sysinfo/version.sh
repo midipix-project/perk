@@ -55,6 +55,7 @@ gitver=`git rev-parse --verify HEAD 2>/dev/null` || gitver="unknown"
 macro=`echo "$prefix"_GIT_VERSION | tr '[:lower:]' '[:upper:]'`
 
 cd "$workdir" || exit 2
+mkdir  -p `dirname "$output"` || exit 2
 printf "#define $macro\t\"$gitver\"\n" > "$output"
 
 # all done
