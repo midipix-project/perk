@@ -129,8 +129,8 @@ struct argv_ctx {
 	int				flags;
 	int				mode;
 	int				nentries;
-	int				unitidx;
-	int				erridx;
+	intptr_t			unitidx;
+	intptr_t			erridx;
 	enum argv_error 		errcode;
 	const char *			errch;
 	const struct argv_option *	erropt;
