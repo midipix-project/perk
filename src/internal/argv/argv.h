@@ -139,17 +139,21 @@ struct argv_ctx {
 
 #ifdef ARGV_DRIVER
 
+static int argv_optv_init(
+	const struct argv_option[],
+	const struct argv_option **);
+
 static const char * argv_program_name(const char *);
 
 static void argv_usage(
 	FILE *,
 	const char *	header,
-	const struct	argv_option[],
+	const struct	argv_option **,
 	const char *	mode);
 
 static struct argv_meta * argv_get(
 	char **,
-	const struct argv_option[],
+	const struct argv_option **,
 	int flags);
 
 static void argv_free(struct argv_meta *);
@@ -161,14 +165,30 @@ static void argv_free(struct argv_meta *);
 /* implementation of static functions */
 /*------------------------------------*/
 
+static int argv_optv_init(
+	const struct argv_option	options[],
+	const struct argv_option **	optv)
+{
+	const struct argv_option *	option;
+	int				i;
+
+	for (option=options,i=0; option->long_name || option->short_name; option++)
+		optv[i++] = option;
+
+	optv[i] = 0;
+	return i;
+}
+
 static const struct argv_option * argv_short_option(
 	const char *			ch,
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	struct argv_entry *		entry)
 {
 	const struct argv_option *	option;
 
-	for (option=options; option->long_name || option->short_name; option++) {
+	for (; *optv; optv++) {
+		option = *optv;
+
 		if (option->short_name == *ch) {
 			entry->tag	= option->tag;
 			entry->fopt	= true;
@@ -181,15 +201,16 @@ static const struct argv_option * argv_short_option(
 
 static const struct argv_option * argv_long_option(
 	const char *			ch,
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	struct argv_entry *		entry)
 {
 	const struct argv_option *	option;
 	const char *			arg;
 	size_t				len;
 
-	for (option=options; option->long_name || option->short_name; option++) {
-		len = option->long_name ? strlen(option->long_name) : 0;
+	for (; *optv; optv++) {
+		option = *optv;
+		len    = option->long_name ? strlen(option->long_name) : 0;
 
 		if (len && !(strncmp(option->long_name,ch,len))) {
 			arg = ch + len;
@@ -226,7 +247,7 @@ static inline bool is_last_option(const char * arg)
 
 static inline bool is_hybrid_option(
 	const char *			arg,
-	const struct argv_option	options[])
+	const struct argv_option **	optv)
 {
 	const struct argv_option *	option;
 	struct argv_entry		entry;
@@ -234,11 +255,11 @@ static inline bool is_hybrid_option(
 	if (!is_short_option(arg))
 		return false;
 
-	if (!(option = argv_long_option(++arg,options,&entry)))
+	if (!(option = argv_long_option(++arg,optv,&entry)))
 		return false;
 
 	if (!(option->flags & ARGV_OPTION_HYBRID_SWITCH))
-		if (argv_short_option(arg,options,&entry))
+		if (argv_short_option(arg,optv,&entry))
 			return false;
 
 	return true;
@@ -265,20 +286,18 @@ static inline bool is_arg_in_paradigm(const char * arg, const char * paradigm)
 }
 
 static inline const struct argv_option * option_from_tag(
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	int				tag)
 {
-	const struct argv_option *	option;
-
-	for (option=options; option->short_name || option->long_name; option++)
-		if (option->tag == tag)
-			return option;
+	for (; *optv; optv++)
+		if (optv[0]->tag == tag)
+			return optv[0];
 	return 0;
 }
 
 static void argv_scan(
 	char **				argv,
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
 {
@@ -316,14 +335,14 @@ static void argv_scan(
 		else if (is_last_option(ch))
 			fnoscan = true;
 
-		else if (!fshort && is_hybrid_option(ch,options))
+		else if (!fshort && is_hybrid_option(ch,optv))
 			fhybrid = true;
 
 		if (!fnoscan && !fhybrid && (fshort || is_short_option(ch))) {
 			if (!fshort)
 				ch++;
 
-			if ((option = argv_short_option(ch,options,&entry))) {
+			if ((option = argv_short_option(ch,optv,&entry))) {
 				if (ch[1]) {
 					ch++;
 					fnext	= false;
@@ -370,7 +389,7 @@ static void argv_scan(
 		} else if (!fnoscan && (fhybrid || is_long_option(ch))) {
 			ch += (fhybrid ? 1 : 2);
 
-			if ((option = argv_long_option(ch,options,&entry))) {
+			if ((option = argv_long_option(ch,optv,&entry))) {
 				val = ch + strlen(option->long_name);
 
 				/* val[0] is either '=' (or ',') or '\0' */
@@ -584,7 +603,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 }
 
 static void argv_show_status(
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
 {
@@ -610,7 +629,7 @@ static void argv_show_status(
 	fputs("\n\nparsed entries:\n",stderr);
 	for (entry=meta->entries; entry->arg || entry->fopt; entry++)
 		if (entry->fopt) {
-			option = option_from_tag(options,entry->tag);
+			option = option_from_tag(optv,entry->tag);
 			short_name[0] = option->short_name;
 
 			if (entry->fval)
@@ -683,13 +702,13 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 
 static struct argv_meta * argv_get(
 	char *				argv[],
-	const struct argv_option	options[],
+	const struct argv_option **	optv,
 	int				flags)
 {
 	struct argv_meta *	meta;
 	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0,0,0};
 
-	argv_scan(argv,options,&ctx,0);
+	argv_scan(argv,optv,&ctx,0);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
 		ctx.program = argv_program_name(argv[0]);
@@ -704,7 +723,7 @@ static struct argv_meta * argv_get(
 		return 0;
 
 	ctx.mode = ARGV_MODE_COPY;
-	argv_scan(meta->argv,options,&ctx,meta);
+	argv_scan(meta->argv,optv,&ctx,meta);
 
 	if (ctx.errcode != ARGV_ERROR_OK) {
 		ctx.program = argv[0];
@@ -716,7 +735,7 @@ static struct argv_meta * argv_get(
 	}
 
 	if (ctx.flags & ARGV_VERBOSITY_STATUS)
-		argv_show_status(options,&ctx,meta);
+		argv_show_status(optv,&ctx,meta);
 
 	return meta;
 }
@@ -736,9 +755,10 @@ static void argv_free(struct argv_meta * xmeta)
 static void argv_usage(
 	FILE *				file,
 	const char *    		header,
-	const struct argv_option	options[],
+	const struct argv_option **	options,
 	const char *			mode)
 {
+	const struct argv_option **	optv;
 	const struct argv_option *	option;
 	bool				fshort,flong,fboth;
 	size_t				len,optlen,desclen;
@@ -771,10 +791,9 @@ static void argv_usage(
 	if (header)
 		fprintf(file,"%s",header);
 
-	option = options;
-	optlen = 0;
+	for (optlen=0,optv=options; *optv; optv++) {
+		option = *optv;
 
-	for (; option->short_name || option->long_name; option++) {
 		/* indent + comma */
 		len = fboth ? sizeof(indent) + 1 : sizeof(indent);
 
@@ -805,7 +824,9 @@ static void argv_usage(
 	optlen &= (~(ARGV_TAB_WIDTH-1));
 	desclen = (optlen < width / 2) ? width - optlen : optlen;
 
-	for (option=options; option->short_name || option->long_name; option++) {
+	for (optv=options; *optv; optv++) {
+		option = *optv;
+
 		/* color */
 		if (fcolor) {
 			color = (color == ccyan) ? cblue : ccyan;

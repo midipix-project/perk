@@ -9,6 +9,8 @@
 #include <perk/perk_meta.h>
 #include "argv/argv.h"
 
+#define PERK_OPTV_ELEMENTS 64
+
 extern const struct argv_option pe_default_options[];
 
 enum app_tags {

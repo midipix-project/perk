@@ -50,7 +50,7 @@ static uint32_t pe_argv_flags(uint32_t flags)
 static int pe_driver_usage(
 	const char *			program,
 	const char *			arg,
-	const struct argv_option *	options,
+	const struct argv_option **	optv,
 	struct argv_meta *		meta)
 {
 	char header[512];
@@ -59,7 +59,7 @@ static int pe_driver_usage(
 		"Usage: %s [options] <file>...\n" "Options:\n",
 		program);
 
-	argv_usage(stdout,header,options,arg);
+	argv_usage(stdout,header,optv,arg);
 	argv_free(meta);
 
 	return PERK_USAGE;
@@ -115,7 +115,7 @@ int pe_get_driver_ctx(
 {
 	struct pe_driver_ctx_impl *	ctx;
 	struct pe_common_ctx		cctx;
-	const struct argv_option *	options;
+	const struct argv_option *	optv[PERK_OPTV_ELEMENTS];
 	struct argv_meta *		meta;
 	struct argv_entry *		entry;
 	size_t				nunits;
@@ -124,9 +124,9 @@ int pe_get_driver_ctx(
 
 	(void)envp;
 
-	options = pe_default_options;
+	argv_optv_init(pe_default_options,optv);
 
-	if (!(meta = argv_get(argv,options,pe_argv_flags(flags))))
+	if (!(meta = argv_get(argv,optv,pe_argv_flags(flags))))
 		return -1;
 
 	pretty	= 0;
@@ -136,7 +136,7 @@ int pe_get_driver_ctx(
 	cctx.drvflags = flags;
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
-		return pe_driver_usage(program,0,options,meta);
+		return pe_driver_usage(program,0,optv,meta);
 
 	/* get options, count units */
 	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
@@ -144,7 +144,7 @@ int pe_get_driver_ctx(
 			switch (entry->tag) {
 				case TAG_HELP:
 					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
-						return pe_driver_usage(program,entry->arg,options,meta);
+						return pe_driver_usage(program,entry->arg,optv,meta);
 
 				case TAG_VERSION:
 					cctx.drvflags |= PERK_DRIVER_VERSION;
