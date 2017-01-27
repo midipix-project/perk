@@ -11,6 +11,7 @@ supported switches:
 	--prefix
 	--exec-prefix
 	--bindir
+	--sbindir
 	--libdir
 	--includedir
 	--mandir
@@ -53,6 +54,7 @@ supported variables:
 	PREFIX
 	EXEC_PREFIX
 	BINDIR
+	SBINDIR
 	LIBDIR
 	INCLUDEDIR
 	MANDIR

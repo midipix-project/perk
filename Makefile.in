@@ -51,6 +51,7 @@ ELF_CONFIG_DEFS 	= @elf_config_defs@
 PREFIX 			= @prefix@
 EXEC_PREFIX 		= @exec_prefix@
 BINDIR 			= @bindir@
+SBINDIR 		= @sbindir@
 LIBDIR 			= @libdir@
 INCLUDEDIR 		= @includedir@
 MANDIR 			= @mandir@
@@ -343,6 +344,7 @@ clean:		clean-implib
 		@echo PREFIX:'                 '$(PREFIX)
 		@echo EXEC_PREFIX:'            '$(EXEC_PREFIX)
 		@echo BINDIR:'                 '$(BINDIR)
+		@echo SBINDIR:'                '$(SBINDIR)
 		@echo LIBDIR:'                 '$(LIBDIR)
 		@echo INCLUDEDIR:'             '$(INCLUDEDIR)
 		@echo MANDIR:'                 '$(MANDIR)
