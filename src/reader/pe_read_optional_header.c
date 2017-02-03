@@ -15,6 +15,7 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	unsigned int			i;
 	struct pe_block *		pdir;
 	const  unsigned char *		mark;
+	const  unsigned char *		etbl;
 
 	struct pe_raw_opt_hdr_std *	astd;
 	struct pe_raw_opt_hdr_vers *	avers;
@@ -31,6 +32,7 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 			aalign	= (struct pe_raw_opt_hdr_align *)&p->opt_hdr_32.coh_section_align;
 			aimg	= (struct pe_raw_opt_hdr_img *)&p->opt_hdr_32.coh_size_of_image;
 			aldr	= (struct pe_raw_opt_hdr_ldr *)&p->opt_hdr_32.coh_loader_flags;
+			etbl	= p->opt_hdr_32.coh_export_tbl;
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
@@ -39,6 +41,7 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 			aalign	= (struct pe_raw_opt_hdr_align *)&p->opt_hdr_64.coh_section_align;
 			aimg	= (struct pe_raw_opt_hdr_img *)&p->opt_hdr_64.coh_size_of_image;
 			aldr	= (struct pe_raw_opt_hdr_ldr *)&p->opt_hdr_64.coh_loader_flags;
+			etbl	= p->opt_hdr_64.coh_export_tbl;
 			break;
 
 		default:
@@ -88,7 +91,7 @@ static int pe_read_optional_header_structs(const union pe_raw_opt_hdr * p, struc
 	if (m->oh_ldr.coh_rva_and_sizes < 0x10)
 		memset(&m->oh_dirs,0,sizeof(m->oh_dirs));
 
-	mark = p->opt_hdr_64.coh_export_tbl;
+	mark = etbl;
 	pdir = &m->oh_dirs.coh_export_tbl;
 
 	for (i=0; i<m->oh_ldr.coh_rva_and_sizes; i++) {
