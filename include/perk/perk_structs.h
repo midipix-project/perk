@@ -40,6 +40,17 @@ struct pe_raw_coff_image_hdr {
 };
 
 
+struct pe_raw_coff_object_hdr {
+	unsigned char	cfh_machine			[0x02];		/* 0x00 */
+	unsigned char	cfh_num_of_sections		[0x02];		/* 0x02 */
+	unsigned char	cfh_time_date_stamp		[0x04];		/* 0x04 */
+	unsigned char	cfh_ptr_to_sym_tbl		[0x04];		/* 0x08 */
+	unsigned char	cfh_num_of_syms			[0x04];		/* 0x0c */
+	unsigned char	cfh_size_of_opt_hdr		[0x02];		/* 0x10 */
+	unsigned char	cfh_characteristics		[0x02];		/* 0x12 */
+};
+
+
 struct pe_raw_opt_hdr_std {
 	unsigned char	coh_magic			[0x02];		/* 0x00 */
 	unsigned char	coh_major_linker_ver		[0x01];		/* 0x02 */
