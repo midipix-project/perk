@@ -198,6 +198,7 @@ perk_api int  pe_get_image_framework	(const struct pe_image_meta *, struct pe_in
 /* low-level api */
 perk_api int  pe_read_dos_header	(const struct pe_raw_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);
 perk_api int  pe_read_coff_header	(const struct pe_raw_coff_image_hdr *,	struct pe_meta_coff_file_hdr *);
+perk_api int  pe_read_object_header	(const struct pe_raw_coff_object_hdr *,	struct pe_meta_coff_file_hdr *);
 perk_api int  pe_read_optional_header	(const union  pe_raw_opt_hdr *,		struct pe_meta_opt_hdr *);
 perk_api int  pe_read_section_header	(const struct pe_raw_sec_hdr *,		struct pe_meta_sec_hdr *);
 perk_api int  pe_read_export_header	(const struct pe_raw_export_hdr *,	struct pe_meta_export_hdr *);
