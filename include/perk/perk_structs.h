@@ -28,7 +28,7 @@ struct pe_raw_image_dos_hdr {
 };
 
 
-struct pe_raw_coff_file_hdr {
+struct pe_raw_coff_image_hdr {
 	unsigned char	cfh_signature			[0x04];		/* 0x00 */
 	unsigned char	cfh_machine			[0x02];		/* 0x04 */
 	unsigned char	cfh_num_of_sections		[0x02];		/* 0x06 */
