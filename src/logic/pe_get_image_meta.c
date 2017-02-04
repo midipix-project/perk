@@ -48,6 +48,9 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	int i;
 	uint32_t low,high;
 
+	if (m->aobj)
+		return -1;
+
 	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
 		low  = m->sectbl[i].sh_virtual_addr;
 		high = low + m->sectbl[i].sh_virtual_size;
@@ -112,6 +115,9 @@ int pe_get_expsym_by_name(
 	const char *	sym;
 	unsigned	i;
 
+	if (m->aobj)
+		return -1;
+
 	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.eh_name_ptr_rva - offset));
 
@@ -141,6 +147,9 @@ int pe_get_expsym_by_index(
 	uint32_t 	offset;
 	uint32_t *	symrva;
 	uintptr_t	symaddr;
+
+	if (m->aobj)
+		return -1;
 
 	if (index >= m->edata.eh_num_of_name_ptrs)
 		return -1;
@@ -177,34 +186,44 @@ int pe_get_image_meta(
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
 
-	m->ados = (struct pe_raw_image_dos_hdr *)base;
+	m->aobj = (struct pe_raw_coff_object_hdr *)base;
 
-	if ((ret = (pe_read_dos_header(m->ados,&m->dos))))
-		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,ret));
+	if (pe_read_object_header(m->aobj,&m->coff)) {
+		m->aobj = 0;
+		m->ados = (struct pe_raw_image_dos_hdr *)base;
 
-	m->acoff = (struct pe_raw_coff_image_hdr *)(base + m->dos.dos_lfanew);
+		if ((ret = (pe_read_dos_header(m->ados,&m->dos))))
+			return pe_free_image_meta_impl(
+				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	if ((ret = (pe_read_coff_header(m->acoff,&m->coff))))
-		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,ret));
+		m->acoff = (struct pe_raw_coff_image_hdr *)(base + m->dos.dos_lfanew);
 
-	mark  = (const unsigned char *)image->addr + m->coff.cfh_ptr_to_sym_tbl;
+		if ((ret = (pe_read_coff_header(m->acoff,&m->coff))))
+			return pe_free_image_meta_impl(
+				m,PERK_CUSTOM_ERROR(dctx,ret));
+	}
+
+	mark  = (const unsigned char *)base + m->coff.cfh_ptr_to_sym_tbl;
 	mark += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
 
 	m->coff.cfh_ptr_to_str_tbl  = m->coff.cfh_ptr_to_sym_tbl;
 	m->coff.cfh_ptr_to_str_tbl += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
 	m->coff.cfh_size_of_str_tbl = pe_read_long(mark);
 
-	mark    = &m->acoff->cfh_signature[0];
-	m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
+	if (m->ados) {
+		mark    = &m->acoff->cfh_signature[0];
+		m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
 
-	if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
-		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,ret));
+		if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
+			return pe_free_image_meta_impl(
+				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-	mark       = &m->aopt->opt_hdr_32.coh_magic[0];
-	m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.cfh_size_of_opt_hdr);
+		mark       = &m->aopt->opt_hdr_32.coh_magic[0];
+		m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.cfh_size_of_opt_hdr);
+	} else {
+		mark       = &m->aobj->cfh_machine[0];
+		m->asectbl = (struct pe_raw_sec_hdr *)(mark + sizeof(*m->aobj));
+	}
 
 	if (!(m->sectbl = calloc(m->coff.cfh_num_of_sections,sizeof(*(m->sectbl)))))
 		return pe_free_image_meta_impl(

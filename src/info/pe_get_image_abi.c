@@ -19,18 +19,35 @@ int pe_get_image_abi(const struct pe_image_meta * m, struct pe_info_string * inf
 {
 	int abi;
 
-	switch (m->opt.oh_std.coh_magic) {
-		case PE_MAGIC_PE32:
-			abi = PE_ABI_PE32;
-			break;
+	if (m->aobj) {
+		switch (m->coff.cfh_machine) {
+			case PE_IMAGE_FILE_MACHINE_I386:
+				abi = PE_ABI_PE32;
+				break;
 
-		case PE_MAGIC_PE32_PLUS:
-			abi = PE_ABI_PE64;
-			break;
+			case PE_IMAGE_FILE_MACHINE_IA64:
+			case PE_IMAGE_FILE_MACHINE_AMD64:
+				abi = PE_ABI_PE64;
+				break;
 
-		default:
-			abi = PE_ABI_UNSUPPORTED;
-			break;
+			default:
+				abi = PE_ABI_UNSUPPORTED;
+				break;
+		}
+	} else {
+		switch (m->opt.oh_std.coh_magic) {
+			case PE_MAGIC_PE32:
+				abi = PE_ABI_PE32;
+				break;
+
+			case PE_MAGIC_PE32_PLUS:
+				abi = PE_ABI_PE64;
+				break;
+
+			default:
+				abi = PE_ABI_UNSUPPORTED;
+				break;
+		}
 	}
 
 	if (infostr)

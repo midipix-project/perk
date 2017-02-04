@@ -105,6 +105,7 @@ struct pe_image_meta {
 	struct pe_raw_image		image;
 	struct pe_raw_image_dos_hdr *	ados;
 	struct pe_raw_coff_image_hdr *	acoff;
+	struct pe_raw_coff_object_hdr *	aobj;
 	union  pe_raw_opt_hdr *		aopt;
 	struct pe_raw_sec_hdr *		asectbl;
 
