@@ -206,9 +206,11 @@ int pe_get_image_meta(
 	mark  = (const unsigned char *)base + m->coff.cfh_ptr_to_sym_tbl;
 	mark += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
 
-	m->coff.cfh_ptr_to_str_tbl  = m->coff.cfh_ptr_to_sym_tbl;
-	m->coff.cfh_ptr_to_str_tbl += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
-	m->coff.cfh_size_of_str_tbl = pe_read_long(mark);
+	if (m->coff.cfh_ptr_to_sym_tbl) {
+		m->coff.cfh_ptr_to_str_tbl  = m->coff.cfh_ptr_to_sym_tbl;
+		m->coff.cfh_ptr_to_str_tbl += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
+		m->coff.cfh_size_of_str_tbl = pe_read_long(mark);
+	}
 
 	if (m->ados) {
 		mark    = &m->acoff->cfh_signature[0];
