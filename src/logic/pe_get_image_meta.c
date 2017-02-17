@@ -284,7 +284,7 @@ int pe_get_image_meta(
 
 	if (m->aidata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pidata->ih_name_rva[0]; pidata++)
+		for (pidata=m->aidata; pe_read_long(pidata->ih_name_rva); pidata++)
 			m->summary.nimplibs++;
 
 		/* import headers */
