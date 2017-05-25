@@ -14,9 +14,23 @@ supported switches:
 	--sbindir
 	--libdir
 	--includedir
+	--oldincludedir
 	--mandir
 	--docdir
 	--libexecdir
+
+	--sysconfdir
+	--sharedstatedir
+	--localstatedir
+	--runstatedir
+	--datarootdir
+	--datadir
+	--infodir
+	--localedir
+	--htmldir
+	--dvidir
+	--pdfdir
+	--psdir
 
 	--build
 	--host
@@ -60,6 +74,19 @@ supported variables:
 	MANDIR
 	DOCDIR
 	LIBEXECDIR
+
+	SYSCONFDIR
+	SHAREDSTATEDIR
+	LOCALSTATEDIR
+	RUNSTATEDIR
+	DATAROOTDIR
+	DATADIR
+	INFODIR
+	LOCALEDIR
+	HTMLDIR
+	DVIDIR
+	PDFDIR
+	PSDIR
 
 	CC
 	CPP

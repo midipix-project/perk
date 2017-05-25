@@ -54,9 +54,23 @@ BINDIR 			= @bindir@
 SBINDIR 		= @sbindir@
 LIBDIR 			= @libdir@
 INCLUDEDIR 		= @includedir@
+OLDINCLUDEDIR 		= @oldincludedir@
 MANDIR 			= @mandir@
 DOCDIR 			= @docdir@
 LIBEXECDIR 		= @libexecdir@
+
+SYSCONFDIR		= @sysconfdir@
+SHAREDSTATEDIR		= @sharedstatedir@
+LOCALSTATEDIR		= @localstatedir@
+RUNSTATEDIR		= @runstatedir@
+DATAROOTDIR		= @datarootdir@
+DATADIR			= @datadir@
+INFODIR			= @infodir@
+LOCALEDIR		= @localedir@
+HTMLDIR			= @htmldir@
+DVIDIR			= @dvidir@
+PDFDIR			= @pdfdir@
+PSDIR			= @psdir@
 
 NATIVE_CC 		= @native_cc@
 NATIVE_OS 		= @native_os@
@@ -347,10 +361,25 @@ clean:		clean-implib
 		@echo SBINDIR:'                '$(SBINDIR)
 		@echo LIBDIR:'                 '$(LIBDIR)
 		@echo INCLUDEDIR:'             '$(INCLUDEDIR)
+		@echo OLDINCLUDEDIR:'          '$(OLDINCLUDEDIR)
 		@echo MANDIR:'                 '$(MANDIR)
 		@echo DOCDIR:'                 '$(DOCDIR)
 		@echo LIBEXECDIR:'             '$(LIBEXECDIR)
 		@echo
+
+.display-exdirs:
+		@echo SYSCONFDIR'              '$(SYSCONFDIR)
+		@echo SHAREDSTATEDIR'          '$(SHAREDSTATEDIR)
+		@echo LOCALSTATEDIR'           '$(LOCALSTATEDIR)
+		@echo RUNSTATEDIR'             '$(RUNSTATEDIR)
+		@echo DATAROOTDIR'             '$(DATAROOTDIR)
+		@echo DATADIR'                 '$(DATADIR)
+		@echo INFODIR'                 '$(INFODIR)
+		@echo LOCALEDIR'               '$(LOCALEDIR)
+		@echo HTMLDIR'                 '$(HTMLDIR)
+		@echo DVIDIR'                  '$(DVIDIR)
+		@echo PDFDIR'                  '$(PDFDIR)
+		@echo PSDIR'                   '$(PSDIR)
 
 .display-build:
 		@echo NATIVE_CC:'              '$(NATIVE_CC)

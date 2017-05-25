@@ -44,9 +44,23 @@ init_vars()
 	mb_sbindir=$SBINDIR
 	mb_libdir=$LIBDIR
 	mb_includedir=$INCLUDEDIR
+	mb_oldincludedir=$OLDINCLUDEDIR
 	mb_mandir=$MANDIR
 	mb_docdir=$DOCDIR
 	mb_libexecdir=$LIBEXECDIR
+
+	mb_sysconfdir=$SYSCONFDIR
+	mb_sharedstatedir=$SHAREDSTATEDIR
+	mb_localstatedir=$LOCALSTATEDIR
+	mb_runstatedir=$RUNSTATEDIR
+	mb_datarootdir=$DATAROOTDIR
+	mb_datadir=$DATADIR
+	mb_infodir=$INFODIR
+	mb_localedir=$LOCALEDIR
+	mb_htmldir=$HTMLDIR
+	mb_dvidir=$DVIDIR
+	mb_pdfdir=$PDFDIR
+	mb_psdir=$PSDIR
 
 
 	# build
@@ -161,10 +175,25 @@ common_defaults()
 	[ -z "$mb_sbindir" ] 		&& mb_sbindir=$mb_exec_prefix/sbin
 	[ -z "$mb_libdir" ] 		&& mb_libdir=$mb_exec_prefix/lib
 	[ -z "$mb_includedir" ]		&& mb_includedir=$mb_prefix/include
+	[ -z "$mb_oldincludedir" ]	&& mb_oldincludedir=$mb_prefix/include
 	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
 	[ -z "$mb_mandir" ] 		&& mb_mandir=$mb_datarootdir/man
 	[ -z "$mb_docdir" ] 		&& mb_docdir=$mb_datarootdir/doc
 	[ -z "$mb_libexecdir" ]		&& mb_libexecdir=$mb_exec_prefix/libexec
+
+	[ -z "$mb_sysconfdir" ] 	&& mb_sysconfdir=$mb_exec_prefix/etc
+	[ -z "$mb_sharedstatedir" ] 	&& mb_sharedstatedir=$mb_prefix/com
+	[ -z "$mb_localstatedir" ] 	&& mb_localstatedir=$mb_prefix/var
+	[ -z "$mb_runstatedir" ] 	&& mb_runstatedir=$mb_localstatedir/run
+	[ -z "$mb_datarootdir" ] 	&& mb_datarootdir=$mb_prefix/share
+	[ -z "$mb_datadir" ] 		&& mb_datadir=$mb_datarootdir
+	[ -z "$mb_infodir" ] 		&& mb_infodir=$mb_datarootdir/info
+	[ -z "$mb_localedir" ] 		&& mb_localedir=$mb_datarootdir/locale
+	[ -z "$mb_htmldir" ] 		&& mb_htmldir=$mb_docdir
+	[ -z "$mb_dvidir" ] 		&& mb_dvidir=$mb_docdir
+	[ -z "$mb_pdfdir" ] 		&& mb_pdfdir=$mb_docdir
+	[ -z "$mb_psdir" ] 		&& mb_psdir=$mb_docdir
+
 
 	# build
 	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build
@@ -453,9 +482,23 @@ config_copy()
 			-e 's^@sbindir@^'"$mb_sbindir"'^g'				\
 			-e 's^@libdir@^'"$mb_libdir"'^g'				\
 			-e 's^@includedir@^'"$mb_includedir"'^g'			\
+			-e 's^@oldincludedir@^'"$mb_oldincludedir"'^g'			\
 			-e 's^@mandir@^'"$mb_mandir"'^g'				\
 			-e 's^@docdir@^'"$mb_docdir"'^g'				\
 			-e 's^@libexecdir@^'"$mb_libexecdir"'^g'			\
+											\
+			-e 's^@sysconfdir@^'"$mb_sysconfdir"'^g'			\
+			-e 's^@sharedstatedir@^'"$mb_sharedstatedir"'^g'		\
+			-e 's^@localstatedir@^'"$mb_localstatedir"'^g'			\
+			-e 's^@runstatedir@^'"$mb_runstatedir"'^g'			\
+			-e 's^@datarootdir@^'"$mb_datarootdir"'^g'			\
+			-e 's^@datadir@^'"$mb_datadir"'^g'				\
+			-e 's^@infodir@^'"$mb_infodir"'^g'				\
+			-e 's^@localedir@^'"$mb_localedir"'^g'				\
+			-e 's^@htmldir@^'"$mb_htmldir"'^g'				\
+			-e 's^@dvidir@^'"$mb_dvidir"'^g'				\
+			-e 's^@pdfdir@^'"$mb_pdfdir"'^g'				\
+			-e 's^@psdir@^'"$mb_psdir"'^g'					\
 											\
 			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
 			-e 's^@native_os@^'"$mb_native_os"'^g'				\
@@ -546,11 +589,52 @@ for arg ; do
 		--includedir=*)
 			mb_includedir=${arg#*=}
 			;;
+		--oldincludedir=*)
+			mb_oldincludedir=${arg#*=}
+			;;
 		--mandir=*)
 			mb_mandir=${arg#*=}
 			;;
 		--libexecdir=*)
 			mb_libexecdir=${arg#*=}
+			;;
+
+
+		--sysconfdir=*)
+			mb_sysconfdir=${arg#*=}
+			;;
+		--sharedstatedir=*)
+			mb_sharedstatedir=${arg#*=}
+			;;
+		--localstatedir=*)
+			mb_localstatedir=${arg#*=}
+			;;
+		--runstatedir=*)
+			mb_runstatedir=${arg#*=}
+			;;
+		--datarootdir=*)
+			mb_datarootdir=${arg#*=}
+			;;
+		--datadir=*)
+			mb_datadir=${arg#*=}
+			;;
+		--infodir=*)
+			mb_infodir=${arg#*=}
+			;;
+		--localedir=*)
+			mb_localedir=${arg#*=}
+			;;
+		--htmldir=*)
+			mb_htmldir=${arg#*=}
+			;;
+		--dvidir=*)
+			mb_dvidir=${arg#*=}
+			;;
+		--pdfdir=*)
+			mb_pdfdir=${arg#*=}
+			;;
+		--psdir=*)
+			mb_psdir=${arg#*=}
 			;;
 
 
