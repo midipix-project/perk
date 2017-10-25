@@ -8,5 +8,6 @@ OS_LIBDEF_EXT	= .def
 OS_ARCHIVE_EXT	= .a
 OS_SONAME	= copy
 OS_BINFMT	= PE
+OS_IMPLIB_TOOL	= dlltool
 
 CFLAGS_PIC	=

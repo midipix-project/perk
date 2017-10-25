@@ -19,9 +19,6 @@ implib-solink:		shared-lib $(IMPLIB_SOLINK)
 
 $(IMPLIB_DEF):		shared-lib
 
-$(IMPLIB_VER):		$(IMPLIB_DEF)
-			$(DLLTOOL) -l $(IMPLIB_VER) -d $(IMPLIB_DEF) -D $(DSO_VER)
-
 install-implib:		install-implib-ver \
 			package-install-implib-soname \
 			package-install-implib-solink
@@ -36,6 +33,20 @@ clean-implib:
 			rm -f $(IMPLIB_VER)
 			rm -f $(IMPLIB_SONAME)
 			rm -f $(IMPLIB_SOLINK)
+
+
+ifeq ($(OS_IMPLIB_TOOL),mdso)
+
+$(IMPLIB_VER):		$(IMPLIB_DEF)
+			$(MDSO) -m $(HOST_BITS) -i $(IMPLIB_VER) -n $(DSO_VER) $(IMPLIB_DEF)
+
+else ifeq ($(OS_IMPLIB_TOOL),dlltool)
+
+$(IMPLIB_VER):		$(IMPLIB_DEF)
+			$(DLLTOOL) -l $(IMPLIB_VER) -d $(IMPLIB_DEF) -D $(DSO_VER)
+
+endif
+
 
 
 ifeq ($(AVOID_VERSION),yes)
@@ -53,8 +64,18 @@ package-install-implib-soname:	install-implib-soname
 package-install-implib-solink:	install-implib-solink
 
 
+ifeq ($(OS_IMPLIB_TOOL),mdso)
+
+$(IMPLIB_SONAME):	$(IMPLIB_DEF)
+			$(MDSO) -m $(HOST_BITS) -i $(IMPLIB_SONAME) -n $(DSO_SONAME) $(IMPLIB_DEF)
+
+else ifeq ($(OS_IMPLIB_TOOL),dlltool)
+
 $(IMPLIB_SONAME):	$(IMPLIB_DEF)
 			$(DLLTOOL) -l $(IMPLIB_SONAME) -d $(IMPLIB_DEF) -D $(DSO_SONAME)
+
+endif
+
 
 $(IMPLIB_SOLINK):	$(IMPLIB_SONAME)
 			rm -f $(IMPLIB_SOLINK).tmp

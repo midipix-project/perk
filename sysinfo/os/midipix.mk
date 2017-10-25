@@ -8,3 +8,4 @@ OS_LIBDEF_EXT	= .so.def
 OS_ARCHIVE_EXT	= .a
 OS_SONAME	= symlink
 OS_BINFMT	= PE
+OS_IMPLIB_TOOL	= mdso
