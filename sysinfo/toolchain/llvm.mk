@@ -17,3 +17,5 @@ OBJCOPY		= $(CROSS_COMPILE)objcopy
 READELF		= $(CROSS_COMPILE)readelf
 DLLTOOL		= $(CROSS_COMPILE)dlltool
 MDSO		= $(CROSS_COMPILE)mdso
+MC		= $(CROSS_COMPILE)windmc
+RC		= $(CROSS_COMPILE)windres
