@@ -8,6 +8,7 @@ AVOID_VERSION		= @avoid_version@
 
 BUILD 			= @build@
 HOST 			= @host@
+CCHOST 			= @cchost@
 TARGET 			= @target@
 ARCH 			= @arch@
 COMPILER 		= @compiler@
@@ -231,6 +232,9 @@ dirs.tag:
 		mkdir -p lib
 		touch dirs.tag
 
+cchost:
+		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
+
 host.tag:	Makefile
 		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
@@ -283,6 +287,7 @@ clean:		clean-implib
 .display-env:
 		@echo BUILD:'                  '$(BUILD)
 		@echo HOST:'                   '$(HOST)
+		@echo CCHOST:'                 '$(CCHOST)
 		@echo TARGET:'                 '$(TARGET)
 		@echo ARCH:'                   '$(ARCH)
 		@echo COMPILER:'               '$(COMPILER)
@@ -409,8 +414,8 @@ clean:		clean-implib
 		@echo $(CFLAGS)
 
 
-.PHONY:		all install shared static app \
-		package-app \
+.PHONY:		cchost package-app \
+		all install shared static app \
 		shared-objs shared-lib \
 		shared-soname shared-solink \
 		package-shared-soname package-shared-solink \

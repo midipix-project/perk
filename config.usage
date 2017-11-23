@@ -34,6 +34,7 @@ supported switches:
 
 	--build
 	--host
+	--cchost
 	--target
 	--arch
 	--compiler
@@ -94,6 +95,7 @@ supported variables:
 
 	BUILD
 	HOST
+	CCHOST
 	TARGET
 	ARCH
 	COMPILER

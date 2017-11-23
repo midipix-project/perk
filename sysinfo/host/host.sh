@@ -15,7 +15,7 @@ host_test()
 		exit 2
 	fi
 
-	$mb_compiler -dM -E - < /dev/null > /dev/null && return 0
+	$mb_compiler $mb_cflags -dumpmachine && return 0
 
 	error_msg "config error: invalid compiler."
 	exit 2

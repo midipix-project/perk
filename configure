@@ -66,6 +66,7 @@ init_vars()
 	# build
 	mb_build=$BUILD
 	mb_host=$HOST
+	mb_cchost=$CCHOST
 	mb_target=$TARGET
 	mb_arch=$ARCH
 	mb_compiler=$COMPILER
@@ -198,6 +199,7 @@ common_defaults()
 	# build
 	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build
 	[ -z "$mb_host" ] 		&& mb_host=$mb_default_host
+	[ -z "$mb_cchost" ] 		&& mb_cchost=$mb_default_cchost
 	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
 	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
 	[ -z "$mb_compiler" ] 		&& mb_compiler=$mb_default_compiler
@@ -514,7 +516,21 @@ config_copy()
 			-e 's^@disable_frontend@^'"$mb_disable_frontend"'^g'		\
 			-e 's^@disable_static@^'"$mb_disable_static"'^g'		\
 			-e 's^@disable_shared@^'"$mb_disable_shared"'^g'		\
-		$mb_project_dir/Makefile.in > $mb_pwd/Makefile
+		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp || exit 2
+
+	if [ -z "$mb_cchost" ]; then
+		if [ "$mb_host" = 'native' ]; then
+			mb_cchost=`make -s -f $mb_pwd/Makefile.tmp cchost`
+		else
+			mb_cchost=$mb_host
+		fi
+	fi
+
+	sed -e 's^@cchost@^'"$mb_cchost"'^g' $mb_pwd/Makefile.tmp \
+	  > $mb_pwd/Makefile.host                  || exit 2
+
+	rm  $mb_pwd/Makefile.tmp                   || exit 2
+	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile || exit 2
 }
 
 
@@ -644,6 +660,9 @@ for arg ; do
 			;;
 		--host=*)
 			mb_host=${arg#*=}
+			;;
+		--cchost=*)
+			mb_cchost=${arg#*=}
 			;;
 		--target=*)
 			mb_target=${arg#*=}

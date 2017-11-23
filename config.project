@@ -8,6 +8,7 @@ mb_avoid_version=no
 # build
 mb_default_build=
 mb_default_host=
+mb_default_cchost=
 mb_default_target=
 mb_default_arch=
 mb_default_compiler=
