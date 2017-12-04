@@ -115,7 +115,7 @@ int pe_get_expsym_by_name(
 	const char *	sym;
 	unsigned	i;
 
-	if (m->aobj)
+	if (m->aobj || !m->hedata)
 		return -1;
 
 	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
