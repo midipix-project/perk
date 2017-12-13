@@ -27,7 +27,7 @@ static const char * const pe_framework_str[PE_FRAMEWORK_CAP] = {
 
 static bool pe_image_is_psxscl(const struct pe_image_meta * m)
 {
-	return (!m->mstats.nimplibs
+	return (!m->m_stats.nimplibs
 		&& !pe_get_expsym_by_name(m,"__psx_init",0));
 }
 
@@ -35,8 +35,8 @@ static bool pe_image_is_cygwin(const struct pe_image_meta * m)
 {
 	int i;
 
-	for (i=0; i<m->mstats.nimplibs; i++)
-		if (!(strcmp(m->idata[i].ih_name,"cygwin1.dll")))
+	for (i=0; i<m->m_stats.nimplibs; i++)
+		if (!(strcmp(m->m_idata[i].ih_name,"cygwin1.dll")))
 			return true;
 
 	return false;
@@ -46,8 +46,8 @@ static bool pe_image_is_msys(const struct pe_image_meta * m)
 {
 	int i;
 
-	for (i=0; i<m->mstats.nimplibs; i++)
-		if (!(strcmp(m->idata[i].ih_name,"msys-2.0.dll")))
+	for (i=0; i<m->m_stats.nimplibs; i++)
+		if (!(strcmp(m->m_idata[i].ih_name,"msys-2.0.dll")))
 			return true;
 
 	return false;
@@ -85,13 +85,13 @@ int pe_get_image_framework(const struct pe_image_meta * m, struct pe_info_string
 	else if (pe_image_is_mingw(m))
 		framework = PE_FRAMEWORK_MINGW;
 
-	else if (m->opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_POSIX_CUI)
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_POSIX_CUI)
 		framework = PE_FRAMEWORK_SUACON;
 
-	else if (m->opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_CUI)
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_CUI)
 		framework = PE_FRAMEWORK_WINCON;
 
-	else if (m->opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_GUI)
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_GUI)
 		framework = PE_FRAMEWORK_WIN32;
 
 	else

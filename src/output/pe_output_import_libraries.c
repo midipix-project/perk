@@ -50,7 +50,7 @@ int pe_output_import_libraries(
 	unsigned			j;
 	const struct pe_common_ctx *	cctx = dctx->cctx;
 
-	if (!m->mstats.nimplibs)
+	if (!m->m_stats.nimplibs)
 		return 0;
 
 	if (!fout)
@@ -59,16 +59,16 @@ int pe_output_import_libraries(
 	if ((pretty_header(cctx,fout)) < 0)
 		return PERK_FILE_ERROR(dctx);
 
-	for (i=0; i<m->mstats.nimplibs; i++) {
-		if ((pretty_implib_header(cctx,m->idata[i].ih_name,fout)) < 0)
+	for (i=0; i<m->m_stats.nimplibs; i++) {
+		if ((pretty_implib_header(cctx,m->m_idata[i].ih_name,fout)) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 		if (cctx->fmtflags & PERK_OUTPUT_IMPORT_SYMS)
-			for (j=0; j<m->idata[i].ih_count; j++)
-				if (m->idata[i].ih_items[j].ii_name)
+			for (j=0; j<m->m_idata[i].ih_count; j++)
+				if (m->m_idata[i].ih_items[j].ii_name)
 					if ((pretty_implib_item(
 							cctx,
-							m->idata[i].ih_items[j].ii_name,
+							m->m_idata[i].ih_items[j].ii_name,
 							fout)) < 0)
 						return PERK_FILE_ERROR(dctx);
 	}

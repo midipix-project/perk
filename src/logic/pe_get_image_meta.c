@@ -18,11 +18,11 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 	int i;
 
 	if (meta) {
-		for (i=0; i<meta->mstats.nimplibs; i++)
-			free(meta->idata[i].ih_items);
+		for (i=0; i<meta->m_stats.nimplibs; i++)
+			free(meta->m_idata[i].ih_items);
 
-		free(meta->idata);
-		free(meta->sectbl);
+		free(meta->m_idata);
+		free(meta->m_sectbl);
 		free(meta);
 	}
 
@@ -36,8 +36,8 @@ void pe_free_image_meta(struct pe_image_meta * meta)
 
 int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
 {
-	int i; for (i=0; i<m->coff.cfh_num_of_sections; i++)
-		if (!(strcmp(name,m->sectbl[i].sh_name)))
+	int i; for (i=0; i<m->m_coff.cfh_num_of_sections; i++)
+		if (!(strcmp(name,m->m_sectbl[i].sh_name)))
 			return i;
 
 	return -1;
@@ -51,9 +51,9 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	if (m->aobj)
 		return -1;
 
-	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].sh_virtual_addr;
-		high = low + m->sectbl[i].sh_virtual_size;
+	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
+		low  = m->m_sectbl[i].sh_virtual_addr;
+		high = low + m->m_sectbl[i].sh_virtual_size;
 
 		if ((block->dh_rva >= low) && (block->dh_rva + block->dh_size <= high))
 			return i;
@@ -67,12 +67,12 @@ int pe_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32
 	int i;
 	uint32_t low,high;
 
-	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].sh_virtual_addr;
-		high = low + m->sectbl[i].sh_virtual_size;
+	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
+		low  = m->m_sectbl[i].sh_virtual_addr;
+		high = low + m->m_sectbl[i].sh_virtual_size;
 
 		if ((rva >= low) && (rva < high)) {
-			*roffset = (rva - low) + m->sectbl[i].sh_ptr_to_raw_data;
+			*roffset = (rva - low) + m->m_sectbl[i].sh_ptr_to_raw_data;
 			return 0;
 		}
 	}
@@ -85,12 +85,12 @@ int pe_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, ui
 	int i;
 	uint32_t low,high,ref;
 
-	for (i=0, ref=~0; i<m->coff.cfh_num_of_sections; i++) {
-		low  = m->sectbl[i].sh_ptr_to_raw_data;
-		high = low + m->sectbl[i].sh_virtual_size;
+	for (i=0, ref=~0; i<m->m_coff.cfh_num_of_sections; i++) {
+		low  = m->m_sectbl[i].sh_ptr_to_raw_data;
+		high = low + m->m_sectbl[i].sh_virtual_size;
 
 		if ((roffset >= low) && (roffset < high)) {
-			*rva = (roffset - low) + m->sectbl[i].sh_virtual_addr;
+			*rva = (roffset - low) + m->m_sectbl[i].sh_virtual_addr;
 			return 0;
 		} else if (ref > low) {
 			ref = low;
@@ -119,9 +119,9 @@ int pe_get_expsym_by_name(
 		return -1;
 
 	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->edata.eh_name_ptr_rva - offset));
+	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
 
-	for (i=0; i<m->edata.eh_num_of_name_ptrs; i++) {
+	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++) {
 		sym = (const char *)m->image.addr + symrva[i] - offset;
 
 		if (!(strcmp(sym,name))) {
@@ -151,12 +151,12 @@ int pe_get_expsym_by_index(
 	if (m->aobj)
 		return -1;
 
-	if (index >= m->edata.eh_num_of_name_ptrs)
+	if (index >= m->m_edata.eh_num_of_name_ptrs)
 		return -1;
 
 	if (expsym) {
 		offset  = m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
-		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->edata.eh_name_ptr_rva - offset));
+		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
 		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
 
 		expsym->name    = (const char *)symaddr;
@@ -188,78 +188,78 @@ int pe_get_image_meta(
 
 	m->aobj = (struct pe_raw_coff_object_hdr *)base;
 
-	if (pe_read_object_header(m->aobj,&m->coff)) {
+	if (pe_read_object_header(m->aobj,&m->m_coff)) {
 		m->aobj = 0;
 		m->ados = (struct pe_raw_image_dos_hdr *)base;
 
-		if ((ret = (pe_read_dos_header(m->ados,&m->dos))))
+		if ((ret = (pe_read_dos_header(m->ados,&m->m_dos))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-		m->acoff = (struct pe_raw_coff_image_hdr *)(base + m->dos.dos_lfanew);
+		m->acoff = (struct pe_raw_coff_image_hdr *)(base + m->m_dos.dos_lfanew);
 
-		if ((ret = (pe_read_coff_header(m->acoff,&m->coff))))
+		if ((ret = (pe_read_coff_header(m->acoff,&m->m_coff))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 	}
 
-	mark  = (const unsigned char *)base + m->coff.cfh_ptr_to_sym_tbl;
-	mark += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
+	mark  = (const unsigned char *)base + m->m_coff.cfh_ptr_to_sym_tbl;
+	mark += m->m_coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
 
-	if (m->coff.cfh_ptr_to_sym_tbl) {
-		m->coff.cfh_ptr_to_str_tbl  = m->coff.cfh_ptr_to_sym_tbl;
-		m->coff.cfh_ptr_to_str_tbl += m->coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
-		m->coff.cfh_size_of_str_tbl = pe_read_long(mark);
+	if (m->m_coff.cfh_ptr_to_sym_tbl) {
+		m->m_coff.cfh_ptr_to_str_tbl  = m->m_coff.cfh_ptr_to_sym_tbl;
+		m->m_coff.cfh_ptr_to_str_tbl += m->m_coff.cfh_num_of_syms * sizeof(struct pe_raw_coff_symbol);
+		m->m_coff.cfh_size_of_str_tbl = pe_read_long(mark);
 	}
 
 	if (m->ados) {
 		mark    = &m->acoff->cfh_signature[0];
 		m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
 
-		if ((ret = (pe_read_optional_header(m->aopt,&m->opt))))
+		if ((ret = (pe_read_optional_header(m->aopt,&m->m_opt))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
 		mark       = &m->aopt->opt_hdr_32.coh_magic[0];
-		m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->coff.cfh_size_of_opt_hdr);
+		m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->m_coff.cfh_size_of_opt_hdr);
 	} else {
 		mark       = &m->aobj->cfh_machine[0];
 		m->asectbl = (struct pe_raw_sec_hdr *)(mark + sizeof(*m->aobj));
 	}
 
-	if (!(m->sectbl = calloc(m->coff.cfh_num_of_sections,sizeof(*(m->sectbl)))))
+	if (!(m->m_sectbl = calloc(m->m_coff.cfh_num_of_sections,sizeof(*(m->m_sectbl)))))
 		return pe_free_image_meta_impl(
 			m,PERK_SYSTEM_ERROR(dctx));
 
-	for (i=0; i<m->coff.cfh_num_of_sections; i++) {
-		pe_read_section_header(&m->asectbl[i],&m->sectbl[i]);
+	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
+		pe_read_section_header(&m->asectbl[i],&m->m_sectbl[i]);
 
-		if (m->sectbl[i].sh_name[0] == '/')
-			if ((l = strtol(&m->sectbl[i].sh_name[1],0,10)) > 0)
-				if (l < m->coff.cfh_size_of_str_tbl)
-					m->sectbl[i].sh_long_name = base + m->coff.cfh_ptr_to_str_tbl + l;
+		if (m->m_sectbl[i].sh_name[0] == '/')
+			if ((l = strtol(&m->m_sectbl[i].sh_name[1],0,10)) > 0)
+				if (l < m->m_coff.cfh_size_of_str_tbl)
+					m->m_sectbl[i].sh_long_name = base + m->m_coff.cfh_ptr_to_str_tbl + l;
 	}
 
 	/* .edata */
 	i = pe_get_named_section_index(m,".edata");
-	s = pe_get_block_section_index(m,&m->opt.oh_dirs.coh_export_tbl);
+	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_export_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
-		m->hedata = &m->sectbl[s];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[s].sh_ptr_to_raw_data
-				+ m->opt.oh_dirs.coh_export_tbl.dh_rva - m->sectbl[s].sh_virtual_addr);
+		m->hedata = &m->m_sectbl[s];
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
+				+ m->m_opt.oh_dirs.coh_export_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
-		m->hedata = &m->sectbl[i];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->sectbl[i].sh_ptr_to_raw_data);
+		m->hedata = &m->m_sectbl[i];
+		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
 	if (m->aedata) {
-		pe_read_export_header(m->aedata,&m->edata);
-		m->mstats.nexpsyms = m->edata.eh_num_of_name_ptrs;
+		pe_read_export_header(m->aedata,&m->m_edata);
+		m->m_stats.nexpsyms = m->m_edata.eh_num_of_name_ptrs;
 	}
 
 	/* .idata */
@@ -267,83 +267,83 @@ int pe_get_image_meta(
 	union  pe_raw_import_lookup *	pitem;
 
 	i = pe_get_named_section_index(m,".idata");
-	s = pe_get_block_section_index(m,&m->opt.oh_dirs.coh_import_tbl);
+	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_import_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
 			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
-		m->hidata = &m->sectbl[s];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[s].sh_ptr_to_raw_data
-				+ m->opt.oh_dirs.coh_import_tbl.dh_rva - m->sectbl[s].sh_virtual_addr);
+		m->hidata = &m->m_sectbl[s];
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
+				+ m->m_opt.oh_dirs.coh_import_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
-		m->hidata = &m->sectbl[i];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->sectbl[i].sh_ptr_to_raw_data);
+		m->hidata = &m->m_sectbl[i];
+		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
 	if (m->aidata) {
 		/* num of implibs */
 		for (pidata=m->aidata; pe_read_long(pidata->ih_name_rva); pidata++)
-			m->mstats.nimplibs++;
+			m->m_stats.nimplibs++;
 
 		/* import headers */
-		if (!(m->idata = calloc(m->mstats.nimplibs,sizeof(*m->idata))))
+		if (!(m->m_idata = calloc(m->m_stats.nimplibs,sizeof(*m->m_idata))))
 			return pe_free_image_meta_impl(
 				m,PERK_SYSTEM_ERROR(dctx));
 
-		for (i=0; i<m->mstats.nimplibs; i++) {
-			pe_read_import_header(&m->aidata[i],&m->idata[i]);
+		for (i=0; i<m->m_stats.nimplibs; i++) {
+			pe_read_import_header(&m->aidata[i],&m->m_idata[i]);
 
-			m->idata[i].ih_name = base + m->hidata->sh_ptr_to_raw_data
-						   + m->idata[i].ih_name_rva
+			m->m_idata[i].ih_name = base + m->hidata->sh_ptr_to_raw_data
+						   + m->m_idata[i].ih_name_rva
 						   - m->hidata->sh_virtual_addr;
 
-			if (m->idata[i].ih_import_lookup_tbl_rva)
-				m->idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->idata[i].ih_import_lookup_tbl_rva
+			if (m->m_idata[i].ih_import_lookup_tbl_rva)
+				m->m_idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
+							+ m->m_idata[i].ih_import_lookup_tbl_rva
 							- m->hidata->sh_virtual_addr);
 
 			/* items */
 			uint32_t * hint;
-			m->idata[i].ih_count = 0;
+			m->m_idata[i].ih_count = 0;
 
-			if (m->idata[i].ih_import_lookup_tbl_rva) {
-				pitem = m->idata[i].ih_aitems;
+			if (m->m_idata[i].ih_import_lookup_tbl_rva) {
+				pitem = m->m_idata[i].ih_aitems;
 				hint  = (uint32_t *)pitem->ii_hint_name_tbl_rva;
 
 				for (; *hint; hint=(uint32_t *)((++pitem)->ii_hint_name_tbl_rva))
-					m->idata[i].ih_count++;
+					m->m_idata[i].ih_count++;
 
-				if (!(m->idata[i].ih_items = calloc(m->idata[i].ih_count,sizeof(*(m->idata[i].ih_items)))))
+				if (!(m->m_idata[i].ih_items = calloc(m->m_idata[i].ih_count,sizeof(*(m->m_idata[i].ih_items)))))
 					return pe_free_image_meta_impl(
 						m,PERK_SYSTEM_ERROR(dctx));
 			}
 
-			for (j=0; j<m->idata[i].ih_count; j++) {
+			for (j=0; j<m->m_idata[i].ih_count; j++) {
 				if ((ret = pe_read_import_lookup(
-						&(m->idata[i].ih_aitems[j]),
-						&(m->idata[i].ih_items[j]),
-						m->opt.oh_std.coh_magic)))
+						&(m->m_idata[i].ih_aitems[j]),
+						&(m->m_idata[i].ih_items[j]),
+						m->m_opt.oh_std.coh_magic)))
 					return pe_free_image_meta_impl(
 						m,PERK_CUSTOM_ERROR(dctx,ret));
 
-				switch (m->opt.oh_std.coh_magic) {
+				switch (m->m_opt.oh_std.coh_magic) {
 					case PE_MAGIC_PE32:
-						m->idata[i].ih_items[j].ii_flags = m->idata[i].ih_items[j].u.ii_import_lookup_entry_32;
+						m->m_idata[i].ih_items[j].ii_flags = m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_32;
 						break;
 
 					case PE_MAGIC_PE32_PLUS:
-						m->idata[i].ih_items[j].ii_flags = (m->idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 32);
+						m->m_idata[i].ih_items[j].ii_flags = (m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 32);
 						break;
 				}
 
-				if (!m->idata[i].ih_items[j].ii_flags) {
+				if (!m->m_idata[i].ih_items[j].ii_flags) {
 					struct pe_raw_hint_name_entry * pentry =
 						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
+							+ m->m_idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
 
-					m->idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
+					m->m_idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
 				}
 			}
 		}

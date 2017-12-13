@@ -53,9 +53,9 @@ int pe_output_export_symbols(
 
 	mark	= m->image.addr;
 	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)(mark + m->edata.eh_name_ptr_rva - offset);
+	symrva	= (uint32_t *)(mark + m->m_edata.eh_name_ptr_rva - offset);
 
-	for (i=0; i<m->edata.eh_num_of_name_ptrs; i++)
+	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++)
 		if ((pretty_export_item(
 				cctx,
 				&mark[symrva[i] - offset],

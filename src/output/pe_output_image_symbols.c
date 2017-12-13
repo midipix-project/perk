@@ -34,12 +34,12 @@ int pe_output_image_symbols(
 	}
 
 	mark   = (char *)meta->image.addr;
-	symtbl = (struct pe_raw_coff_symbol *)(mark + meta->coff.cfh_ptr_to_sym_tbl);
+	symtbl = (struct pe_raw_coff_symbol *)(mark + meta->m_coff.cfh_ptr_to_sym_tbl);
 
-	for (i=0; i<meta->coff.cfh_num_of_syms; i++) {
+	for (i=0; i<meta->m_coff.cfh_num_of_syms; i++) {
 		pe_read_coff_symbol(
 			&symtbl[i],&symrec,
-			&meta->coff,meta->image.addr);
+			&meta->m_coff,meta->image.addr);
 
 		if (fprintf(fout,"%s%s\n",
 				dash,

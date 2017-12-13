@@ -90,16 +90,16 @@ struct pe_meta_stats {
 };
 
 struct pe_image_meta {
-	struct pe_meta_stats		mstats;
-	struct pe_meta_image_dos_hdr	dos;
-	struct pe_meta_coff_file_hdr	coff;
-	struct pe_meta_opt_hdr		opt;
-	struct pe_meta_sec_hdr *	sectbl;
+	struct pe_meta_stats		m_stats;
+	struct pe_meta_image_dos_hdr	m_dos;
+	struct pe_meta_coff_file_hdr	m_coff;
+	struct pe_meta_opt_hdr		m_opt;
+	struct pe_meta_sec_hdr *	m_sectbl;
 
-	struct pe_meta_export_hdr	edata;
+	struct pe_meta_export_hdr	m_edata;
+	struct pe_meta_import_hdr *	m_idata;
+
 	struct pe_meta_sec_hdr *	hedata;
-
-	struct pe_meta_import_hdr *	idata;
 	struct pe_meta_sec_hdr *	hidata;
 
 	struct pe_raw_image		image;
