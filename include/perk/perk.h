@@ -70,10 +70,10 @@ struct pe_raw_image {
 };
 
 struct pe_expsym {
-	const char *	name;
-	void *		eaddr;
-	void *		maddr;
-	uint32_t	roffset;
+	const char *	s_name;
+	void *		s_eaddr;
+	void *		s_maddr;
+	uint32_t	s_roffset;
 };
 
 struct pe_meta_stats {

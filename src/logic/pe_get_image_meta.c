@@ -126,10 +126,10 @@ int pe_get_expsym_by_name(
 
 		if (!(strcmp(sym,name))) {
 			if (expsym) {
-				expsym->name    = sym;
-				expsym->eaddr   = 0;
-				expsym->maddr   = 0;
-				expsym->roffset = 0;
+				expsym->s_name    = sym;
+				expsym->s_eaddr   = 0;
+				expsym->s_maddr   = 0;
+				expsym->s_roffset = 0;
 			}
 
 			return 0;
@@ -159,10 +159,10 @@ int pe_get_expsym_by_index(
 		symrva  = (uint32_t *)((uintptr_t)m->r_image.map_addr + (m->m_edata.eh_name_ptr_rva - offset));
 		symaddr = (uintptr_t)m->r_image.map_addr + symrva[index] - offset;
 
-		expsym->name    = (const char *)symaddr;
-		expsym->eaddr   = 0;
-		expsym->maddr   = 0;
-		expsym->roffset = 0;
+		expsym->s_name    = (const char *)symaddr;
+		expsym->s_eaddr   = 0;
+		expsym->s_maddr   = 0;
+		expsym->s_roffset = 0;
 	}
 
 	return 0;
