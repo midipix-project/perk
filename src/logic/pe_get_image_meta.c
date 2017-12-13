@@ -18,7 +18,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 	int i;
 
 	if (meta) {
-		for (i=0; i<meta->summary.nimplibs; i++)
+		for (i=0; i<meta->mstats.nimplibs; i++)
 			free(meta->idata[i].ih_items);
 
 		free(meta->idata);
@@ -259,7 +259,7 @@ int pe_get_image_meta(
 
 	if (m->aedata) {
 		pe_read_export_header(m->aedata,&m->edata);
-		m->summary.nexpsyms = m->edata.eh_num_of_name_ptrs;
+		m->mstats.nexpsyms = m->edata.eh_num_of_name_ptrs;
 	}
 
 	/* .idata */
@@ -285,14 +285,14 @@ int pe_get_image_meta(
 	if (m->aidata) {
 		/* num of implibs */
 		for (pidata=m->aidata; pe_read_long(pidata->ih_name_rva); pidata++)
-			m->summary.nimplibs++;
+			m->mstats.nimplibs++;
 
 		/* import headers */
-		if (!(m->idata = calloc(m->summary.nimplibs,sizeof(*m->idata))))
+		if (!(m->idata = calloc(m->mstats.nimplibs,sizeof(*m->idata))))
 			return pe_free_image_meta_impl(
 				m,PERK_SYSTEM_ERROR(dctx));
 
-		for (i=0; i<m->summary.nimplibs; i++) {
+		for (i=0; i<m->mstats.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->idata[i]);
 
 			m->idata[i].ih_name = base + m->hidata->sh_ptr_to_raw_data

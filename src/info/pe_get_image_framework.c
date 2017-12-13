@@ -27,7 +27,7 @@ static const char * const pe_framework_str[PE_FRAMEWORK_CAP] = {
 
 static bool pe_image_is_psxscl(const struct pe_image_meta * m)
 {
-	return (!m->summary.nimplibs
+	return (!m->mstats.nimplibs
 		&& !pe_get_expsym_by_name(m,"__psx_init",0));
 }
 
@@ -35,7 +35,7 @@ static bool pe_image_is_cygwin(const struct pe_image_meta * m)
 {
 	int i;
 
-	for (i=0; i<m->summary.nimplibs; i++)
+	for (i=0; i<m->mstats.nimplibs; i++)
 		if (!(strcmp(m->idata[i].ih_name,"cygwin1.dll")))
 			return true;
 
@@ -46,7 +46,7 @@ static bool pe_image_is_msys(const struct pe_image_meta * m)
 {
 	int i;
 
-	for (i=0; i<m->summary.nimplibs; i++)
+	for (i=0; i<m->mstats.nimplibs; i++)
 		if (!(strcmp(m->idata[i].ih_name,"msys-2.0.dll")))
 			return true;
 
