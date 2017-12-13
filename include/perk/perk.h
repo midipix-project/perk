@@ -99,8 +99,8 @@ struct pe_image_meta {
 	struct pe_meta_export_hdr	m_edata;
 	struct pe_meta_import_hdr *	m_idata;
 
-	struct pe_meta_sec_hdr *	hedata;
-	struct pe_meta_sec_hdr *	hidata;
+	struct pe_meta_sec_hdr *	h_edata;
+	struct pe_meta_sec_hdr *	h_idata;
 
 	struct pe_raw_image		image;
 	struct pe_raw_image_dos_hdr *	ados;

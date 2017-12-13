@@ -115,10 +115,10 @@ int pe_get_expsym_by_name(
 	const char *	sym;
 	unsigned	i;
 
-	if (m->aobj || !m->hedata)
+	if (m->aobj || !m->h_edata)
 		return -1;
 
-	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
+	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++) {
@@ -155,7 +155,7 @@ int pe_get_expsym_by_index(
 		return -1;
 
 	if (expsym) {
-		offset  = m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
+		offset  = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
 		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
 		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
 
@@ -249,11 +249,11 @@ int pe_get_image_meta(
 			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
-		m->hedata = &m->m_sectbl[s];
+		m->h_edata = &m->m_sectbl[s];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_export_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
-		m->hedata = &m->m_sectbl[i];
+		m->h_edata = &m->m_sectbl[i];
 		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
@@ -274,11 +274,11 @@ int pe_get_image_meta(
 			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
-		m->hidata = &m->m_sectbl[s];
+		m->h_idata = &m->m_sectbl[s];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_import_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
-		m->hidata = &m->m_sectbl[i];
+		m->h_idata = &m->m_sectbl[i];
 		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
@@ -295,14 +295,14 @@ int pe_get_image_meta(
 		for (i=0; i<m->m_stats.nimplibs; i++) {
 			pe_read_import_header(&m->aidata[i],&m->m_idata[i]);
 
-			m->m_idata[i].ih_name = base + m->hidata->sh_ptr_to_raw_data
+			m->m_idata[i].ih_name = base + m->h_idata->sh_ptr_to_raw_data
 						   + m->m_idata[i].ih_name_rva
-						   - m->hidata->sh_virtual_addr;
+						   - m->h_idata->sh_virtual_addr;
 
 			if (m->m_idata[i].ih_import_lookup_tbl_rva)
-				m->m_idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->hidata->sh_ptr_to_raw_data
+				m->m_idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->h_idata->sh_ptr_to_raw_data
 							+ m->m_idata[i].ih_import_lookup_tbl_rva
-							- m->hidata->sh_virtual_addr);
+							- m->h_idata->sh_virtual_addr);
 
 			/* items */
 			uint32_t * hint;
@@ -340,8 +340,8 @@ int pe_get_image_meta(
 
 				if (!m->m_idata[i].ih_items[j].ii_flags) {
 					struct pe_raw_hint_name_entry * pentry =
-						(struct pe_raw_hint_name_entry *)(base + m->hidata->sh_ptr_to_raw_data
-							+ m->m_idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->hidata->sh_virtual_addr);
+						(struct pe_raw_hint_name_entry *)(base + m->h_idata->sh_ptr_to_raw_data
+							+ m->m_idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->h_idata->sh_virtual_addr);
 
 					m->m_idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
 				}

@@ -42,7 +42,7 @@ int pe_output_export_symbols(
 	unsigned			i;
 	const struct pe_common_ctx *	cctx = dctx->cctx;
 
-	if (!m->hedata)
+	if (!m->h_edata)
 		return 0;
 
 	if (!fout)
@@ -52,7 +52,7 @@ int pe_output_export_symbols(
 		return PERK_FILE_ERROR(dctx);
 
 	mark	= m->image.addr;
-	offset	= m->hedata->sh_virtual_addr - m->hedata->sh_ptr_to_raw_data;
+	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)(mark + m->m_edata.eh_name_ptr_rva - offset);
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++)
