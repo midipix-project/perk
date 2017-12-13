@@ -64,13 +64,6 @@ enum pe_custom_error {
 	PERK_ERR_CAP,
 };
 
-struct pe_source_version {
-	int		major;
-	int		minor;
-	int		revision;
-	const char *	commit;
-};
-
 struct pe_raw_image {
 	void *	addr;
 	size_t	size;
@@ -111,6 +104,13 @@ struct pe_image_meta {
 
 	struct pe_meta_sec_hdr *	h_edata;
 	struct pe_meta_sec_hdr *	h_idata;
+};
+
+struct pe_source_version {
+	int		major;
+	int		minor;
+	int		revision;
+	const char *	commit;
 };
 
 struct pe_error_info {
