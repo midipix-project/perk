@@ -77,9 +77,9 @@ struct pe_expsym {
 };
 
 struct pe_meta_stats {
-	int32_t		nexpsyms;
-	int32_t		nimplibs;
-	int32_t		nrelocs;
+	int32_t		t_nexpsyms;
+	int32_t		t_nimplibs;
+	int32_t		t_nrelocs;
 };
 
 struct pe_image_meta {
