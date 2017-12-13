@@ -65,8 +65,8 @@ enum pe_custom_error {
 };
 
 struct pe_raw_image {
-	void *	addr;
-	size_t	size;
+	void *		map_addr;
+	size_t		map_size;
 };
 
 struct pe_expsym {

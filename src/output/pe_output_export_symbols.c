@@ -51,7 +51,7 @@ int pe_output_export_symbols(
 	if ((pretty_header(cctx,fout)) < 0)
 		return PERK_FILE_ERROR(dctx);
 
-	mark	= m->r_image.addr;
+	mark	= m->r_image.map_addr;
 	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
 	symrva	= (uint32_t *)(mark + m->m_edata.eh_name_ptr_rva - offset);
 

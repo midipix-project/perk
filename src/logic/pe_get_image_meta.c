@@ -119,10 +119,10 @@ int pe_get_expsym_by_name(
 		return -1;
 
 	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->r_image.addr + (m->m_edata.eh_name_ptr_rva - offset));
+	symrva	= (uint32_t *)((uintptr_t)m->r_image.map_addr + (m->m_edata.eh_name_ptr_rva - offset));
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++) {
-		sym = (const char *)m->r_image.addr + symrva[i] - offset;
+		sym = (const char *)m->r_image.map_addr + symrva[i] - offset;
 
 		if (!(strcmp(sym,name))) {
 			if (expsym) {
@@ -156,8 +156,8 @@ int pe_get_expsym_by_index(
 
 	if (expsym) {
 		offset  = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-		symrva  = (uint32_t *)((uintptr_t)m->r_image.addr + (m->m_edata.eh_name_ptr_rva - offset));
-		symaddr = (uintptr_t)m->r_image.addr + symrva[index] - offset;
+		symrva  = (uint32_t *)((uintptr_t)m->r_image.map_addr + (m->m_edata.eh_name_ptr_rva - offset));
+		symaddr = (uintptr_t)m->r_image.map_addr + symrva[index] - offset;
 
 		expsym->name    = (const char *)symaddr;
 		expsym->eaddr   = 0;
@@ -181,7 +181,7 @@ int pe_get_image_meta(
 	struct pe_image_meta *	m;
 	char *			base;
 
-	base = image->addr;
+	base = image->map_addr;
 
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
@@ -350,8 +350,8 @@ int pe_get_image_meta(
 	}
 
 	/* image */
-	m->r_image.addr = image->addr;
-	m->r_image.size = image->size;
+	m->r_image.map_addr = image->map_addr;
+	m->r_image.map_size = image->map_size;
 
 	/* all done */
 	*meta = m;

@@ -45,18 +45,18 @@ int pe_map_raw_image(
 		return PERK_CUSTOM_ERROR(
 			dctx,PERK_ERR_IMAGE_SIZE_ZERO);
 
-	map->size = st.st_size;
-	map->addr = mmap(0,map->size,prot,MAP_PRIVATE,fd,0);
+	map->map_size = st.st_size;
+	map->map_addr = mmap(0,map->map_size,prot,MAP_PRIVATE,fd,0);
 
 	if (fnew)
 		close(fd);
 
-	return (map->addr == MAP_FAILED)
+	return (map->map_addr == MAP_FAILED)
 		? PERK_SYSTEM_ERROR(dctx)
 		: 0;
 }
 
 int pe_unmap_raw_image(struct pe_raw_image * map)
 {
-	return munmap(map->addr,map->size);
+	return munmap(map->map_addr,map->map_size);
 }
