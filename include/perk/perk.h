@@ -90,6 +90,16 @@ struct pe_meta_stats {
 };
 
 struct pe_image_meta {
+	struct pe_raw_image		r_image;
+	struct pe_raw_image_dos_hdr *	r_dos;
+	struct pe_raw_coff_image_hdr *	r_coff;
+	struct pe_raw_coff_object_hdr *	r_obj;
+	union  pe_raw_opt_hdr *		r_opt;
+	struct pe_raw_sec_hdr *		r_sectbl;
+
+	struct pe_raw_export_hdr *	r_edata;
+	struct pe_raw_import_hdr *	r_idata;
+
 	struct pe_meta_stats		m_stats;
 	struct pe_meta_image_dos_hdr	m_dos;
 	struct pe_meta_coff_file_hdr	m_coff;
@@ -101,16 +111,6 @@ struct pe_image_meta {
 
 	struct pe_meta_sec_hdr *	h_edata;
 	struct pe_meta_sec_hdr *	h_idata;
-
-	struct pe_raw_image		image;
-	struct pe_raw_image_dos_hdr *	ados;
-	struct pe_raw_coff_image_hdr *	acoff;
-	struct pe_raw_coff_object_hdr *	aobj;
-	union  pe_raw_opt_hdr *		aopt;
-	struct pe_raw_sec_hdr *		asectbl;
-
-	struct pe_raw_export_hdr *	aedata;
-	struct pe_raw_import_hdr *	aidata;
 };
 
 struct pe_error_info {

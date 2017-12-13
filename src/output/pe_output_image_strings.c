@@ -32,7 +32,7 @@ int pe_output_image_strings(
 		dash = "- ";
 	}
 
-	mark  = (char *)meta->image.addr;
+	mark  = (char *)meta->r_image.addr;
 	mark += meta->m_coff.cfh_ptr_to_str_tbl;
 
 	cap   = mark + meta->m_coff.cfh_size_of_str_tbl;

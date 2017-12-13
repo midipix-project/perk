@@ -22,7 +22,7 @@ int pe_get_image_subtype(const struct pe_image_meta * m, struct pe_info_string *
 {
 	int subtype;
 
-	if (m->aobj)
+	if (m->r_obj)
 		subtype = PE_SUBTYPE_OBJ;
 
 	else if (m->m_coff.cfh_characteristics & PE_IMAGE_FILE_DLL)

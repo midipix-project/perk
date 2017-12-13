@@ -19,7 +19,7 @@ int pe_get_image_abi(const struct pe_image_meta * m, struct pe_info_string * inf
 {
 	int abi;
 
-	if (m->aobj) {
+	if (m->r_obj) {
 		switch (m->m_coff.cfh_machine) {
 			case PE_IMAGE_FILE_MACHINE_I386:
 				abi = PE_ABI_PE32;

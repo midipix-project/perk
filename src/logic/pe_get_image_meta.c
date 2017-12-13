@@ -48,7 +48,7 @@ int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_b
 	int i;
 	uint32_t low,high;
 
-	if (m->aobj)
+	if (m->r_obj)
 		return -1;
 
 	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
@@ -115,14 +115,14 @@ int pe_get_expsym_by_name(
 	const char *	sym;
 	unsigned	i;
 
-	if (m->aobj || !m->h_edata)
+	if (m->r_obj || !m->h_edata)
 		return -1;
 
 	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
+	symrva	= (uint32_t *)((uintptr_t)m->r_image.addr + (m->m_edata.eh_name_ptr_rva - offset));
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++) {
-		sym = (const char *)m->image.addr + symrva[i] - offset;
+		sym = (const char *)m->r_image.addr + symrva[i] - offset;
 
 		if (!(strcmp(sym,name))) {
 			if (expsym) {
@@ -148,7 +148,7 @@ int pe_get_expsym_by_index(
 	uint32_t *	symrva;
 	uintptr_t	symaddr;
 
-	if (m->aobj)
+	if (m->r_obj)
 		return -1;
 
 	if (index >= m->m_edata.eh_num_of_name_ptrs)
@@ -156,8 +156,8 @@ int pe_get_expsym_by_index(
 
 	if (expsym) {
 		offset  = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-		symrva  = (uint32_t *)((uintptr_t)m->image.addr + (m->m_edata.eh_name_ptr_rva - offset));
-		symaddr = (uintptr_t)m->image.addr + symrva[index] - offset;
+		symrva  = (uint32_t *)((uintptr_t)m->r_image.addr + (m->m_edata.eh_name_ptr_rva - offset));
+		symaddr = (uintptr_t)m->r_image.addr + symrva[index] - offset;
 
 		expsym->name    = (const char *)symaddr;
 		expsym->eaddr   = 0;
@@ -186,19 +186,19 @@ int pe_get_image_meta(
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
 
-	m->aobj = (struct pe_raw_coff_object_hdr *)base;
+	m->r_obj = (struct pe_raw_coff_object_hdr *)base;
 
-	if (pe_read_object_header(m->aobj,&m->m_coff)) {
-		m->aobj = 0;
-		m->ados = (struct pe_raw_image_dos_hdr *)base;
+	if (pe_read_object_header(m->r_obj,&m->m_coff)) {
+		m->r_obj = 0;
+		m->r_dos = (struct pe_raw_image_dos_hdr *)base;
 
-		if ((ret = (pe_read_dos_header(m->ados,&m->m_dos))))
+		if ((ret = (pe_read_dos_header(m->r_dos,&m->m_dos))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-		m->acoff = (struct pe_raw_coff_image_hdr *)(base + m->m_dos.dos_lfanew);
+		m->r_coff = (struct pe_raw_coff_image_hdr *)(base + m->m_dos.dos_lfanew);
 
-		if ((ret = (pe_read_coff_header(m->acoff,&m->m_coff))))
+		if ((ret = (pe_read_coff_header(m->r_coff,&m->m_coff))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 	}
@@ -212,19 +212,19 @@ int pe_get_image_meta(
 		m->m_coff.cfh_size_of_str_tbl = pe_read_long(mark);
 	}
 
-	if (m->ados) {
-		mark    = &m->acoff->cfh_signature[0];
-		m->aopt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->acoff));
+	if (m->r_dos) {
+		mark    = &m->r_coff->cfh_signature[0];
+		m->r_opt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->r_coff));
 
-		if ((ret = (pe_read_optional_header(m->aopt,&m->m_opt))))
+		if ((ret = (pe_read_optional_header(m->r_opt,&m->m_opt))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-		mark       = &m->aopt->opt_hdr_32.coh_magic[0];
-		m->asectbl = (struct pe_raw_sec_hdr *)(mark + m->m_coff.cfh_size_of_opt_hdr);
+		mark       = &m->r_opt->opt_hdr_32.coh_magic[0];
+		m->r_sectbl = (struct pe_raw_sec_hdr *)(mark + m->m_coff.cfh_size_of_opt_hdr);
 	} else {
-		mark       = &m->aobj->cfh_machine[0];
-		m->asectbl = (struct pe_raw_sec_hdr *)(mark + sizeof(*m->aobj));
+		mark       = &m->r_obj->cfh_machine[0];
+		m->r_sectbl = (struct pe_raw_sec_hdr *)(mark + sizeof(*m->r_obj));
 	}
 
 	if (!(m->m_sectbl = calloc(m->m_coff.cfh_num_of_sections,sizeof(*(m->m_sectbl)))))
@@ -232,7 +232,7 @@ int pe_get_image_meta(
 			m,PERK_SYSTEM_ERROR(dctx));
 
 	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
-		pe_read_section_header(&m->asectbl[i],&m->m_sectbl[i]);
+		pe_read_section_header(&m->r_sectbl[i],&m->m_sectbl[i]);
 
 		if (m->m_sectbl[i].sh_name[0] == '/')
 			if ((l = strtol(&m->m_sectbl[i].sh_name[1],0,10)) > 0)
@@ -250,15 +250,15 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->h_edata = &m->m_sectbl[s];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
+		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_export_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
 		m->h_edata = &m->m_sectbl[i];
-		m->aedata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
+		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
-	if (m->aedata) {
-		pe_read_export_header(m->aedata,&m->m_edata);
+	if (m->r_edata) {
+		pe_read_export_header(m->r_edata,&m->m_edata);
 		m->m_stats.nexpsyms = m->m_edata.eh_num_of_name_ptrs;
 	}
 
@@ -275,16 +275,16 @@ int pe_get_image_meta(
 
 	if (s >= 0) {
 		m->h_idata = &m->m_sectbl[s];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
+		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_import_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
 	} else if (i >= 0) {
 		m->h_idata = &m->m_sectbl[i];
-		m->aidata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
+		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
 	}
 
-	if (m->aidata) {
+	if (m->r_idata) {
 		/* num of implibs */
-		for (pidata=m->aidata; pe_read_long(pidata->ih_name_rva); pidata++)
+		for (pidata=m->r_idata; pe_read_long(pidata->ih_name_rva); pidata++)
 			m->m_stats.nimplibs++;
 
 		/* import headers */
@@ -293,7 +293,7 @@ int pe_get_image_meta(
 				m,PERK_SYSTEM_ERROR(dctx));
 
 		for (i=0; i<m->m_stats.nimplibs; i++) {
-			pe_read_import_header(&m->aidata[i],&m->m_idata[i]);
+			pe_read_import_header(&m->r_idata[i],&m->m_idata[i]);
 
 			m->m_idata[i].ih_name = base + m->h_idata->sh_ptr_to_raw_data
 						   + m->m_idata[i].ih_name_rva
@@ -350,8 +350,8 @@ int pe_get_image_meta(
 	}
 
 	/* image */
-	m->image.addr = image->addr;
-	m->image.size = image->size;
+	m->r_image.addr = image->addr;
+	m->r_image.size = image->size;
 
 	/* all done */
 	*meta = m;

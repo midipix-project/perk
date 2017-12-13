@@ -26,7 +26,7 @@ int pe_get_image_subsystem(const struct pe_image_meta * m, struct pe_info_string
 {
 	int subsystem;
 
-	if (m->aobj)
+	if (m->r_obj)
 		subsystem = 0;
 
 	else if (m->m_opt.oh_img.coh_subsystem >= 0x10)
