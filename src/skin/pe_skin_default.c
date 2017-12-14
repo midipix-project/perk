@@ -27,10 +27,10 @@ const struct argv_option pe_default_options[] = {
 			"list exported symbols" },
 
 	{"implibs",	'i',TAG_IMPLIBS,ARGV_OPTARG_NONE,0,0,0,
-			"list direct dependency libraries"},
+			"list .idata dependency libraries"},
 
 	{"impsyms",	'I',TAG_IMPSYMS,ARGV_OPTARG_NONE,0,0,0,
-			"list direct dependency libraries "
+			"list .idata dependency libraries "
 			"along with imported symbols"},
 
 	{0,0,0,0,0,0,0,0}
