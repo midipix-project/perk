@@ -69,6 +69,9 @@ static void pe_perform_unit_actions(
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS))
 		pe_output_import_libraries(dctx,uctx->meta,0);
+
+	if ((flags & PERK_OUTPUT_MDSO_LIBS) || (flags & PERK_OUTPUT_MDSO_SYMS))
+		pe_output_mdso_libraries(dctx,uctx->meta,0);
 }
 
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)

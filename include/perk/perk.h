@@ -61,6 +61,7 @@ enum pe_custom_error {
 	PERK_ERR_BAD_DOS_HEADER,
 	PERK_ERR_BAD_COFF_HEADER,
 	PERK_ERR_BAD_IMAGE_TYPE,
+	PERK_ERR_UNSUPPORTED_ABI,
 	PERK_ERR_CAP,
 };
 
@@ -181,6 +182,7 @@ perk_api int  pe_output_image_symbols	(const struct pe_driver_ctx *, const struc
 perk_api int  pe_output_image_strings	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_export_symbols	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_import_libraries(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_output_mdso_libraries  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 
 /* error trace api */
 perk_api int  pe_output_error_record	(const struct pe_driver_ctx *, const struct pe_error_info *);

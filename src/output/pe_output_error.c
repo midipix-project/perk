@@ -30,6 +30,7 @@ static const char * const pe_error_strings[PERK_ERR_CAP] = {
 	[PERK_ERR_BAD_DOS_HEADER]  = "bad DOS header",
 	[PERK_ERR_BAD_COFF_HEADER] = "bad COFF header",
 	[PERK_ERR_BAD_IMAGE_TYPE]  = "bad PE image type",
+	[PERK_ERR_UNSUPPORTED_ABI] = "unsupported image abi",
 };
 
 static const char * pe_output_error_header(const struct pe_error_info * erri)
