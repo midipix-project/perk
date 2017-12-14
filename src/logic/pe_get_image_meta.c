@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <mdso/mdso_specs.h>
+#include <mdso/mdso_structs.h>
+
 #include <perk/perk.h>
 #include "perk_reader_impl.h"
 #include "perk_errinfo_impl.h"
@@ -348,6 +351,45 @@ int pe_get_image_meta(
 			}
 		}
 	}
+
+	/* .dsometa */
+	if ((i = pe_get_named_section_index(m,MDSO_META_SECTION)) >= 0) {
+		m->h_dsometa = &m->m_sectbl[i];
+		m->r_dsometa = base + m->m_sectbl[i].sh_ptr_to_raw_data;
+
+		m->m_stats.t_ndsolibs = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
+			? m->h_dsometa->sh_virtual_size / sizeof(struct mdso_raw_meta_record_m64)
+			: m->h_dsometa->sh_virtual_size / sizeof(struct mdso_raw_meta_record_m32);
+	}
+
+	/* .dsosyms */
+	if ((i = pe_get_named_section_index(m,MDSO_SYMS_SECTION)) >= 0) {
+		m->h_dsosyms = &m->m_sectbl[i];
+		m->r_dsosyms = base + m->m_sectbl[i].sh_ptr_to_raw_data;
+
+		m->m_stats.t_ndsosyms = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
+			? m->h_dsosyms->sh_virtual_size / sizeof(struct mdso_raw_sym_entry_m64)
+			: m->h_dsosyms->sh_virtual_size / sizeof(struct mdso_raw_sym_entry_m32);
+	}
+
+	/* .dsostrs */
+	if ((i = pe_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0) {
+		m->h_dsostrs = &m->m_sectbl[i];
+		m->r_dsostrs = base + m->m_sectbl[i].sh_ptr_to_raw_data;
+	}
+
+	/* .dsodata */
+	if ((i = pe_get_named_section_index(m,MDSO_DATA_SECTION)) >= 0) {
+		m->h_dsodata = &m->m_sectbl[i];
+		m->r_dsodata = base + m->m_sectbl[i].sh_ptr_to_raw_data;
+	}
+
+	/* mdso abi */
+	if (m->h_dsometa || m->h_dsosyms)
+		if (pe_get_image_abi(m,0) == PE_ABI_UNSUPPORTED)
+			return pe_free_image_meta_impl(
+				m,PERK_CUSTOM_ERROR(
+					dctx,PERK_ERR_UNSUPPORTED_ABI));
 
 	/* image */
 	m->r_image.map_addr = image->map_addr;

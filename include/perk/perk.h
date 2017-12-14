@@ -79,6 +79,8 @@ struct pe_expsym {
 struct pe_meta_stats {
 	int32_t		t_nexpsyms;
 	int32_t		t_nimplibs;
+	int32_t		t_ndsolibs;
+	int32_t		t_ndsosyms;
 	int32_t		t_nrelocs;
 };
 
@@ -93,6 +95,11 @@ struct pe_image_meta {
 	struct pe_raw_export_hdr *	r_edata;
 	struct pe_raw_import_hdr *	r_idata;
 
+	void *				r_dsometa;
+	void *				r_dsosyms;
+	char *				r_dsostrs;
+	void *				r_dsodata;
+
 	struct pe_meta_stats		m_stats;
 	struct pe_meta_image_dos_hdr	m_dos;
 	struct pe_meta_coff_file_hdr	m_coff;
@@ -104,6 +111,11 @@ struct pe_image_meta {
 
 	struct pe_meta_sec_hdr *	h_edata;
 	struct pe_meta_sec_hdr *	h_idata;
+
+	struct pe_meta_sec_hdr *	h_dsometa;
+	struct pe_meta_sec_hdr *	h_dsosyms;
+	struct pe_meta_sec_hdr *	h_dsostrs;
+	struct pe_meta_sec_hdr *	h_dsodata;
 };
 
 struct pe_source_version {
