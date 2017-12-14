@@ -24,6 +24,8 @@ enum app_tags {
 	TAG_EXPSYMS,
 	TAG_IMPLIBS,
 	TAG_IMPSYMS,
+	TAG_DSOLIBS,
+	TAG_DSOSYMS,
 };
 
 struct pe_driver_ctx_impl {

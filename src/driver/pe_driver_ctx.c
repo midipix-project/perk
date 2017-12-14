@@ -181,6 +181,14 @@ int pe_get_driver_ctx(
 				case TAG_IMPSYMS:
 					cctx.fmtflags |= PERK_OUTPUT_IMPORT_SYMS;
 					break;
+
+				case TAG_DSOLIBS:
+					cctx.fmtflags |= PERK_OUTPUT_MDSO_LIBS;
+					break;
+
+				case TAG_DSOSYMS:
+					cctx.fmtflags |= PERK_OUTPUT_MDSO_SYMS;
+					break;
 			}
 		} else
 			nunits++;

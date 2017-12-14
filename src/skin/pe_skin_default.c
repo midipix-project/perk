@@ -33,5 +33,12 @@ const struct argv_option pe_default_options[] = {
 			"list .idata dependency libraries "
 			"along with imported symbols"},
 
+	{"dsolibs",	'd',TAG_DSOLIBS,ARGV_OPTARG_NONE,0,0,0,
+			"list .dsometa (mdso) dependency libraries"},
+
+	{"dsosyms",	'D',TAG_DSOSYMS,ARGV_OPTARG_NONE,0,0,0,
+			"list .dsometa (mdso) dependency libraries "
+			"along with referenced symbols"},
+
 	{0,0,0,0,0,0,0,0}
 };
