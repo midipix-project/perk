@@ -355,13 +355,16 @@ static void argv_scan(
 				}
 
 				if (option->optarg == ARGV_OPTARG_NONE) {
-					if (!fnext && ch && (*ch == '-'))
+					if (!fnext && ch && (*ch == '-')) {
 						ferr = ARGV_ERROR_OPTARG_NONE;
-					else
+					} else {
 						fval = false;
-				} else if (!fnext)
+					}
+
+				} else if (!fnext) {
 					fval = true;
-				else if (option->optarg == ARGV_OPTARG_REQUIRED) {
+
+				} else if (option->optarg == ARGV_OPTARG_REQUIRED) {
 					if (ch && is_short_option(ch))
 						ferr = ARGV_ERROR_OPTARG_REQUIRED;
 					else if (ch && is_long_option(ch))
@@ -385,8 +388,9 @@ static void argv_scan(
 					else
 						fval = ch;
 				}
-			} else
+			} else {
 				ferr = ARGV_ERROR_SHORT_OPTION;
+			}
 
 		} else if (!fnoscan && (fhybrid || is_long_option(ch))) {
 			ch += (fhybrid ? 1 : 2);
