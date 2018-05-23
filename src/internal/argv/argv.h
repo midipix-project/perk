@@ -380,6 +380,8 @@ static void argv_scan(
 						fval = false;
 					else if (ch && is_last_option(ch))
 						fval = false;
+					else if (fnext)
+						fval = false;
 					else
 						fval = ch;
 				}
