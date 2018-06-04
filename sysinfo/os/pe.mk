@@ -6,6 +6,7 @@ LDFLAGS_SONAME	+= -Wl,-soname
 LDFLAGS_SONAME	+= -Wl,$(DSO_SONAME)
 LDFLAGS_SHARED	+= $(LDFLAGS_SONAME)
 
+DSO_LIBPATH	?= loader
 PE_SUBSYSTEM	?= windows
 LDFLAGS_COMMON	+= -Wl,--subsystem=$(PE_SUBSYSTEM)
 
@@ -38,7 +39,7 @@ clean-implib:
 ifeq ($(OS_IMPLIB_TOOL),mdso)
 
 $(IMPLIB_VER):		$(IMPLIB_DEF)
-			$(MDSO) -m $(HOST_BITS) -i $(IMPLIB_VER) -n $(DSO_VER) $(IMPLIB_DEF)
+			$(MDSO) -m $(HOST_BITS) -i $(IMPLIB_VER) -n $(DSO_VER) -l $(DSO_LIBPATH) $<
 
 else ifeq ($(OS_IMPLIB_TOOL),dlltool)
 
