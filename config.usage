@@ -5,6 +5,7 @@ supported switches:
 	--help
 
 	--nickname
+	--program-prefix
 	--avoid-version
 	--source-dir
 

@@ -737,6 +737,9 @@ for arg ; do
 		--nickname=*)
 			mb_nickname=${arg#*=}
 			;;
+		--program-prefix=*)
+			mb_program_prefix=${arg#*=}
+			;;
 		--avoid-version)
 			mb_avoid_version='yes'
 			;;
@@ -755,6 +758,10 @@ done
 
 # three: validation
 verify_source_directory
+
+if ! [ -z "$mb_program_prefix" ]; then
+	error_msg "--program-prefix is not yet fully support (must be null)."
+fi
 
 
 
