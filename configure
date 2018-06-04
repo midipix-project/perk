@@ -747,6 +747,12 @@ for arg ; do
 			mb_source_dir=${arg#*=}
 			;;
 
+		# compatibility
+		--enable-dependency-tracking)
+			;;
+		--disable-dependency-tracking)
+			;;
+
 		*)
 			error_msg ${arg#}: "unsupported config argument."
 			exit 2

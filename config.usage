@@ -61,6 +61,9 @@ supported switches:
 	--disable-app
 	--disable-frontend
 
+	--enable-dependency-tracking
+	--disable-dependency-tracking
+
 
 supported variables:
 --------------------
