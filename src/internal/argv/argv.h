@@ -146,7 +146,7 @@ static int argv_optv_init(
 static const char * argv_program_name(const char *);
 
 static void argv_usage(
-	FILE *,
+	int		fd,
 	const char *	header,
 	const struct	argv_option **,
 	const char *	mode);
@@ -154,10 +154,14 @@ static void argv_usage(
 static struct argv_meta * argv_get(
 	char **,
 	const struct argv_option **,
-	int flags);
+	int flags,
+	int fd);
 
 static void argv_free(struct argv_meta *);
 
+#ifndef argv_dprintf
+#define argv_dprintf dprintf
+#endif
 
 
 
@@ -520,26 +524,26 @@ static const char * argv_program_name(const char * program_path)
 	return program_path;
 }
 
-static void argv_show_error(struct argv_ctx * ctx)
+static void argv_show_error(int fd, struct argv_ctx * ctx)
 {
 	char opt_short_name[2] = {0,0};
 
 	if (ctx->erropt && ctx->erropt->short_name)
 		opt_short_name[0] = ctx->erropt->short_name;
 
-	fprintf(stderr,"%s: error: ",ctx->program);
+	argv_dprintf(fd,"%s: error: ",ctx->program);
 
 	switch (ctx->errcode) {
 		case ARGV_ERROR_SHORT_OPTION:
-			fprintf(stderr,"'-%c' is not a valid short option\n",*ctx->errch);
+			argv_dprintf(fd,"'-%c' is not a valid short option\n",*ctx->errch);
 			break;
 
 		case ARGV_ERROR_LONG_OPTION:
-			fprintf(stderr,"'--%s' is not a valid long option\n",ctx->errch);
+			argv_dprintf(fd,"'--%s' is not a valid long option\n",ctx->errch);
 			break;
 
 		case ARGV_ERROR_OPTARG_NONE:
-			fprintf(stderr,"'%s' is not a valid option value for [%s%s%s%s%s] "
+			argv_dprintf(fd,"'%s' is not a valid option value for [%s%s%s%s%s] "
 					"(option values may not be specified)\n",
 				ctx->errch,
 				opt_short_name[0] ? "-" : "",
@@ -550,7 +554,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_OPTARG_REQUIRED:
-			fprintf(stderr,"option [%s%s%s%s%s] requires %s %s%s%s\n",
+			argv_dprintf(fd,"option [%s%s%s%s%s] requires %s %s%s%s\n",
 				opt_short_name[0] ? "-" : "",
 				opt_short_name,
 				opt_short_name[0] ? "," : "",
@@ -563,7 +567,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_OPTARG_PARADIGM:
-			fprintf(stderr,"'%s' is not a valid option value for [%s%s%s%s%s]={%s}\n",
+			argv_dprintf(fd,"'%s' is not a valid option value for [%s%s%s%s%s]={%s}\n",
 				ctx->errch,
 				opt_short_name[0] ? "-" : "",
 				opt_short_name,
@@ -574,13 +578,13 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_HYBRID_NONE:
-			fprintf(stderr,"-%s is not a synonym for --%s\n",
+			argv_dprintf(fd,"-%s is not a synonym for --%s\n",
 				ctx->erropt->long_name,
 				ctx->erropt->long_name);
 			break;
 
 		case ARGV_ERROR_HYBRID_ONLY:
-			fprintf(stderr,"--%s is not a synonym for -%s\n",
+			argv_dprintf(fd,"--%s is not a synonym for -%s\n",
 				ctx->erropt->long_name,
 				ctx->erropt->long_name);
 			break;
@@ -588,7 +592,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 		case ARGV_ERROR_HYBRID_SPACE:
 		case ARGV_ERROR_HYBRID_EQUAL:
 		case ARGV_ERROR_HYBRID_COMMA:
-			fprintf(stderr,"-%s: illegal value assignment; valid syntax is "
+			argv_dprintf(fd,"-%s: illegal value assignment; valid syntax is "
 					"-%s%sVAL\n",
 				ctx->erropt->long_name,
 				ctx->erropt->long_name,
@@ -600,7 +604,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_INTERNAL:
-			fputs("internal error",stderr);
+			argv_dprintf(fd,"internal error");
 			break;
 
 		default:
@@ -609,6 +613,7 @@ static void argv_show_error(struct argv_ctx * ctx)
 }
 
 static void argv_show_status(
+	int				fd,
 	const struct argv_option **	optv,
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
@@ -622,32 +627,32 @@ static void argv_show_status(
 
 	(void)ctx;
 
-	fputs("\n\nconcatenated command line:\n",stderr);
+	argv_dprintf(fd,"\n\nconcatenated command line:\n");
 	for (argv=meta->argv; *argv; argv++) {
-		fprintf(stderr,"%s%s",space,*argv);
+		argv_dprintf(fd,"%s%s",space,*argv);
 		space = " ";
 	}
 
-	fputs("\n\nargument vector:\n",stderr);
+	argv_dprintf(fd,"\n\nargument vector:\n");
 	for (argc=0,argv=meta->argv; *argv; argc++,argv++)
-		fprintf(stderr,"argv[%d]: %s\n",argc,*argv);
+		argv_dprintf(fd,"argv[%d]: %s\n",argc,*argv);
 
-	fputs("\n\nparsed entries:\n",stderr);
+	argv_dprintf(fd,"\n\nparsed entries:\n");
 	for (entry=meta->entries; entry->arg || entry->fopt; entry++)
 		if (entry->fopt) {
 			option = option_from_tag(optv,entry->tag);
 			short_name[0] = option->short_name;
 
 			if (entry->fval)
-				fprintf(stderr,"[-%s,--%s] := %s\n",
+				argv_dprintf(fd,"[-%s,--%s] := %s\n",
 					short_name,option->long_name,entry->arg);
 			else
-				fprintf(stderr,"[-%s,--%s]\n",
+				argv_dprintf(fd,"[-%s,--%s]\n",
 					short_name,option->long_name);
 		} else
-			fprintf(stderr,"<program arg> := %s\n",entry->arg);
+			argv_dprintf(fd,"<program arg> := %s\n",entry->arg);
 
-	fputs("\n\n",stderr);
+	argv_dprintf(fd,"\n\n");
 }
 
 static struct argv_meta * argv_free_impl(struct argv_meta_impl * imeta)
@@ -709,7 +714,8 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 static struct argv_meta * argv_get(
 	char **				argv,
 	const struct argv_option **	optv,
-	int				flags)
+	int				flags,
+	int				fd)
 {
 	struct argv_meta *	meta;
 	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0,0,0};
@@ -720,7 +726,7 @@ static struct argv_meta * argv_get(
 		ctx.program = argv_program_name(argv[0]);
 
 		if (ctx.flags & ARGV_VERBOSITY_ERRORS)
-			argv_show_error(&ctx);
+			argv_show_error(fd,&ctx);
 
 		return 0;
 	}
@@ -734,14 +740,14 @@ static struct argv_meta * argv_get(
 	if (ctx.errcode != ARGV_ERROR_OK) {
 		ctx.program = argv[0];
 		ctx.errcode = ARGV_ERROR_INTERNAL;
-		argv_show_error(&ctx);
+		argv_show_error(fd,&ctx);
 		argv_free(meta);
 
 		return 0;
 	}
 
 	if (ctx.flags & ARGV_VERBOSITY_STATUS)
-		argv_show_status(optv,&ctx,meta);
+		argv_show_status(fd,optv,&ctx,meta);
 
 	return meta;
 }
@@ -759,7 +765,7 @@ static void argv_free(struct argv_meta * xmeta)
 }
 
 static void argv_usage(
-	FILE *				file,
+	int				fd,
 	const char *    		header,
 	const struct argv_option **	options,
 	const char *			mode)
@@ -789,13 +795,13 @@ static void argv_usage(
 	fshort = mode ? !strcmp(mode,"short") : 0;
 	flong  = fshort ? 0 : mode && !strcmp(mode,"long");
 	fboth  = !fshort && !flong;
-	fcolor = isatty(fileno(file));
+	fcolor = isatty(fd);
 
 	if (fcolor)
-		fprintf(file,"%s%s",cbold,cgreen);
+		argv_dprintf(fd,"%s%s",cbold,cgreen);
 
 	if (header)
-		fprintf(file,"%s",header);
+		argv_dprintf(fd,"%s",header);
 
 	for (optlen=0,optv=options; *optv; optv++) {
 		option = *optv;
@@ -819,7 +825,7 @@ static void argv_usage(
 	}
 
 	if (optlen >= optcap) {
-		fprintf(stderr,
+		argv_dprintf(fd,
 			"Option strings exceed %zu characters, "
 			"please generate the usage screen manually.\n",
 			optcap);
@@ -836,7 +842,7 @@ static void argv_usage(
 		/* color */
 		if (fcolor) {
 			color = (color == ccyan) ? cblue : ccyan;
-			fputs(color,file);
+			argv_dprintf(fd,color);
 		}
 
 		/* description, using either paradigm or argname if applicable */
@@ -877,7 +883,7 @@ static void argv_usage(
 
 		/* single line? */
 		if (optlen + strlen(description) < width) {
-			fprintf(file,"%s%s\n",optstr,description);
+			argv_dprintf(fd,"%s%s\n",optstr,description);
 
 		} else {
 			desc = description;
@@ -909,9 +915,9 @@ static void argv_usage(
 
 				/* first line? */
 				if (desc == description)
-					fprintf(file,"%s%s\n",optstr,desc);
+					argv_dprintf(fd,"%s%s\n",optstr,desc);
 				else
-					fprintf(file,"%-*c %s\n",
+					argv_dprintf(fd,"%-*c %s\n",
 						(*desc == '|')
 							? (int)(optlen+1)
 							: (int)optlen,
@@ -928,7 +934,7 @@ static void argv_usage(
 	}
 
 	if (fcolor)
-		fputs(creset,file);
+		argv_dprintf(fd,creset);
 }
 
 #endif

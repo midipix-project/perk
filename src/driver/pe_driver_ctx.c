@@ -59,7 +59,7 @@ static int pe_driver_usage(
 		"Usage: %s [options] <file>...\n" "Options:\n",
 		program);
 
-	argv_usage(stdout,header,optv,arg);
+	argv_usage(STDOUT_FILENO,header,optv,arg);
 	argv_free(meta);
 
 	return PERK_USAGE;
@@ -126,7 +126,10 @@ int pe_get_driver_ctx(
 
 	argv_optv_init(pe_default_options,optv);
 
-	if (!(meta = argv_get(argv,optv,pe_argv_flags(flags))))
+	if (!(meta = argv_get(
+			argv,optv,
+			pe_argv_flags(flags),
+			STDERR_FILENO)))
 		return -1;
 
 	pretty	= 0;
