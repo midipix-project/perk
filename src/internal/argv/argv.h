@@ -707,7 +707,7 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 }
 
 static struct argv_meta * argv_get(
-	char *				argv[],
+	char **				argv,
 	const struct argv_option **	optv,
 	int				flags)
 {
