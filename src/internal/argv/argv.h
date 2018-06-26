@@ -119,12 +119,6 @@ struct argv_meta {
 	struct argv_entry *	entries;
 };
 
-struct argv_meta_impl {
-	char **			argv;
-	char *			strbuf;
-	struct argv_meta	meta;
-};
-
 struct argv_ctx {
 	int				flags;
 	int				mode;
@@ -138,6 +132,12 @@ struct argv_ctx {
 };
 
 #ifdef ARGV_DRIVER
+
+struct argv_meta_impl {
+	char **			argv;
+	char *			strbuf;
+	struct argv_meta	meta;
+};
 
 static int argv_optv_init(
 	const struct argv_option[],
