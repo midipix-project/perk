@@ -26,6 +26,7 @@ API_SRCS = \
 	src/skin/pe_skin_default.c \
 
 INTERNAL_SRCS = \
+	src/internal/$(PACKAGE)_dprintf_impl.c \
 	src/internal/$(PACKAGE)_errinfo_impl.c \
 
 APP_SRCS = \
