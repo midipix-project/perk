@@ -115,6 +115,7 @@ include $(PROJECT_DIR)/project/osforce.mk
 include $(PROJECT_DIR)/sofort/defs.mk
 include $(PROJECT_DIR)/sofort/version.mk
 include $(PROJECT_DIR)/sofort/custom.mk
+include $(PROJECT_DIR)/sofort/pkgconf.mk
 
 include $(PROJECT_DIR)/project/tree.mk
 include $(PROJECT_DIR)/project/depends.mk
