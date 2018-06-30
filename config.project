@@ -4,6 +4,15 @@ mb_require_out_of_tree=no
 mb_custom_install_headers=no
 mb_avoid_version=no
 
+# pkgconfig
+mb_pkgname='perk'
+mb_pkgdesc='perk'
+mb_pkgusrc=
+mb_pkgrepo='git://midipix.org/perk'
+mb_pkgpsrc=
+mb_pkgdurl=
+mb_pkgdefs=
+mb_pkglibs=
 
 # build
 mb_default_build=
