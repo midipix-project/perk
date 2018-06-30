@@ -6,6 +6,15 @@ GIT_REFERENCE_INDEX	= @git_reference_index@
 CUSTOM_INSTALL_HEADERS  = @custom_install_headers@
 AVOID_VERSION		= @avoid_version@
 
+PKGNAME			= @pkgname@
+PKGDESC			= @pkgdesc@
+PKGUSRC			= @pkgusrc@
+PKGREPO			= @pkgrepo@
+PKGPSRC			= @pkgpsrc@
+PKGDURL			= @pkgdurl@
+PKGDEFS			= @pkgdefs@
+PKGLIBS			= @pkglibs@
+
 BUILD 			= @build@
 HOST 			= @host@
 CCHOST 			= @cchost@
@@ -268,9 +277,9 @@ clean:		clean-implib
 		rm -f $(STATIC_APP)
 
 
-.display:	.display-project .display-env .display-tools .display-flags \
-		.display-pe .display-elf .display-dirs .display-build \
-		.display-config
+.display:	.display-project     .display-pkgconf     .display-env \
+		.display-tools .display-flags .display-pe .display-elf \
+		.display-dirs  .display-build .display-config
 
 .conf:		PAGER ?= less
 .conf:
@@ -282,6 +291,17 @@ clean:		clean-implib
 		@echo PROJECT_DIR:'            '$(PROJECT_DIR)
 		@echo SOURCE_DIR:'             '$(SOURCE_DIR)
 		@echo BUILD_DIR:'              '$(CURDIR)
+		@echo
+
+.display-pkgconf:
+		@echo PKGNAME:'                '$(PKGNAME)
+		@echo PKGDESC:'                '$(PKGDESC)
+		@echo PKGUSRC:'                '$(PKGUSRC)
+		@echo PKGREPO:'                '$(PKGREPO)
+		@echo PKGPSRC:'                '$(PKGPSRC)
+		@echo PKGDURL:'                '$(PKGDURL)
+		@echo PKGDEFS:'                '$(PKGDEFS)
+		@echo PKGLIBS:'                '$(PKGLIBS)
 		@echo
 
 .display-env:

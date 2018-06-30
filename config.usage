@@ -9,6 +9,15 @@ supported switches:
 	--avoid-version
 	--source-dir
 
+	--pkgname
+	--pkgdesc
+	--pkgusrc
+	--pkgrepo
+	--pkgpsrc
+	--pkgdurl
+	--pkgdefs
+	--pkglibs
+
 	--prefix
 	--exec-prefix
 	--bindir

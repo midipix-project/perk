@@ -165,6 +165,16 @@ common_defaults()
 	[ -z "$mb_source_dir" ] 	&& mb_source_dir=$mb_project_dir
 	[ -z "$mb_avoid_version" ] 	&& mb_avoid_version='no'
 
+	# pkgconfig
+	[ -z "$mb_pkgname" ]		&& mb_pkgname="$mb_default_pkgname"
+	[ -z "$mb_pkgdesc" ]		&& mb_pkgdesc="$mb_default_pkgdesc"
+	[ -z "$mb_pkgusrc" ]		&& mb_pkgusrc="$mb_default_pkgusrc"
+	[ -z "$mb_pkgrepo" ]		&& mb_pkgrepo="$mb_default_pkgrepo"
+	[ -z "$mb_pkgpsrc" ]		&& mb_pkgpsrc="$mb_default_pkgpsrc"
+	[ -z "$mb_pkgdurl" ]		&& mb_pkgdurl="$mb_default_pkgdurl"
+	[ -z "$mb_pkgdefs" ]		&& mb_pkgdefs="$mb_default_pkgdefs"
+	[ -z "$mb_pkglibs" ]		&& mb_pkglibs="$mb_default_pkglibs"
+
 	# dirs
 	[ -z "$mb_prefix" ] 		&& [ -z "$mb_prefix_set" ] \
 					&& mb_prefix='/usr/local'
@@ -439,6 +449,15 @@ config_copy()
 			-e 's^@git_reference_index@^'"$mb_git_reference_index"'^g'	\
 			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
 			-e 's^@avoid_version@^'"$mb_avoid_version"'^g'			\
+											\
+			-e 's^@pkgname@^'"$mb_pkgname"'^g'				\
+			-e 's^@pkgdesc@^'"$mb_pkgdesc"'^g'				\
+			-e 's^@pkgusrc@^'"$mb_pkgusrc"'^g'				\
+			-e 's^@pkgrepo@^'"$mb_pkgrepo"'^g'				\
+			-e 's^@pkgpsrc@^'"$mb_pkgpsrc"'^g'				\
+			-e 's^@pkgdurl@^'"$mb_pkgdurl"'^g'				\
+			-e 's^@pkgdefs@^'"$mb_pkgdefs"'^g'				\
+			-e 's^@pkglibs@^'"$mb_pkglibs"'^g'				\
 											\
 			-e 's^@build@^'"$mb_build"'^g'					\
 			-e 's^@host@^'"$mb_host"'^g'					\
@@ -752,6 +771,39 @@ for arg ; do
 			;;
 		--source-dir=*)
 			mb_source_dir=${arg#*=}
+			;;
+
+		# pkgconfig
+		--pkgname=*)
+			mb_pkgname=${arg#*=}
+			;;
+
+		--pkgdesc=*)
+			mb_pkgdesc=${arg#*=}
+			;;
+
+		--pkgusrc=*)
+			mb_pkgusrc=${arg#*=}
+			;;
+
+		--pkgrepo=*)
+			mb_pkgrepo=${arg#*=}
+			;;
+
+		--pkgpsrc=*)
+			mb_pkgpsrc=${arg#*=}
+			;;
+
+		--pkgdurl=*)
+			mb_pkgdurl=${arg#*=}
+			;;
+
+		--pkgdefs=*)
+			mb_pkgdefs=${arg#*=}
+			;;
+
+		--pkglibs=*)
+			mb_pkglibs=${arg#*=}
 			;;
 
 		# compatibility
