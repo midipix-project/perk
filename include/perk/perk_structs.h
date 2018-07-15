@@ -327,6 +327,29 @@ struct pe_raw_coff_symbol_name {
 };
 
 
+struct pe_raw_coff_strtbl {
+	unsigned char	cst_size			[0x04];		/* 0x00 */
+	unsigned char	cst_data[];					/* 0x04 */
+};
+
+
+struct pe_raw_coff_reloc {
+	unsigned char	rel_rva				[0x04];		/* 0x00 */
+	unsigned char	rel_sym				[0x04];		/* 0x04 */
+	unsigned char	rel_type			[0x02];		/* 0x08 */
+};
+
+
+struct pe_raw_aux_rec_section {
+	unsigned char	aux_size			[0x04];		/* 0x00 */
+	unsigned char	aux_num_of_relocs		[0x02];		/* 0x04 */
+	unsigned char	aux_num_of_line_nums		[0x02];		/* 0x06 */
+	unsigned char	aux_check_sum			[0x04];		/* 0x08 */
+	unsigned char	aux_number			[0x02];		/* 0x0c */
+	unsigned char	aux_selection			[0x01];		/* 0x0e */
+	unsigned char	aux_pad				[0x03];		/* 0x0f */
+};
+
 #ifdef __cplusplus
 }
 #endif
