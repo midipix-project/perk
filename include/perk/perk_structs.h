@@ -350,6 +350,17 @@ struct pe_raw_aux_rec_section {
 	unsigned char	aux_pad				[0x03];		/* 0x0f */
 };
 
+struct pe_raw_archive_common_hdr {
+	unsigned char	ar_file_id			[0x10];		/* 0x00 */
+	unsigned char	ar_time_date_stamp		[0x0c];		/* 0x10 */
+	unsigned char	ar_uid				[0x06];		/* 0x1c */
+	unsigned char	ar_gid				[0x06];		/* 0x22 */
+	unsigned char	ar_file_mode			[0x08];		/* 0x28 */
+	unsigned char	ar_file_size			[0x0a];		/* 0x30 */
+	unsigned char	ar_end_tag			[0x02];		/* 0x3a */
+
+};
+
 #ifdef __cplusplus
 }
 #endif
