@@ -7,6 +7,7 @@
 
 #include <perk/perk.h>
 #include <perk/perk_meta.h>
+#include "perk_dprintf_impl.h"
 #include "argv/argv.h"
 
 #define PERK_OPTV_ELEMENTS 64
