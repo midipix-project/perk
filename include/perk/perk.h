@@ -164,66 +164,77 @@ struct pe_info_string {
 	char				buffer[128];
 };
 
-/* package info */
-perk_api				const struct pe_source_version * pe_source_version(void);
-
 /* driver api */
-perk_api int  pe_get_driver_ctx		(char ** argv, char ** envp, uint32_t flags, struct pe_driver_ctx **);
-perk_api void pe_free_driver_ctx	(struct pe_driver_ctx *);
+perk_api int  pe_get_driver_ctx         (char ** argv, char ** envp, uint32_t flags,
+                                         struct pe_driver_ctx **);
 
-perk_api int  pe_get_unit_ctx		(const struct pe_driver_ctx *, const char * path, struct pe_unit_ctx **);
-perk_api void pe_free_unit_ctx		(struct pe_unit_ctx *);
+perk_api void pe_free_driver_ctx        (struct pe_driver_ctx *);
+
+perk_api int  pe_get_unit_ctx           (const struct pe_driver_ctx *, const char * path,
+                                         struct pe_unit_ctx **);
+
+perk_api void pe_free_unit_ctx          (struct pe_unit_ctx *);
 
 /* utility api */
-perk_api int  pe_main			(int, char **, char **);
-perk_api int  pe_output_image_category	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
-perk_api int  pe_output_image_sections	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
-perk_api int  pe_output_image_symbols	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
-perk_api int  pe_output_image_strings	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
-perk_api int  pe_output_export_symbols	(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_main                   (int, char **, char **);
+perk_api int  pe_output_image_category  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_output_image_sections  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_output_image_symbols   (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_output_image_strings   (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
+perk_api int  pe_output_export_symbols  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_import_libraries(const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_mdso_libraries  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 
 /* error trace api */
-perk_api int  pe_output_error_record	(const struct pe_driver_ctx *, const struct pe_error_info *);
-perk_api int  pe_output_error_vector	(const struct pe_driver_ctx *);
+perk_api int  pe_output_error_record    (const struct pe_driver_ctx *, const struct pe_error_info *);
+perk_api int  pe_output_error_vector    (const struct pe_driver_ctx *);
 
-/* high-level api */
-perk_api int  pe_map_raw_image		(const struct pe_driver_ctx *, int fd, const char * path, int prot, struct pe_raw_image *);
-perk_api int  pe_unmap_raw_image	(struct pe_raw_image *);
+/* raw image api */
+perk_api int  pe_map_raw_image          (const struct pe_driver_ctx *,
+                                         int fd, const char * path, int prot,
+                                         struct pe_raw_image *);
 
-perk_api int  pe_get_image_meta		(const struct pe_driver_ctx *, const struct pe_raw_image *, struct pe_image_meta **);
-perk_api void pe_free_image_meta	(struct pe_image_meta *);
+perk_api int  pe_unmap_raw_image        (struct pe_raw_image *);
 
-perk_api int  pe_get_named_section_index(const struct pe_image_meta *, const char * name);
+/* image meta api */
+perk_api int  pe_get_image_meta         (const struct pe_driver_ctx *,
+                                         const struct pe_raw_image *,
+                                         struct pe_image_meta **);
+
+perk_api void pe_free_image_meta        (struct pe_image_meta *);
+
+perk_api int  pe_get_named_section_index(const struct pe_image_meta *, const char *);
 perk_api int  pe_get_block_section_index(const struct pe_image_meta *, const struct pe_block *);
 
-perk_api int  pe_get_roffset_from_rva	(const struct pe_image_meta *, uint32_t rva, uint32_t * roffset);
-perk_api int  pe_get_rva_from_roffset	(const struct pe_image_meta *, uint32_t roffset, uint32_t * rva);
+perk_api int  pe_get_roffset_from_rva   (const struct pe_image_meta *, uint32_t, uint32_t *);
+perk_api int  pe_get_rva_from_roffset   (const struct pe_image_meta *, uint32_t, uint32_t *);
 
-perk_api int  pe_get_expsym_by_name	(const struct pe_image_meta *, const char * name, struct pe_expsym * optional);
-perk_api int  pe_get_expsym_by_index	(const struct pe_image_meta *, unsigned index, struct pe_expsym * optional);
+perk_api int  pe_get_expsym_by_name     (const struct pe_image_meta *, const char *, struct pe_expsym *);
+perk_api int  pe_get_expsym_by_index    (const struct pe_image_meta *, unsigned,     struct pe_expsym *);
 
 /* info api */
-perk_api int  pe_get_image_abi		(const struct pe_image_meta *, struct pe_info_string * optional);
-perk_api int  pe_get_image_subtype	(const struct pe_image_meta *, struct pe_info_string * optional);
-perk_api int  pe_get_image_subsystem	(const struct pe_image_meta *, struct pe_info_string * optional);
-perk_api int  pe_get_image_framework	(const struct pe_image_meta *, struct pe_info_string * optional);
+perk_api int  pe_get_image_abi          (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_get_image_subtype      (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_get_image_subsystem    (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_get_image_framework    (const struct pe_image_meta *, struct pe_info_string *);
 
 /* low-level api */
-perk_api int  pe_read_dos_header	(const struct pe_raw_image_dos_hdr *,	struct pe_meta_image_dos_hdr *);
-perk_api int  pe_read_coff_header	(const struct pe_raw_coff_image_hdr *,	struct pe_meta_coff_file_hdr *);
-perk_api int  pe_read_object_header	(const struct pe_raw_coff_object_hdr *,	struct pe_meta_coff_file_hdr *);
-perk_api int  pe_read_optional_header	(const union  pe_raw_opt_hdr *,		struct pe_meta_opt_hdr *);
-perk_api int  pe_read_section_header	(const struct pe_raw_sec_hdr *,		struct pe_meta_sec_hdr *);
-perk_api int  pe_read_export_header	(const struct pe_raw_export_hdr *,	struct pe_meta_export_hdr *);
-perk_api int  pe_read_import_header	(const struct pe_raw_import_hdr *,	struct pe_meta_import_hdr *);
+perk_api int  pe_read_dos_header        (const struct pe_raw_image_dos_hdr *,   struct pe_meta_image_dos_hdr *);
+perk_api int  pe_read_coff_header       (const struct pe_raw_coff_image_hdr *,  struct pe_meta_coff_file_hdr *);
+perk_api int  pe_read_object_header     (const struct pe_raw_coff_object_hdr *, struct pe_meta_coff_file_hdr *);
+perk_api int  pe_read_optional_header   (const union  pe_raw_opt_hdr *,         struct pe_meta_opt_hdr *);
+perk_api int  pe_read_section_header    (const struct pe_raw_sec_hdr *,         struct pe_meta_sec_hdr *);
+perk_api int  pe_read_export_header     (const struct pe_raw_export_hdr *,      struct pe_meta_export_hdr *);
+perk_api int  pe_read_import_header     (const struct pe_raw_import_hdr *,      struct pe_meta_import_hdr *);
 
-perk_api int  pe_read_coff_symbol	(const struct pe_raw_coff_symbol *,	struct pe_meta_coff_symbol *,
-					 const struct pe_meta_coff_file_hdr *,	void * base);
+perk_api int  pe_read_coff_symbol       (const struct pe_raw_coff_symbol *,     struct pe_meta_coff_symbol *,
+                                         const struct pe_meta_coff_file_hdr *,  void * base);
 
-perk_api int  pe_read_import_lookup	(const union  pe_raw_import_lookup *,	struct pe_meta_import_lookup *,
-					 uint32_t magic);
+perk_api int  pe_read_import_lookup     (const union  pe_raw_import_lookup *,   struct pe_meta_import_lookup *,
+                                         uint32_t magic);
+
+/* package info */
+perk_api const struct pe_source_version * pe_source_version(void);
 
 #ifdef __cplusplus
 }
