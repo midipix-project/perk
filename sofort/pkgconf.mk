@@ -31,9 +31,9 @@ install-pkgconf: build/$(PACKAGE).pc
 	mkdir -p $(DESTDIR)$(LIBDIR)/pkgconfig
 	cp -p build/$(PACKAGE).pc    $(DESTDIR)$(LIBDIR)/pkgconfig
 
-package-install-shared: install-pkgconf
+install-shared: install-pkgconf
 
-package-install-static: install-pkgconf
+install-static: install-pkgconf
 
 .PHONY: .pkgconf install-pkgconf
 
