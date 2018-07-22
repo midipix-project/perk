@@ -126,6 +126,15 @@ struct pe_source_version {
 	const char *	commit;
 };
 
+struct pe_fd_ctx {
+	int		fdin;
+	int		fdout;
+	int		fderr;
+	int		fdlog;
+	int		fdcwd;
+	int		fddst;
+};
+
 struct pe_error_info {
 	const struct pe_driver_ctx *	edctx;
 	const struct pe_unit_ctx *	euctx;
@@ -166,6 +175,7 @@ struct pe_info_string {
 
 /* driver api */
 perk_api int  pe_get_driver_ctx         (char ** argv, char ** envp, uint32_t flags,
+                                         const struct pe_fd_ctx *,
                                          struct pe_driver_ctx **);
 
 perk_api void pe_free_driver_ctx        (struct pe_driver_ctx *);
@@ -175,8 +185,12 @@ perk_api int  pe_get_unit_ctx           (const struct pe_driver_ctx *, const cha
 
 perk_api void pe_free_unit_ctx          (struct pe_unit_ctx *);
 
+perk_api int  pe_get_driver_fdctx       (const struct pe_driver_ctx *, struct pe_fd_ctx *);
+perk_api int  pe_set_driver_fdctx       (struct pe_driver_ctx *, const struct pe_fd_ctx *);
+
 /* utility api */
-perk_api int  pe_main                   (int, char **, char **);
+perk_api int  pe_main                   (int, char **, char **, const struct pe_fd_ctx *);
+
 perk_api int  pe_output_image_category  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_image_sections  (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);
 perk_api int  pe_output_image_symbols   (const struct pe_driver_ctx *, const struct pe_image_meta *, FILE *);

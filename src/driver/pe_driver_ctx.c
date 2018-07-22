@@ -48,6 +48,7 @@ static uint32_t pe_argv_flags(uint32_t flags)
 }
 
 static int pe_driver_usage(
+	int				fdout,
 	const char *			program,
 	const char *			arg,
 	const struct argv_option **	optv,
@@ -59,7 +60,7 @@ static int pe_driver_usage(
 		"Usage: %s [options] <file>...\n" "Options:\n",
 		program);
 
-	argv_usage(STDOUT_FILENO,header,optv,arg);
+	argv_usage(fdout,header,optv,arg);
 	argv_free(meta);
 
 	return PERK_USAGE;
@@ -67,6 +68,7 @@ static int pe_driver_usage(
 
 static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	struct argv_meta *		meta,
+	const struct pe_fd_ctx *	fdctx,
 	const struct pe_common_ctx *	cctx,
 	size_t				nunits)
 {
@@ -82,8 +84,8 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	if (!(ictx = calloc(1,size)))
 		return 0;
 
-	if (cctx)
-		memcpy(&ictx->ctx.cctx,cctx,sizeof(*cctx));
+	memcpy(&ictx->ctx.fdctx,fdctx,sizeof(*fdctx));
+	memcpy(&ictx->ctx.cctx,cctx,sizeof(*cctx));
 
 	elements = sizeof(ictx->ctx.erribuf) / sizeof(*ictx->ctx.erribuf);
 
@@ -108,10 +110,11 @@ static int pe_get_driver_ctx_fail(struct argv_meta * meta)
 }
 
 int pe_get_driver_ctx(
-	char **			argv,
-	char **			envp,
-	uint32_t		flags,
-	struct pe_driver_ctx ** pctx)
+	char **				argv,
+	char **				envp,
+	uint32_t			flags,
+	const struct pe_fd_ctx *	fdctx,
+	struct pe_driver_ctx ** 	pctx)
 {
 	struct pe_driver_ctx_impl *	ctx;
 	struct pe_common_ctx		cctx;
@@ -123,6 +126,17 @@ int pe_get_driver_ctx(
 	const char *			pretty;
 
 	(void)envp;
+
+	if (!fdctx) {
+		fdctx = &(const struct pe_fd_ctx) {
+			.fdin  = STDIN_FILENO,
+			.fdout = STDOUT_FILENO,
+			.fderr = STDERR_FILENO,
+			.fdlog = (-1),
+			.fdcwd = AT_FDCWD,
+			.fddst = AT_FDCWD,
+		};
+	}
 
 	argv_optv_init(pe_default_options,optv);
 
@@ -139,7 +153,10 @@ int pe_get_driver_ctx(
 	cctx.drvflags = flags;
 
 	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
-		return pe_driver_usage(program,0,optv,meta);
+		return pe_driver_usage(
+			fdctx->fderr,
+			program,
+			0,optv,meta);
 
 	/* get options, count units */
 	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
@@ -147,7 +164,10 @@ int pe_get_driver_ctx(
 			switch (entry->tag) {
 				case TAG_HELP:
 					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
-						return pe_driver_usage(program,entry->arg,optv,meta);
+						return pe_driver_usage(
+							fdctx->fdout,
+							program,entry->arg,
+							optv,meta);
 
 				case TAG_VERSION:
 					cctx.drvflags |= PERK_DRIVER_VERSION;
@@ -202,7 +222,7 @@ int pe_get_driver_ctx(
 	else if (pretty && !strcmp(pretty,"dlltool"))
 		cctx.fmtflags |= PERK_PRETTY_DLLTOOL;
 
-	if (!(ctx = pe_driver_ctx_alloc(meta,&cctx,nunits)))
+	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))
 		return pe_get_driver_ctx_fail(meta);
 
 	ctx->ctx.program	= program;
@@ -234,4 +254,40 @@ void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 const struct pe_source_version * pe_source_version(void)
 {
 	return &pe_src_version;
+}
+
+int pe_get_driver_fdctx(
+	const struct pe_driver_ctx *	dctx,
+	struct pe_fd_ctx *		fdctx)
+{
+	struct pe_driver_ctx_impl *	ictx;
+
+	ictx = pe_get_driver_ictx(dctx);
+
+	fdctx->fdin  = ictx->fdctx.fdin;
+	fdctx->fdout = ictx->fdctx.fdout;
+	fdctx->fderr = ictx->fdctx.fderr;
+	fdctx->fdlog = ictx->fdctx.fdlog;
+	fdctx->fdcwd = ictx->fdctx.fdcwd;
+	fdctx->fddst = ictx->fdctx.fddst;
+
+	return 0;
+}
+
+int pe_set_driver_fdctx(
+	struct pe_driver_ctx *	dctx,
+	const struct pe_fd_ctx *	fdctx)
+{
+	struct pe_driver_ctx_impl *	ictx;
+
+	ictx = pe_get_driver_ictx(dctx);
+
+	ictx->fdctx.fdin  = fdctx->fdin;
+	ictx->fdctx.fdout = fdctx->fdout;
+	ictx->fdctx.fderr = fdctx->fderr;
+	ictx->fdctx.fdlog = fdctx->fdlog;
+	ictx->fdctx.fdcwd = fdctx->fdcwd;
+	ictx->fdctx.fddst = fdctx->fddst;
+
+	return 0;
 }

@@ -8,5 +8,5 @@
 
 int main(int argc, char ** argv, char ** envp)
 {
-	return pe_main(argc,argv,envp);
+	return pe_main(argc,argv,envp,0);
 }

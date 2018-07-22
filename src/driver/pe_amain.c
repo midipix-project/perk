@@ -9,6 +9,7 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
+#include "perk_dprintf_impl.h"
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS \
@@ -31,15 +32,16 @@ static const char * const pe_ver_plain[6] = {
 		"",""
 };
 
-static ssize_t pe_version(struct pe_driver_ctx * dctx)
+static ssize_t pe_version(int fdout, struct pe_driver_ctx * dctx)
 {
 	const struct pe_source_version * verinfo;
 	const char * const * verclr;
 
 	verinfo = pe_source_version();
-	verclr  = isatty(STDOUT_FILENO) ? pe_ver_color : pe_ver_plain;
+	verclr  = isatty(fdout) ? pe_ver_color : pe_ver_plain;
 
-	return fprintf(stdout,vermsg,
+	return pe_dprintf(
+			fdout,vermsg,
 			verclr[0],dctx->program,verclr[1],
 			verclr[2],verinfo->major,verinfo->minor,
 			verinfo->revision,verclr[3],
@@ -81,20 +83,25 @@ static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 	return ret;
 }
 
-int pe_main(int argc, char ** argv, char ** envp)
+int pe_main(int argc, char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 {
 	int			ret;
+	int			fdout;
+	uint64_t		flags;
 	struct pe_driver_ctx *	dctx;
 	struct pe_unit_ctx *	uctx;
 	const char **		unit;
 
-	if ((ret = pe_get_driver_ctx(argv,envp,PERK_DRIVER_FLAGS,&dctx)))
+	flags = PERK_DRIVER_FLAGS;
+	fdout = fdctx ? fdctx->fdout : STDOUT_FILENO;
+
+	if ((ret = pe_get_driver_ctx(argv,envp,flags,fdctx,&dctx)))
 		return (ret == PERK_USAGE)
 			? !--argc
 			: PERK_ERROR;
 
 	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
-		if ((pe_version(dctx)) < 0)
+		if ((pe_version(fdout,dctx)) < 0)
 			return pe_exit(dctx,PERK_ERROR);
 
 	for (unit=dctx->units; *unit; unit++) {
