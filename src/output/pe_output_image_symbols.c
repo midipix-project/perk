@@ -10,24 +10,25 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_reader_impl.h"
+#include "perk_driver_impl.h"
+#include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
 int pe_output_image_symbols(
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_image_meta *	meta,
-	FILE *				fout)
+	const struct pe_image_meta *	meta)
 {
 	unsigned			i;
+	int				fdout;
 	char *				mark;
 	struct pe_raw_coff_symbol *	symtbl;
 	struct pe_meta_coff_symbol	symrec;
 	const char * 			dash = "";
 
-	if (!fout)
-		fout = stdout;
+	fdout = pe_driver_fdout(dctx);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
-		if (fputs("symbols:\n",fout) < 0)
+		if (pe_dprintf(fdout,"symbols:\n") < 0)
 			return PERK_FILE_ERROR(dctx);
 
 		dash = "- ";
@@ -41,7 +42,9 @@ int pe_output_image_symbols(
 			&symtbl[i],&symrec,
 			&meta->m_coff,meta->r_image.map_addr);
 
-		if (fprintf(fout,"%s%s\n",
+		if (pe_dprintf(
+				fdout,
+				"%s%s\n",
 				dash,
 				symrec.cs_long_name
 					? symrec.cs_long_name

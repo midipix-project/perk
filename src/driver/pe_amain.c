@@ -55,25 +55,25 @@ static void pe_perform_unit_actions(
 	uint64_t flags = dctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
-		pe_output_image_category(dctx,uctx->meta,0);
+		pe_output_image_category(dctx,uctx->meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_SECTIONS)
-		pe_output_image_sections(dctx,uctx->meta,0);
+		pe_output_image_sections(dctx,uctx->meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_SYMBOLS)
-		pe_output_image_symbols(dctx,uctx->meta,0);
+		pe_output_image_symbols(dctx,uctx->meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_STRINGS)
-		pe_output_image_strings(dctx,uctx->meta,0);
+		pe_output_image_strings(dctx,uctx->meta);
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS)
-		pe_output_export_symbols(dctx,uctx->meta,0);
+		pe_output_export_symbols(dctx,uctx->meta);
 
 	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS))
-		pe_output_import_libraries(dctx,uctx->meta,0);
+		pe_output_import_libraries(dctx,uctx->meta);
 
 	if ((flags & PERK_OUTPUT_MDSO_LIBS) || (flags & PERK_OUTPUT_MDSO_SYMS))
-		pe_output_mdso_libraries(dctx,uctx->meta,0);
+		pe_output_mdso_libraries(dctx,uctx->meta);
 }
 
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)

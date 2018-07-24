@@ -12,43 +12,49 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_driver_impl.h"
+#include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
-static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
+static int pretty_header(
+	int				fdout,
+	const struct pe_common_ctx *	cctx)
 {
 	if (cctx->fmtflags & PERK_PRETTY_YAML)
-		return fputs("exports:\n",fout);
+		return pe_dprintf(fdout,"exports:\n");
 	else if (cctx->fmtflags & PERK_PRETTY_DLLTOOL)
-		return fputs("EXPORTS\n",fout);
+		return pe_dprintf(fdout,"EXPORTS\n");
 	return 0;
 }
 
-static int pretty_export_item(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
+static int pretty_export_item(
+	int				fdout,
+	const struct pe_common_ctx *	cctx,
+	const char *			name)
 {
 	if (cctx->fmtflags & PERK_PRETTY_YAML)
-		return fprintf(fout,"- %s\n",name);
+		return pe_dprintf(fdout,"- %s\n",name);
 	else
-		return fprintf(fout,"%s\n",name);
+		return pe_dprintf(fdout,"%s\n",name);
 }
 
 int pe_output_export_symbols(
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_image_meta *	m,
-	FILE *				fout)
+	const struct pe_image_meta *	m)
 {
+	int				fdout;
 	char *				mark;
 	uint32_t 			offset;
 	uint32_t *			symrva;
 	unsigned			i;
 	const struct pe_common_ctx *	cctx = dctx->cctx;
 
+	fdout = pe_driver_fdout(dctx);
+
 	if (!m->h_edata)
 		return 0;
 
-	if (!fout)
-		fout = stdout;
-
-	if ((pretty_header(cctx,fout)) < 0)
+	if ((pretty_header(fdout,cctx)) < 0)
 		return PERK_FILE_ERROR(dctx);
 
 	mark	= m->r_image.map_addr;
@@ -57,9 +63,8 @@ int pe_output_export_symbols(
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++)
 		if ((pretty_export_item(
-				cctx,
-				&mark[symrva[i] - offset],
-				fout)) < 0)
+				fdout,cctx,
+				&mark[symrva[i] - offset])) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 	return 0;

@@ -16,33 +16,43 @@
 #include <perk/perk.h>
 #include <perk/perk_output.h>
 #include "perk_reader_impl.h"
+#include "perk_driver_impl.h"
+#include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
-static int pretty_header(const struct pe_common_ctx * cctx, FILE * fout)
+static int pretty_header(
+	int				fdout,
+	const struct pe_common_ctx *	cctx)
 {
 	return (cctx->fmtflags & PERK_PRETTY_YAML)
-		? fputs("dsolibs:\n",fout)
+		? pe_dprintf(fdout,"dsolibs:\n")
 		: 0;
 }
 
-static int pretty_dsolib_header(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
+static int pretty_dsolib_header(
+	int				fdout,
+	const struct pe_common_ctx *	cctx,
+	const char *			name)
 {
 	if ((cctx->fmtflags & PERK_PRETTY_YAML) && (cctx->fmtflags & PERK_OUTPUT_MDSO_SYMS))
-		return fprintf(fout,"  %s:\n",name);
+		return pe_dprintf(fdout,"  %s:\n",name);
 	else if (cctx->fmtflags & PERK_PRETTY_YAML)
-		return fprintf(fout,"- %s:\n",name);
+		return pe_dprintf(fdout,"- %s:\n",name);
 	else if (cctx->fmtflags & PERK_OUTPUT_MDSO_SYMS)
-		return fprintf(fout,"%s:\n",name);
+		return pe_dprintf(fdout,"%s:\n",name);
 	else
-		return fprintf(fout,"%s\n",name);
+		return pe_dprintf(fdout,"%s\n",name);
 }
 
-static int pretty_dsolib_item(const struct pe_common_ctx * cctx, const char * name, FILE * fout)
+static int pretty_dsolib_item(
+	int				fdout,
+	const struct pe_common_ctx *	cctx,
+	const char *			name)
 {
 	if (cctx->fmtflags & PERK_PRETTY_YAML)
-		return fprintf(fout,"  - %s\n",name);
+		return pe_dprintf(fdout,"  - %s\n",name);
 	else
-		return fprintf(fout,"%s\n",name);
+		return pe_dprintf(fdout,"%s\n",name);
 }
 
 static unsigned char * dsolib_meta(const struct pe_image_meta * m, int i)
@@ -142,27 +152,26 @@ static char * dsosym_string(const struct pe_image_meta * m, int j)
 
 int pe_output_mdso_libraries(
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_image_meta *	m,
-	FILE *				fout)
+	const struct pe_image_meta *	m)
 {
 	int				i,j;
+	int				fdout;
 	char *				name;
 	unsigned char *			symmeta;
 	unsigned char *			dsometa;
 	char *				symstr;
 	const struct pe_common_ctx *	cctx = dctx->cctx;
 
+	fdout = pe_driver_fdout(dctx);
+
 	if (!m->m_stats.t_ndsolibs)
 		return 0;
-
-	if (!fout)
-		fout = stdout;
 
 	if (pe_get_image_abi(m,0) == PE_ABI_UNSUPPORTED)
 		return PERK_CUSTOM_ERROR(
 			dctx,PERK_ERR_UNSUPPORTED_ABI);
 
-	if ((pretty_header(cctx,fout)) < 0)
+	if ((pretty_header(fdout,cctx)) < 0)
 		return PERK_FILE_ERROR(dctx);
 
 	for (i=0; i<m->m_stats.t_ndsolibs; i++) {
@@ -172,7 +181,7 @@ int pe_output_mdso_libraries(
 			return PERK_CUSTOM_ERROR(
 				dctx,PERK_ERR_IMAGE_MALFORMED);
 
-		if ((pretty_dsolib_header(cctx,name,fout)) < 0)
+		if ((pretty_dsolib_header(fdout,cctx,name)) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 		if (cctx->fmtflags & PERK_OUTPUT_MDSO_SYMS) {
@@ -186,7 +195,7 @@ int pe_output_mdso_libraries(
 						dctx,PERK_ERR_IMAGE_MALFORMED);
 
 				if (symmeta == dsometa)
-					if ((pretty_dsolib_item(cctx,symstr,fout)) < 0)
+					if ((pretty_dsolib_item(fdout,cctx,symstr)) < 0)
 						return PERK_FILE_ERROR(dctx);
 			}
 		}

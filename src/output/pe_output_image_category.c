@@ -8,20 +8,21 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include "perk_driver_impl.h"
+#include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
 int pe_output_image_category(
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_image_meta *	meta,
-	FILE *				fout)
+	const struct pe_image_meta *	meta)
 {
+	int				fdout;
 	struct pe_info_string		abi;
 	struct pe_info_string		subtype;
 	struct pe_info_string		subsystem;
 	struct pe_info_string		framework;
 
-	if (!fout)
-		fout = stdout;
+	fdout = pe_driver_fdout(dctx);
 
 	pe_get_image_abi      (meta,&abi);
 	pe_get_image_subtype  (meta,&subtype);
@@ -29,14 +30,18 @@ int pe_output_image_category(
 	pe_get_image_framework(meta,&framework);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
-		if (fprintf(fout,"category:\n- %s:\n- %s:\n- %s:\n- %s:\n",
+		if (pe_dprintf(
+				fdout,
+				"category:\n- %s:\n- %s:\n- %s:\n- %s:\n",
 				abi.buffer,
 				subtype.buffer,
 				subsystem.buffer,
 				framework.buffer) < 0)
 			return PERK_FILE_ERROR(dctx);
 	} else {
-		if (fprintf(fout,"%s-%s-%s-%s\n",
+		if (pe_dprintf(
+				fdout,
+				"%s-%s-%s-%s\n",
 				abi.buffer,
 				subtype.buffer,
 				subsystem.buffer,
