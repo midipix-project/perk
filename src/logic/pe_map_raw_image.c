@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 
 #include <perk/perk.h>
+#include "perk_driver_impl.h"
 #include "perk_errinfo_impl.h"
 
 int pe_map_raw_image(
@@ -22,12 +23,15 @@ int pe_map_raw_image(
 	int				prot,
 	struct pe_raw_image *		map)
 {
+	int		ret;
 	struct stat	st;
 	bool		fnew;
-	int		ret;
+	int		fdcwd;
+
+	fdcwd = pe_driver_fdcwd(dctx);
 
 	if ((fnew = (fd < 0)))
-		fd  = open(path,O_RDONLY | O_CLOEXEC);
+		fd  = openat(fdcwd,path,O_RDONLY | O_CLOEXEC);
 
 	if (fd < 0)
 		return PERK_SYSTEM_ERROR(dctx);
