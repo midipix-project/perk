@@ -187,7 +187,7 @@ int pe_output_error_record(
 	else if (dctx->cctx->drvflags & PERK_DRIVER_ANNOTATE_ALWAYS)
 		return pe_output_error_record_annotated(dctx,erri);
 
-	else if (isatty(STDERR_FILENO))
+	else if (isatty(pe_driver_fderr(dctx)))
 		return pe_output_error_record_annotated(dctx,erri);
 
 	else
@@ -224,7 +224,7 @@ int pe_output_error_vector(const struct pe_driver_ctx * dctx)
 	else if (dctx->cctx->drvflags & PERK_DRIVER_ANNOTATE_ALWAYS)
 		return pe_output_error_vector_annotated(dctx);
 
-	else if (isatty(STDERR_FILENO))
+	else if (isatty(pe_driver_fderr(dctx)))
 		return pe_output_error_vector_annotated(dctx);
 
 	else
