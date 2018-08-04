@@ -143,7 +143,7 @@ int pe_get_driver_ctx(
 	if (!(meta = argv_get(
 			argv,optv,
 			pe_argv_flags(flags),
-			STDERR_FILENO)))
+			fdctx->fderr)))
 		return -1;
 
 	pretty	= 0;
