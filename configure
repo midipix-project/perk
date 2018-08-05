@@ -24,7 +24,7 @@ warning_msg()
 
 init_vars()
 {
-	mb_project_dir=$(cd `dirname $0` ; pwd)
+	mb_project_dir=$(cd "$(dirname $0)" ; pwd)
 	mb_pwd=`pwd`
 
 	if [ -z "$mb_config" ]; then
