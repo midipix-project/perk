@@ -32,7 +32,7 @@ static const char * const pe_ver_plain[6] = {
 		"",""
 };
 
-static ssize_t pe_version(int fdout, struct pe_driver_ctx * dctx)
+static ssize_t pe_version(struct pe_driver_ctx * dctx, int fdout)
 {
 	const struct pe_source_version * verinfo;
 	const char * const * verclr;
@@ -101,7 +101,7 @@ int pe_main(int argc, char ** argv, char ** envp, const struct pe_fd_ctx * fdctx
 			: PERK_ERROR;
 
 	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
-		if ((pe_version(fdout,dctx)) < 0)
+		if ((pe_version(dctx,fdout)) < 0)
 			return pe_exit(dctx,PERK_ERROR);
 
 	for (unit=dctx->units; *unit; unit++) {
