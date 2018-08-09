@@ -189,7 +189,7 @@ perk_api int  pe_get_driver_fdctx       (const struct pe_driver_ctx *, struct pe
 perk_api int  pe_set_driver_fdctx       (struct pe_driver_ctx *, const struct pe_fd_ctx *);
 
 /* utility api */
-perk_api int  pe_main                   (int, char **, char **, const struct pe_fd_ctx *);
+perk_api int  pe_main                   (char **, char **, const struct pe_fd_ctx *);
 
 perk_api int  pe_output_image_category  (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_image_sections  (const struct pe_driver_ctx *, const struct pe_image_meta *);

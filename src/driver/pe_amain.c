@@ -83,7 +83,7 @@ static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 	return ret;
 }
 
-int pe_main(int argc, char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
+int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 {
 	int			ret;
 	int			fdout;
@@ -97,7 +97,7 @@ int pe_main(int argc, char ** argv, char ** envp, const struct pe_fd_ctx * fdctx
 
 	if ((ret = pe_get_driver_ctx(argv,envp,flags,fdctx,&dctx)))
 		return (ret == PERK_USAGE)
-			? !--argc
+			? !argv || !argv[0] || !argv[1]
 			: PERK_ERROR;
 
 	if (dctx->cctx->drvflags & PERK_DRIVER_VERSION)
