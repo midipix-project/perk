@@ -63,7 +63,9 @@ static const char * pe_output_unit_header(const struct pe_error_info * erri)
 		return "while parsing";
 }
 
-static const char * pe_output_strerror(const struct pe_error_info * erri)
+static const char * pe_output_strerror(
+	const struct pe_error_info * erri,
+	char (*errbuf)[256])
 {
 	if (erri->eflags & PERK_ERROR_CUSTOM)
 		return ((erri->elibcode < 0) || (erri->elibcode >= PERK_ERR_CAP))
@@ -80,7 +82,10 @@ static const char * pe_output_strerror(const struct pe_error_info * erri)
 		return "input error: string length exceeds buffer size.";
 
 	else
-		return strerror(erri->esyscode);
+		return strerror_r(erri->esyscode,*errbuf,sizeof(*errbuf))
+			? "internal error: strerror_r(3) call failed"
+			: *errbuf;
+
 }
 
 static int pe_output_error_record_plain(
@@ -88,8 +93,10 @@ static int pe_output_error_record_plain(
 	const struct pe_error_info *	erri)
 {
 	const char * epath;
-	const char * errdesc = pe_output_strerror(erri);
+	char         errbuf[256];
+
 	int          fderr   = pe_driver_fderr(dctx);
+	const char * errdesc = pe_output_strerror(erri,&errbuf);
 
 	epath = erri->euctx
 		? *erri->euctx->path
@@ -123,8 +130,10 @@ static int pe_output_error_record_annotated(
 	const struct pe_error_info *	erri)
 {
 	const char * epath;
-	const char * errdesc = pe_output_strerror(erri);
+	char         errbuf[256];
+
 	int          fderr   = pe_driver_fderr(dctx);
+	const char * errdesc = pe_output_strerror(erri,&errbuf);
 
 	epath = erri->euctx
 		? *erri->euctx->path
@@ -170,7 +179,7 @@ static int pe_output_error_record_annotated(
 			strlen(errdesc) ? ": " : "",
 
 			aclr_bold,
-			pe_output_strerror(erri),
+			errdesc,
 			aclr_reset) < 0)
 		return -1;
 
