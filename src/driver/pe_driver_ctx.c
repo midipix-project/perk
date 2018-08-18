@@ -33,7 +33,7 @@ struct pe_driver_ctx_alloc {
 
 static uint32_t pe_argv_flags(uint32_t flags)
 {
-	uint32_t ret = 0;
+	uint32_t ret = ARGV_CLONE_VECTOR;
 
 	if (flags & PERK_DRIVER_VERBOSITY_NONE)
 		ret |= ARGV_VERBOSITY_NONE;
