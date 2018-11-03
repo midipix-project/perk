@@ -171,6 +171,44 @@ int pe_get_expsym_by_index(
 	return 0;
 }
 
+static void pe_detect_image_abi(struct pe_image_meta * m)
+{
+	int abi;
+
+	if (m->r_obj) {
+		switch (m->m_coff.cfh_machine) {
+			case PE_IMAGE_FILE_MACHINE_I386:
+				abi = PE_ABI_PE32;
+				break;
+
+			case PE_IMAGE_FILE_MACHINE_IA64:
+			case PE_IMAGE_FILE_MACHINE_AMD64:
+				abi = PE_ABI_PE64;
+				break;
+
+			default:
+				abi = PE_ABI_UNSUPPORTED;
+				break;
+		}
+	} else {
+		switch (m->m_opt.oh_std.coh_magic) {
+			case PE_MAGIC_PE32:
+				abi = PE_ABI_PE32;
+				break;
+
+			case PE_MAGIC_PE32_PLUS:
+				abi = PE_ABI_PE64;
+				break;
+
+			default:
+				abi = PE_ABI_UNSUPPORTED;
+				break;
+		}
+	}
+
+	m->m_abi = abi;
+}
+
 int pe_get_image_meta(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_raw_image *	image,
@@ -384,16 +422,20 @@ int pe_get_image_meta(
 		m->r_dsodata = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 	}
 
+	/* image */
+	m->r_image.map_addr = image->map_addr;
+	m->r_image.map_size = image->map_size;
+
+	/* info */
+	pe_detect_image_abi(m);
+
 	/* mdso abi */
 	if (m->h_dsometa || m->h_dsosyms)
-		if (pe_get_image_abi(m,0) == PE_ABI_UNSUPPORTED)
+		if (m->m_abi == PE_ABI_UNSUPPORTED)
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(
 					dctx,PERK_ERR_UNSUPPORTED_ABI));
 
-	/* image */
-	m->r_image.map_addr = image->map_addr;
-	m->r_image.map_size = image->map_size;
 
 	/* all done */
 	*meta = m;
