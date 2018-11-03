@@ -22,14 +22,8 @@ int pe_get_image_subtype(const struct pe_image_meta * m, struct pe_info_string *
 {
 	int subtype;
 
-	if (m->r_obj)
-		subtype = PE_SUBTYPE_OBJ;
-
-	else if (m->m_coff.cfh_characteristics & PE_IMAGE_FILE_DLL)
-		subtype = PE_SUBTYPE_DLL;
-
-	else
-		subtype = PE_SUBTYPE_EXE;
+	if (((subtype = m->m_subtype) < 0) || (subtype >= PE_SUBTYPE_CAP))
+		subtype = PE_SUBTYPE_UNRECOGNIZED;
 
 	if (infostr)
 		strcpy(infostr->buffer,pe_subtype_str[subtype]);

@@ -209,6 +209,22 @@ static void pe_detect_image_abi(struct pe_image_meta * m)
 	m->m_abi = abi;
 }
 
+static void pe_detect_image_subtype(struct pe_image_meta * m)
+{
+	int subtype;
+
+	if (m->r_obj)
+		subtype = PE_SUBTYPE_OBJ;
+
+	else if (m->m_coff.cfh_characteristics & PE_IMAGE_FILE_DLL)
+		subtype = PE_SUBTYPE_DLL;
+
+	else
+		subtype = PE_SUBTYPE_EXE;
+
+	m->m_subtype = subtype;
+}
+
 int pe_get_image_meta(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_raw_image *	image,
@@ -428,6 +444,7 @@ int pe_get_image_meta(
 
 	/* info */
 	pe_detect_image_abi(m);
+	pe_detect_image_subtype(m);
 
 	/* mdso abi */
 	if (m->h_dsometa || m->h_dsosyms)
