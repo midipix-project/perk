@@ -225,6 +225,81 @@ static void pe_detect_image_subtype(struct pe_image_meta * m)
 	m->m_subtype = subtype;
 }
 
+static bool pe_image_is_psxscl(const struct pe_image_meta * m)
+{
+	return (!m->m_stats.t_nimplibs
+		&& !pe_get_expsym_by_name(m,"__psx_init",0));
+}
+
+static bool pe_image_is_cygwin(const struct pe_image_meta * m)
+{
+	int i;
+
+	for (i=0; i<m->m_stats.t_nimplibs; i++)
+		if (!(strcmp(m->m_idata[i].ih_name,"cygwin1.dll")))
+			return true;
+
+	return false;
+}
+
+static bool pe_image_is_msys(const struct pe_image_meta * m)
+{
+	int i;
+
+	for (i=0; i<m->m_stats.t_nimplibs; i++)
+		if (!(strcmp(m->m_idata[i].ih_name,"msys-2.0.dll")))
+			return true;
+
+	return false;
+}
+
+static bool pe_image_is_mingw(const struct pe_image_meta * m)
+{
+	return ((pe_get_named_section_index(m,".CRT") >= 0)
+		&& (pe_get_named_section_index(m,".bss") >= 0)
+		&& (pe_get_named_section_index(m,".tls") >= 0));
+}
+
+static void pe_detect_image_framework(struct pe_image_meta * m)
+{
+	int framework;
+
+	if (pe_get_named_section_index(m,".midipix") >= 0)
+		framework = PE_FRAMEWORK_MIDIPIX;
+
+	else if (pe_get_named_section_index(m,".freestd") >= 0)
+		framework = PE_FRAMEWORK_FREESTD;
+
+	else if (pe_get_named_section_index(m,".cygheap") >= 0)
+		framework = PE_FRAMEWORK_CYGONE;
+
+	else if (pe_image_is_psxscl(m))
+		framework = PE_FRAMEWORK_PSXSCL;
+
+	else if (pe_image_is_cygwin(m))
+		framework = PE_FRAMEWORK_CYGWIN;
+
+	else if (pe_image_is_msys(m))
+		framework = PE_FRAMEWORK_MSYS;
+
+	else if (pe_image_is_mingw(m))
+		framework = PE_FRAMEWORK_MINGW;
+
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_POSIX_CUI)
+		framework = PE_FRAMEWORK_SUACON;
+
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_CUI)
+		framework = PE_FRAMEWORK_WINCON;
+
+	else if (m->m_opt.oh_img.coh_subsystem == PE_IMAGE_SUBSYSTEM_WINDOWS_GUI)
+		framework = PE_FRAMEWORK_WIN32;
+
+	else
+		framework = PE_FRAMEWORK_UNKNOWN;
+
+	m->m_framework = framework;
+}
+
 int pe_get_image_meta(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_raw_image *	image,
@@ -445,6 +520,7 @@ int pe_get_image_meta(
 	/* info */
 	pe_detect_image_abi(m);
 	pe_detect_image_subtype(m);
+	pe_detect_image_framework(m);
 
 	/* mdso abi */
 	if (m->h_dsometa || m->h_dsosyms)
