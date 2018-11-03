@@ -117,6 +117,10 @@ struct pe_image_meta {
 	struct pe_meta_sec_hdr *	h_dsosyms;
 	struct pe_meta_sec_hdr *	h_dsostrs;
 	struct pe_meta_sec_hdr *	h_dsodata;
+
+	enum pe_abi			m_abi;
+	enum pe_subtype			m_subtype;
+	enum pe_framework		m_framework;
 };
 
 struct pe_source_version {
