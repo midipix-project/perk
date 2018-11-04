@@ -28,6 +28,7 @@ API_SRCS = \
 INTERNAL_SRCS = \
 	src/internal/$(PACKAGE)_dprintf_impl.c \
 	src/internal/$(PACKAGE)_errinfo_impl.c \
+	src/internal/$(PACKAGE)_hdrdump_impl.c \
 
 APP_SRCS = \
 	src/perk.c
