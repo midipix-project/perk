@@ -12,3 +12,7 @@ OS_IMPLIB_TOOL	= dlltool
 
 CFLAGS_PIC	=
 CFLAGS_OS      += -U__STRICT_ANSI__
+
+# dso suffix notation
+OS_LIB_PREFIXED_SUFFIX  = $(OS_LIB_SUFFIX)
+OS_LIB_SUFFIXED_SUFFIX  =

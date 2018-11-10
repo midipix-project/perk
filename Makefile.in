@@ -135,7 +135,7 @@ src/%.lo: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 src/%.o: 	$(SOURCE_DIR)/src/%.c $(ALL_HEADERS) host.tag tree.tag
 		$(CC) -c -o $@ $< $(CFLAGS_STATIC)
 
-lib/%$(OS_LIB_SUFFIX)$(VER_XYZ):
+lib/%$(OS_LIB_PREFIXED_SUFFIX)$(VER_XYZ)$(OS_LIB_SUFFIXED_SUFFIX):
 		$(CC) -shared -o $@ $^ $(LDFLAGS_SHARED)
 
 lib/%$(OS_ARCHIVE_EXT):

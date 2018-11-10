@@ -9,3 +9,7 @@ OS_ARCHIVE_EXT	= .a
 OS_SONAME	= symlink
 OS_BINFMT	= PE
 OS_IMPLIB_TOOL	= mdso
+
+# dso suffix notation
+OS_LIB_PREFIXED_SUFFIX  = $(OS_LIB_SUFFIX)
+OS_LIB_SUFFIXED_SUFFIX  =
