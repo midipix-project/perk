@@ -46,4 +46,18 @@ size_t pe_output_raw_element(
 	uint32_t	moffset,
 	uint32_t	msize);
 
+static inline int pe_image_bits(const struct pe_image_meta * m)
+{
+	switch (m->m_abi) {
+		case PE_ABI_PE32:
+			return 32;
+
+		case PE_ABI_PE64:
+			return 64;
+
+		default:
+			return -1;
+	}
+}
+
 #endif

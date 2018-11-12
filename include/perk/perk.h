@@ -203,6 +203,9 @@ perk_api int  pe_output_export_symbols  (const struct pe_driver_ctx *, const str
 perk_api int  pe_output_import_libraries(const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_mdso_libraries  (const struct pe_driver_ctx *, const struct pe_image_meta *);
 
+/* header dump api */
+perk_api int  pe_hdrdump_image_dos_hdr  (const struct pe_driver_ctx *, const struct pe_image_meta *);
+
 /* error trace api */
 perk_api int  pe_output_error_record    (const struct pe_driver_ctx *, const struct pe_error_info *);
 perk_api int  pe_output_error_vector    (const struct pe_driver_ctx *);
