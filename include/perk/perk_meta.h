@@ -198,6 +198,7 @@ struct pe_meta_sec_hdr {
 
 /* .edata section header*/
 struct pe_meta_export_hdr {
+	uint32_t	eh_virtual_addr;
 	uint32_t	eh_export_flags;
 	uint32_t	eh_time_date_stamp;
 	uint16_t	eh_major_ver;

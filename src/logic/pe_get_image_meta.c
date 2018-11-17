@@ -384,9 +384,11 @@ int pe_get_image_meta(
 		m->h_edata = &m->m_sectbl[s];
 		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_export_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
+		m->m_edata.eh_virtual_addr = m->m_opt.oh_dirs.coh_export_tbl.dh_rva;
 	} else if (i >= 0) {
 		m->h_edata = &m->m_sectbl[i];
 		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
+		m->m_edata.eh_virtual_addr = m->m_sectbl[i].sh_virtual_addr;
 	}
 
 	if (m->r_edata) {
