@@ -312,6 +312,7 @@ int pe_get_image_meta(
 	const unsigned char *	mark;
 	struct pe_image_meta *	m;
 	char *			base;
+	uint64_t		vaddr;
 
 	base = image->map_addr;
 
@@ -411,9 +412,11 @@ int pe_get_image_meta(
 		m->h_idata = &m->m_sectbl[s];
 		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
 				+ m->m_opt.oh_dirs.coh_import_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
+		vaddr = m->m_opt.oh_dirs.coh_import_tbl.dh_rva;
 	} else if (i >= 0) {
 		m->h_idata = &m->m_sectbl[i];
 		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
+		vaddr = m->m_sectbl[i].sh_virtual_addr;
 	}
 
 	if (m->r_idata) {
@@ -427,6 +430,7 @@ int pe_get_image_meta(
 				m,PERK_SYSTEM_ERROR(dctx));
 
 		for (i=0; i<m->m_stats.t_nimplibs; i++) {
+			m->m_idata[i].ih_virtual_addr = vaddr + (i * sizeof(*m->r_idata));
 			pe_read_import_header(&m->r_idata[i],&m->m_idata[i]);
 
 			m->m_idata[i].ih_name = base + m->h_idata->sh_ptr_to_raw_data

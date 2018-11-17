@@ -222,6 +222,7 @@ union pe_meta_export_addr_tbl {
 
 /* image: import directory table entry */
 struct pe_meta_import_hdr {
+	uint32_t				ih_virtual_addr;
 	uint32_t				ih_import_lookup_tbl_rva;
 	uint32_t				ih_time_date_stamp;
 	uint32_t				ih_forwarder_chain;
