@@ -6,6 +6,7 @@ API_SRCS = \
 	src/hdrdump/pe_hdrdump_coff_image_hdr.c \
 	src/hdrdump/pe_hdrdump_coff_object_hdr.c \
 	src/hdrdump/pe_hdrdump_opt_hdr.c \
+	src/hdrdump/pe_hdrdump_sec_tbl.c \
 	src/info/pe_get_image_abi.c \
 	src/info/pe_get_image_framework.c \
 	src/info/pe_get_image_subsystem.c \
