@@ -4,6 +4,7 @@ API_SRCS = \
 	src/driver/pe_unit_ctx.c \
 	src/hdrdump/pe_hdrdump_export_hdr.c \
 	src/hdrdump/pe_hdrdump_image_dos_hdr.c \
+	src/hdrdump/pe_hdrdump_import_tbl.c \
 	src/hdrdump/pe_hdrdump_coff_image_hdr.c \
 	src/hdrdump/pe_hdrdump_coff_object_hdr.c \
 	src/hdrdump/pe_hdrdump_opt_hdr.c \

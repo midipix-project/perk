@@ -210,6 +210,7 @@ perk_api int  pe_hdrdump_coff_object_hdr(const struct pe_driver_ctx *, const str
 perk_api int  pe_hdrdump_opt_hdr        (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_sec_tbl        (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_export_hdr     (const struct pe_driver_ctx *, const struct pe_image_meta *);
+perk_api int  pe_hdrdump_import_tbl     (const struct pe_driver_ctx *, const struct pe_image_meta *);
 
 /* error trace api */
 perk_api int  pe_output_error_record    (const struct pe_driver_ctx *, const struct pe_error_info *);
