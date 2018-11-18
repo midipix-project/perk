@@ -468,15 +468,15 @@ int pe_get_image_meta(
 
 				switch (m->m_opt.oh_std.coh_magic) {
 					case PE_MAGIC_PE32:
-						m->m_idata[i].ih_items[j].ii_flags = m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_32;
+						m->m_idata[i].ih_items[j].ii_flag = m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_32 >> 31;
 						break;
 
 					case PE_MAGIC_PE32_PLUS:
-						m->m_idata[i].ih_items[j].ii_flags = (m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 32);
+						m->m_idata[i].ih_items[j].ii_flag = (m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 63);
 						break;
 				}
 
-				if (!m->m_idata[i].ih_items[j].ii_flags) {
+				if (!m->m_idata[i].ih_items[j].ii_flag) {
 					struct pe_raw_hint_name_entry * pentry =
 						(struct pe_raw_hint_name_entry *)(base + m->h_idata->sh_ptr_to_raw_data
 							+ m->m_idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->h_idata->sh_virtual_addr);
