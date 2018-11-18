@@ -291,6 +291,11 @@ struct pe_raw_import_hdr {
 };
 
 
+struct pe_raw_import_name {
+	unsigned char	ih_name				[0x01];		/* 0x00 */
+};
+
+
 union pe_raw_import_lookup {
 	unsigned char	ii_import_lookup_entry_64	[0x08];		/* 0x00 */
 	unsigned char	ii_import_lookup_entry_32	[0x04];		/* 0x00 */
