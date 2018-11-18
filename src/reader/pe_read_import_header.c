@@ -32,13 +32,28 @@ int pe_read_import_lookup(
 	switch (magic) {
 		case PE_MAGIC_PE32:
 			m->u.ii_import_lookup_entry_64 = pe_read_long(p->ii_import_lookup_entry_32);
-			return 0;
+			m->ii_flag = (uint32_t)m->u.ii_import_lookup_entry_64 >> 31;
+			break;
 
 		case PE_MAGIC_PE32_PLUS:
 			m->u.ii_import_lookup_entry_64 = pe_read_quad(p->ii_import_lookup_entry_64);
-			return 0;
+			m->ii_flag = m->u.ii_import_lookup_entry_64 >> 63;
+			break;
 
 		default:
 			return PERK_ERR_BAD_IMAGE_TYPE;
 	}
+
+	if (m->ii_flag) {
+		m->ii_ordinal           = m->u.ii_import_lookup_entry_32 & 0x7fff;
+		m->ii_hint_name_tbl_rva = 0;
+	} else {
+		m->ii_ordinal           = 0;
+		m->ii_hint_name_tbl_rva = m->u.ii_import_lookup_entry_32 & 0x7fffffff;
+	}
+
+	m->ii_hint = 0;
+	m->ii_name = 0;
+
+	return 0;
 }

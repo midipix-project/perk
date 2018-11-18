@@ -443,14 +443,8 @@ int pe_get_image_meta(
 							- m->h_idata->sh_virtual_addr);
 
 			/* items */
-			uint32_t * hint;
-			m->m_idata[i].ih_count = 0;
-
 			if (m->m_idata[i].ih_import_lookup_tbl_rva) {
-				pitem = m->m_idata[i].ih_aitems;
-				hint  = (uint32_t *)pitem->ii_hint_name_tbl_rva;
-
-				for (; *hint; hint=(uint32_t *)((++pitem)->ii_hint_name_tbl_rva))
+				for (pitem = m->m_idata[i].ih_aitems; pe_read_long(pitem->ii_import_lookup_entry_32); pitem++)
 					m->m_idata[i].ih_count++;
 
 				if (!(m->m_idata[i].ih_items = calloc(m->m_idata[i].ih_count,sizeof(*(m->m_idata[i].ih_items)))))
@@ -466,21 +460,12 @@ int pe_get_image_meta(
 					return pe_free_image_meta_impl(
 						m,PERK_CUSTOM_ERROR(dctx,ret));
 
-				switch (m->m_opt.oh_std.coh_magic) {
-					case PE_MAGIC_PE32:
-						m->m_idata[i].ih_items[j].ii_flag = m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_32 >> 31;
-						break;
-
-					case PE_MAGIC_PE32_PLUS:
-						m->m_idata[i].ih_items[j].ii_flag = (m->m_idata[i].ih_items[j].u.ii_import_lookup_entry_64 >> 63);
-						break;
-				}
-
 				if (!m->m_idata[i].ih_items[j].ii_flag) {
 					struct pe_raw_hint_name_entry * pentry =
 						(struct pe_raw_hint_name_entry *)(base + m->h_idata->sh_ptr_to_raw_data
-							+ m->m_idata[i].ih_items[j].u.ii_hint_name_tbl_rva - m->h_idata->sh_virtual_addr);
+							+ m->m_idata[i].ih_items[j].ii_hint_name_tbl_rva - m->h_idata->sh_virtual_addr);
 
+					m->m_idata[i].ih_items[j].ii_hint = pe_read_short(pentry->ii_hint);
 					m->m_idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
 				}
 			}

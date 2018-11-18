@@ -240,11 +240,11 @@ struct pe_meta_import_lookup {
 	union {
 		uint64_t	ii_import_lookup_entry_64;
 		uint32_t	ii_import_lookup_entry_32;
-		uint32_t	ii_hint_name_tbl_rva;
-		uint16_t	ii_ordinal_number;
 	} u;
 
+	uint32_t	ii_hint_name_tbl_rva;
 	uint32_t	ii_flag;
+	uint16_t	ii_ordinal;
 	uint16_t	ii_hint;
 	char *		ii_name;
 };
