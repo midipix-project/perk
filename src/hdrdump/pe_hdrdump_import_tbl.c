@@ -20,7 +20,7 @@
 static int pe_hdrdump_import_hdr_impl(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta,
-	uint32_t			idx)
+	int32_t				idx)
 {
 	int		bits;
 	uint64_t	faddr;
@@ -33,6 +33,7 @@ static int pe_hdrdump_import_hdr_impl(
 		return PERK_CUSTOM_ERROR(
 			dctx,PERK_ERR_UNSUPPORTED_ABI);
 
+	/* import header */
 	sprintf(
 		hdr,
 		"struct pe_raw_import_hdr [%d]",
@@ -54,8 +55,35 @@ static int pe_hdrdump_import_hdr_impl(
 
 	ch += pe_output_hex_footer(ch);
 
+	/* import name for all but the null header */
+	if (idx == meta->m_stats.t_nimplibs) {
+		(void)0;
+
+	} else if (meta->m_idata[idx].ih_name_rva) {
+		sprintf(
+			hdr,
+			"struct pe_raw_import_name [%d]",
+			idx);
+
+		faddr = meta->m_idata[idx].ih_name - (char *)meta->r_image.map_addr;
+		vaddr = meta->m_idata[idx].ih_name_rva;
+
+		ch += pe_output_hex_header(
+			ch,hdr,
+			faddr,vaddr,bits);
+
+		ch += pe_output_raw_element(
+			ch,
+			meta->m_idata[idx].ih_name,
+			"ih_name",0,
+			strlen(meta->m_idata[idx].ih_name) + 1);
+
+		ch += pe_output_hex_footer(ch);
+	}
+
 	*ch = 0;
 
+	/* fdout */
 	if (pe_dprintf(pe_driver_fdout(dctx),"%s",buf) < 0)
 		return PERK_FILE_ERROR(dctx);
 
@@ -68,7 +96,7 @@ int pe_hdrdump_import_tbl(
 {
 	int idx;
 
-	for (idx=0; idx<meta->m_stats.t_nimplibs; idx++)
+	for (idx=0; idx<=meta->m_stats.t_nimplibs; idx++)
 		if (pe_hdrdump_import_hdr_impl(dctx,meta,idx) < 0)
 			return PERK_NESTED_ERROR(dctx);
 
