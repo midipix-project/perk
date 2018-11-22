@@ -45,6 +45,7 @@ supported switches:
 	--build
 	--host
 	--cchost
+	--cfghost
 	--target
 	--arch
 	--compiler
@@ -109,6 +110,7 @@ supported variables:
 	BUILD
 	HOST
 	CCHOST
+	CFGHOST
 	TARGET
 	ARCH
 	COMPILER

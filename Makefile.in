@@ -18,6 +18,7 @@ PKGLIBS			= @pkglibs@
 BUILD 			= @build@
 HOST 			= @host@
 CCHOST 			= @cchost@
+CFGHOST 		= @cfghost@
 TARGET 			= @target@
 ARCH 			= @arch@
 COMPILER 		= @compiler@
@@ -309,6 +310,7 @@ clean:		clean-implib
 		@echo BUILD:'                  '$(BUILD)
 		@echo HOST:'                   '$(HOST)
 		@echo CCHOST:'                 '$(CCHOST)
+		@echo CFGHOST:'                '$(CFGHOST)
 		@echo TARGET:'                 '$(TARGET)
 		@echo ARCH:'                   '$(ARCH)
 		@echo COMPILER:'               '$(COMPILER)

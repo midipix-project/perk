@@ -67,6 +67,7 @@ init_vars()
 	mb_build=$BUILD
 	mb_host=$HOST
 	mb_cchost=$CCHOST
+	mb_cfghost=$CFGHOST
 	mb_target=$TARGET
 	mb_arch=$ARCH
 	mb_compiler=$COMPILER
@@ -216,6 +217,7 @@ common_defaults()
 	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build
 	[ -z "$mb_host" ] 		&& mb_host=$mb_default_host
 	[ -z "$mb_cchost" ] 		&& mb_cchost=$mb_default_cchost
+	[ -z "$mb_cfghost" ] 		&& mb_cfghost=$mb_default_cfghost
 	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
 	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
 	[ -z "$mb_compiler" ] 		&& mb_compiler=$mb_default_compiler
@@ -551,8 +553,13 @@ config_copy()
 		fi
 	fi
 
-	sed -e 's^@cchost@^'"$mb_cchost"'^g' $mb_pwd/Makefile.tmp \
-	  > $mb_pwd/Makefile.host                  || exit 2
+	if [ -z "$mb_cfghost" ]; then
+		mb_cfghost=$mb_cchost
+	fi
+
+	sed		-e 's^@cchost@^'"$mb_cchost"'^g'     \
+			-e 's^@cfghost@^'"$mb_cfghost"'^g'   \
+		$mb_pwd/Makefile.tmp > $mb_pwd/Makefile.host || exit 2
 
 	rm  $mb_pwd/Makefile.tmp                   || exit 2
 	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile || exit 2
@@ -689,6 +696,9 @@ for arg ; do
 			;;
 		--cchost=*)
 			mb_cchost=${arg#*=}
+			;;
+		--cfghost=*)
+			mb_cfghost=${arg#*=}
 			;;
 		--target=*)
 			mb_target=${arg#*=}
