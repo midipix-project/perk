@@ -229,7 +229,7 @@ $(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
 
 $(SHARED_APP):	$(SHARED_LIB) $(APP_OBJS) $(SHARED_SOLINK)
 		rm -f app.tag
-		$(CC) -o $@ $(APP_OBJS) $(LDFLAGS_SHARED) -l$(PACKAGE)
+		$(CC) -o $@ $(APP_OBJS) $(LDFLAGS_APP) -l$(PACKAGE)
 
 $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		rm -f app.tag
