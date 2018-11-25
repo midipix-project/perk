@@ -228,7 +228,7 @@ $(DEFAULT_APP):	$(STATIC_OBJS) $(APP_OBJS)
 		rm -f app.tag
 		$(CC) -o $@ $^ $(LDFLAGS_APP)
 
-$(SHARED_APP):	$(DSO_REF_SONAME) $(APP_OBJS) $(SHARED_SOLINK)
+$(SHARED_APP):	$(DSO_REF_SOLINK) $(APP_OBJS) $(SHARED_SOLINK)
 		rm -f app.tag
 		$(CC) -o $@ $(APP_OBJS) $(LDFLAGS_APP) -l$(PACKAGE)
 
