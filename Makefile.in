@@ -84,6 +84,8 @@ PDFDIR			= @pdfdir@
 PSDIR			= @psdir@
 
 NATIVE_CC 		= @native_cc@
+NATIVE_CC_HOST		= @native_cc_host@
+
 NATIVE_OS 		= @native_os@
 NATIVE_OS_BITS 		= @native_os_bits@
 NATIVE_OS_UNDERSCORE	= @native_os_underscore@
@@ -251,6 +253,9 @@ host.tag:	Makefile
 		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
 		touch host.tag
 
+cchost-native:
+		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(NATIVE_CC)"
+
 version.tag:	$(GIT_REFERENCE_INDEX)
 		$(PROJECT_DIR)/sysinfo/version.sh	\
 			-s $(SOURCE_DIR)		\
@@ -412,6 +417,8 @@ clean:		clean-implib
 
 .display-build:
 		@echo NATIVE_CC:'              '$(NATIVE_CC)
+		@echo NATIVE_CC_HOST:'         '$(NATIVE_CC_HOST)
+		@echo
 		@echo NATIVE_OS:'              '$(NATIVE_OS)
 		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
 		@echo NATIVE_OS_UNDERSCORE:'   '$(NATIVE_OS_UNDERSCORE)
@@ -438,7 +445,7 @@ clean:		clean-implib
 		@echo $(CFLAGS)
 
 
-.PHONY:		cchost package-app \
+.PHONY:		cchost cchost-native package-app \
 		all install shared static app \
 		shared-objs shared-lib \
 		shared-soname shared-solink \

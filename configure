@@ -113,6 +113,8 @@ init_vars()
 
 	# overrides
 	mb_native_cc=$NATIVE_CC
+	mb_native_cc_host=$NATIVE_CC_HOST
+
 	mb_native_os=$NATIVE_OS
 	mb_native_os_bits=$NATIVE_OS_BITS
 	mb_native_os_underscore=$NATIVE_OS_UNDERSCORE
@@ -346,6 +348,10 @@ native_defaults()
 		mb_native_cc='false'
 	fi
 
+	if [ -z "$mb_native_cc_host" ]; then
+		mb_native_cc_host=$($mb_project_dir/sysinfo/host/host.sh --compiler=$mb_native_cc)
+	fi
+
 	if [ -z "$mb_compiler" ]; then
 		$mb_native_cc -dM -E - < /dev/null | grep -q '__clang__' && mb_compiler='clang'
 	fi
@@ -530,6 +536,8 @@ config_copy()
 			-e 's^@psdir@^'"$mb_psdir"'^g'					\
 											\
 			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
+			-e 's^@native_cc_host@^'"$mb_native_cc_host"'^g'		\
+											\
 			-e 's^@native_os@^'"$mb_native_os"'^g'				\
 			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'		\
 			-e 's^@native_os_underscore@^'"$mb_native_os_underscore"'^g'	\
