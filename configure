@@ -323,13 +323,6 @@ common_defaults()
 		fi
 	fi
 
-	# compiler
-	if [ -n "$mb_compiler" ]; then
-		if [ -z "$mb_native_cc" ]; then
-			mb_native_cc=$mb_compiler
-		fi
-	fi
-
 	# toolchain
 	if [ -z "$mb_toolchain" ]; then
 		mb_toolchain='binutils'
@@ -363,7 +356,6 @@ native_defaults()
 	fi
 
 	# compiler
-	[ -z "$mb_native_cc" ] && mb_native_cc=$CC
 	[ -z "$mb_native_cc" ] && mb_native_cc='cc'
 	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
 
