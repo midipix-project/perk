@@ -8,7 +8,28 @@
 usage()
 {
 	cat "$mb_project_dir"/config.usage
-	exit $?
+
+	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+		printf '\n\n%s%s\n' \
+			" ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" \
+			"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+
+		printf '%s%s\n' \
+			"| Listed above are configure's common switches " \
+			"and environment variables.     |"
+
+		printf '%s%s\n' \
+			"| Found below are project-specific variables " \
+			"and other customization options. |"
+
+		printf '%s%s\n\n\n' \
+			" ___________________________________________" \
+			"__________________________________"
+
+		cat "$mb_project_dir"/project/config/cfgdefs.usage
+	fi
+
+	exit 0
 }
 
 error_msg()
@@ -31,6 +52,18 @@ init_vars()
 		. $mb_project_dir/config.project || exit 2
 	else
 		. "$mb_config" || exit 2
+	fi
+
+	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+		mb_custom_cfgdefs_wrapper=$(mktemp)
+
+		if [ -z $mb_custom_cfgdefs_wrapper ]; then
+			error_msg "failed to create a temporary file."
+			exit 2
+		fi
+
+		printf '. $mb_project_dir/project/config/cfgdefs.sh \\\n' \
+			> $mb_custom_cfgdefs_wrapper
 	fi
 
 	# project
@@ -551,7 +584,18 @@ config_copy()
 			-e 's^@disable_frontend@^'"$mb_disable_frontend"'^g'		\
 			-e 's^@disable_static@^'"$mb_disable_static"'^g'		\
 			-e 's^@disable_shared@^'"$mb_disable_shared"'^g'		\
+											\
+			-e 's^@use_custom_cfgdefs@^'"$mb_use_custom_cfgdefs"'^g'	\
+			-e 's^@use_custom_usrdefs@^'"$mb_use_custom_usrdefs"'^g'	\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp || exit 2
+
+	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+		touch cfgdefs.mk
+	fi
+
+	if [ $mb_use_custom_usrdefs = 'yes' ]; then
+		touch usrdefs.mk
+	fi
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
@@ -560,7 +604,24 @@ config_copy()
 			mb_cchost=$mb_host
 		fi
 	fi
+}
 
+
+config_custom()
+{
+	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+		. $mb_custom_cfgdefs_wrapper
+		config_copy
+	fi
+
+	if [ $mb_use_custom_usrdefs = 'yes' ]; then
+		. $mb_project_dir/project/usrdefs.sh
+	fi
+}
+
+
+config_cfghost()
+{
 	if [ -z "$mb_cfghost" ]; then
 		mb_cfghost=$mb_cchost
 	fi
@@ -831,8 +892,25 @@ for arg ; do
 			;;
 
 		*)
-			error_msg ${arg#}: "unsupported config argument."
-			exit 2
+			if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+				printf '\t' >> $mb_custom_cfgdefs_wrapper
+
+				mb_first='yes'
+
+				for mb_arg in $arg; do
+					if [ $mb_first = 'yes' ]; then
+						printf '%s' $mb_arg >> $mb_custom_cfgdefs_wrapper
+						mb_first='no'
+					else
+						printf '\\ %s' $mb_arg >> $mb_custom_cfgdefs_wrapper
+					fi
+				done
+
+				printf ' \\\n' >> $mb_custom_cfgdefs_wrapper
+			else
+				error_msg ${arg#}: "unsupported config argument."
+				exit 2
+			fi
 			;;
 	esac
 done
@@ -858,6 +936,8 @@ cross_defaults
 # five: config
 config_flags
 config_copy
+config_custom
+config_cfghost
 config_support
 config_host
 config_status

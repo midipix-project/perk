@@ -100,6 +100,9 @@ DISABLE_FRONTEND	= @disable_frontend@
 DISABLE_SHARED          = @disable_shared@
 DISABLE_STATIC          = @disable_static@
 
+USE_CUSTOM_CFGDEFS      = @use_custom_cfgdefs@
+USE_CUSTOM_USRDEFS      = @use_custom_usrdefs@
+
 all:
 install:
 shared:
@@ -128,6 +131,13 @@ include $(PROJECT_DIR)/project/arch.mk
 include $(PROJECT_DIR)/project/extras.mk
 include $(PROJECT_DIR)/project/overrides.mk
 
+ifeq ($(USE_CUSTOM_CFGDEFS),yes)
+include ./cfgdefs.mk
+endif
+
+ifeq ($(USE_CUSTOM_USRDEFS),yes)
+include ./usrdefs.mk
+endif
 
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
@@ -434,6 +444,9 @@ clean:		clean-implib
 		@echo DISABLE_FRONTEND:'       '$(DISABLE_FRONTEND)
 		@echo DISABLE_SHARED:'         '$(DISABLE_SHARED)
 		@echo DISABLE_STATIC:'         '$(DISABLE_STATIC)
+		@echo
+		@echo USE_CUSTOM_CFGDEFS:'     '$(USE_CUSTOM_CFGDEFS)
+		@echo USE_CUSTOM_USRDEFS:'     '$(USE_CUSTOM_USRDEFS)
 
 .display-host:
 		@$(CC) $(CFLAGS) -dumpmachine

@@ -70,3 +70,6 @@ mb_all_shared=
 mb_disable_frontend=
 mb_disable_static=
 mb_disable_shared=
+
+mb_use_custom_cfgdefs=no
+mb_use_custom_usrdefs=no
