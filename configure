@@ -48,22 +48,13 @@ init_vars()
 	mb_project_dir=$(cd "$(dirname $0)" ; pwd)
 	mb_pwd=`pwd`
 
+	mb_custom_cfgdefs_args=''
+	mb_custom_cfgdefs_space=''
+
 	if [ -z "$mb_config" ]; then
 		. $mb_project_dir/config.project || exit 2
 	else
 		. "$mb_config" || exit 2
-	fi
-
-	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
-		mb_custom_cfgdefs_wrapper=$(mktemp)
-
-		if [ -z $mb_custom_cfgdefs_wrapper ]; then
-			error_msg "failed to create a temporary file."
-			exit 2
-		fi
-
-		printf '. $mb_project_dir/project/config/cfgdefs.sh \\\n' \
-			> $mb_custom_cfgdefs_wrapper
 	fi
 
 	# project
@@ -602,7 +593,8 @@ config_copy()
 config_custom()
 {
 	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
-		. $mb_custom_cfgdefs_wrapper
+		eval . $mb_project_dir/project/config/cfgdefs.sh \
+			"$mb_custom_cfgdefs_args"
 		config_copy
 	fi
 
@@ -885,20 +877,10 @@ for arg ; do
 
 		*)
 			if [ $mb_use_custom_cfgdefs = 'yes' ]; then
-				printf '\t' >> $mb_custom_cfgdefs_wrapper
-
-				mb_first='yes'
-
-				for mb_arg in $arg; do
-					if [ $mb_first = 'yes' ]; then
-						printf '%s' $mb_arg >> $mb_custom_cfgdefs_wrapper
-						mb_first='no'
-					else
-						printf '\\ %s' $mb_arg >> $mb_custom_cfgdefs_wrapper
-					fi
-				done
-
-				printf ' \\\n' >> $mb_custom_cfgdefs_wrapper
+				mb_escaped_arg=\'$(printf '%s\n' "$arg" | sed -e "s/'/'\\\\''/g")\'
+				mb_escaped_arg="$mb_custom_cfgdefs_space$mb_escaped_arg"
+				mb_custom_cfgdefs_args="$mb_custom_cfgdefs_args$mb_escaped_arg"
+				mb_custom_cfgdefs_space=' '
 			else
 				error_msg ${arg#}: "unsupported config argument."
 				exit 2
