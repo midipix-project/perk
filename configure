@@ -57,6 +57,16 @@ init_vars()
 		. "$mb_config" || exit 2
 	fi
 
+	# project-specific config definitions
+	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+		cat < /dev/null > cfgdefs.mk
+	fi
+
+	# user build-time overrides
+	if [ $mb_use_custom_usrdefs = 'yes' ]; then
+		touch usrdefs.mk
+	fi
+
 	# project
 	mb_nickname=$NICKNAME
 	mb_source_dir=$SOURCE_DIR
@@ -578,14 +588,6 @@ config_copy()
 			-e 's^@use_custom_cfgdefs@^'"$mb_use_custom_cfgdefs"'^g'	\
 			-e 's^@use_custom_usrdefs@^'"$mb_use_custom_usrdefs"'^g'	\
 		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp || exit 2
-
-	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
-		touch cfgdefs.mk
-	fi
-
-	if [ $mb_use_custom_usrdefs = 'yes' ]; then
-		touch usrdefs.mk
-	fi
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
