@@ -85,6 +85,9 @@ PSDIR			= @psdir@
 
 NATIVE_CC 		= @native_cc@
 NATIVE_CC_HOST		= @native_cc_host@
+NATIVE_CC_CFGHOST	= @native_cc_cfghost@
+NATIVE_CC_CFLAGS	= @native_cc_cflags@
+NATIVE_CC_LDFLAGS	= @native_cc_ldflags@
 
 NATIVE_OS 		= @native_os@
 NATIVE_OS_BITS 		= @native_os_bits@
@@ -428,6 +431,9 @@ clean:		clean-implib
 .display-build:
 		@echo NATIVE_CC:'              '$(NATIVE_CC)
 		@echo NATIVE_CC_HOST:'         '$(NATIVE_CC_HOST)
+		@echo NATIVE_CC_CFGHOST:'      '$(NATIVE_CC_CFGHOST)
+		@echo NATIVE_CC_CFLAGS:'       '$(NATIVE_CC_CFLAGS)
+		@echo NATIVE_CC_LDFLAGS:'      '$(NATIVE_CC_LDFLAGS)
 		@echo
 		@echo NATIVE_OS:'              '$(NATIVE_OS)
 		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)

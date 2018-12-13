@@ -138,6 +138,9 @@ init_vars()
 	# overrides
 	mb_native_cc=$NATIVE_CC
 	mb_native_cc_host=$NATIVE_CC_HOST
+	mb_native_cc_cfghost=$NATIVE_CC_CFGHOST
+	mb_native_cc_cflags=$NATIVE_CC_CFLAGS
+	mb_native_cc_ldflags=$NATIVE_CC_LDFLAGS
 
 	mb_native_os=$NATIVE_OS
 	mb_native_os_bits=$NATIVE_OS_BITS
@@ -365,7 +368,8 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_native_cc_host" ]; then
-		mb_native_cc_host=$($mb_project_dir/sysinfo/host/host.sh --compiler=$mb_native_cc)
+		mb_native_cc_host=$($mb_project_dir/sysinfo/host/host.sh \
+			--compiler=$mb_native_cc --cflags="$mb_native_cc_cflags")
 	fi
 
 	if [ -z "$mb_compiler" ]; then
@@ -553,6 +557,9 @@ config_copy()
 											\
 			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
 			-e 's^@native_cc_host@^'"$mb_native_cc_host"'^g'		\
+			-e 's^@native_cc_cfghost@^'"$mb_native_cc_cfghost"'^g'		\
+			-e 's^@native_cc_cflags@^'"$mb_native_cc_cflags"'^g'		\
+			-e 's^@native_cc_ldflags@^'"$mb_native_cc_ldflags"'^g'		\
 											\
 			-e 's^@native_os@^'"$mb_native_os"'^g'				\
 			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'		\
