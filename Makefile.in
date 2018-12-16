@@ -119,21 +119,6 @@ include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 include $(PROJECT_DIR)/sysinfo/os/$(OS).mk
 
-include $(PROJECT_DIR)/project/osforce.mk
-
-include $(PROJECT_DIR)/sofort/defs.mk
-include $(PROJECT_DIR)/sofort/version.mk
-include $(PROJECT_DIR)/sofort/custom.mk
-include $(PROJECT_DIR)/sofort/pkgconf.mk
-
-include $(PROJECT_DIR)/project/tree.mk
-include $(PROJECT_DIR)/project/depends.mk
-include $(PROJECT_DIR)/project/headers.mk
-include $(PROJECT_DIR)/project/common.mk
-include $(PROJECT_DIR)/project/arch.mk
-include $(PROJECT_DIR)/project/extras.mk
-include $(PROJECT_DIR)/project/overrides.mk
-
 ifeq ($(USE_CUSTOM_CFGDEFS),yes)
 include ./cfgdefs.mk
 endif
@@ -141,6 +126,20 @@ endif
 ifeq ($(USE_CUSTOM_USRDEFS),yes)
 include ./usrdefs.mk
 endif
+
+include $(PROJECT_DIR)/sofort/defs.mk
+include $(PROJECT_DIR)/sofort/version.mk
+include $(PROJECT_DIR)/sofort/custom.mk
+include $(PROJECT_DIR)/sofort/pkgconf.mk
+
+include $(PROJECT_DIR)/project/osforce.mk
+include $(PROJECT_DIR)/project/tree.mk
+include $(PROJECT_DIR)/project/depends.mk
+include $(PROJECT_DIR)/project/headers.mk
+include $(PROJECT_DIR)/project/common.mk
+include $(PROJECT_DIR)/project/arch.mk
+include $(PROJECT_DIR)/project/extras.mk
+include $(PROJECT_DIR)/project/overrides.mk
 
 
 $(APP_SRCS:%.c=%.o): CFLAGS_STATIC = $(CFLAGS_APP)
