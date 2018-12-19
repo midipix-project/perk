@@ -2,91 +2,106 @@
 
 # prefix, exec_prefix
 if [ "$PKGCONF_PREFIX" = "$PKGCONF_EXEC_PREFIX" ]; then
-	echo 'prefix='${PKGCONF_PREFIX}
-	echo 'exec_prefix=${prefix}'
+	pkgconf_prefix="${PKGCONF_PREFIX}"
+	pkgconf_exec_prefix='${prefix}'
 else
-	echo 'prefix='${PKGCONF_PREFIX}
-	echo 'exec_prefix='${PKGCONF_EXEC_PREFIX}
+	pkgconf_prefix="${PKGCONF_PREFIX}"
+	pkgconf_exec_prefix="${PKGCONF_EXEC_PREFIX}"
 fi
 
 
 # (relative) includedir
-prefix=`dirname "$PKGCONF_INCLUDEDIR"`
-base=`basename "$PKGCONF_INCLUDEDIR"`
-
-if [ "$prefix/$base" = "$PKGCONF_PREFIX/$base" ]; then
-	echo 'includedir=${prefix}/'${base}
+if [ -z "$PKGCONF_INCLUDEDIR" ]; then
+	pkgconf_includedir=
+	pkgconf_cflags=
 else
-	echo 'includedir='${PKGCONF_INCLUDEDIR}
-fi
+	prefix=$(dirname "$PKGCONF_INCLUDEDIR")
+	base=$(basename "$PKGCONF_INCLUDEDIR")
 
-if [ "$prefix/$base" = "$PKGCONF_PREFIX/include" ]; then
-	CFLAGS=
-else
-	CFLAGS='-I{includedir}'
-fi
-
-
-# (relative) libdir
-prefix=`dirname "$PKGCONF_LIBDIR"`
-base=`basename "$PKGCONF_LIBDIR"`
-
-if [ "$prefix/$base" = "$PKGCONF_EXEC_PREFIX/$base" ]; then
-	echo 'libdir=${prefix}/'${base}
-else
-	echo 'libdir='${PKGCONF_LIBDIR}
-fi
-
-if [ "$prefix/$base" = "$PKGCONF_EXEC_PREFIX/lib" ]; then
-	LDFLAGS='-l'${PKGCONF_NAME}
-elif [ "$prefix/$base" = "$PKGCONF_EXEC_PREFIX/lib64" ]; then
-	LDFLAGS='-l'${PKGCONF_NAME}
-else
-	LDFLAGS='-L'${PKGCONF_LIBDIR} '-l'${PKGCONF_NAME}
+	if [ "$prefix/$base" = "$PKGCONF_PREFIX/$base" ]; then
+		pkgconf_includedir='${prefix}/'"${base}"
+		pkgconf_cflags='-I${includedir}'
+	else
+		pkgconf_includedir="${PKGCONF_INCLUDEDIR}"
+		pkgconf_cflags='-I${includedir}'
+	fi
 fi
 
 
-# name, description, url, version
-echo
-echo 'Name:        '${PKGCONF_NAME}
-echo 'Description: '${PKGCONF_DESC}
-echo 'URL:         '${PKGCONF_USRC}
-echo 'Version:     '${PKGCONF_VERSION}
+# (relative) libdir (blank unless needed)
+if [ -z "$PKGCONF_LIBDIR" ]; then
+	pkgconf_libdir=
+else
+	prefix=$(dirname "$PKGCONF_LIBDIR")
+	base=$(basename "$PKGCONF_LIBDIR")
+
+	if [ "$prefix/$base" = "$PKGCONF_EXEC_PREFIX/$base" ]; then
+		pkgconf_libdir='${exec_prefix}/'"${base}"
+	else
+		pkgconf_libdir='${prefix}/'"${PKGCONF_LIBDIR}"
+	fi
+fi
+
+
+# ldflags (--libs)
+if [ -n "$pkgconf_libdir" ] &&  [ -n "${PKGCONF_NAME}" ]; then
+	pkgconf_ldflags="$pkgconf_libdir -l${PKGCONF_NAME}"
+elif [ -n "${PKGCONF_NAME}" ]; then
+	pkgconf_ldflags="-l${PKGCONF_NAME}"
+else
+	pkgconf_ldflags="$pkgconf_libdir"
+fi
+
+
+# cflags
+if [ -n "$pkgconf_cflags" ] || [ -n "${PKGCONF_DEFS}" ]; then
+	pkgconf_cflags="            $pkgconf_cflags ${PKGCONF_DEFS}"
+	pkgconf_cflags=$(printf '%s' "$pkgconf_cflags" | sed -e 's/^[ \t]*//g')
+fi
 
 
 # repo (optional)
-if ! [ -z "$PKGCONF_REPO" ]; then
-	echo 'Repo:        '${PKGCONF_REPO}
+if [ -z "${PKGCONF_REPO}" ]; then
+	pkgconf_repo='#'
+else
+	pkgconf_repo="Repo:        ${PKGCONF_REPO}"
 fi
-
 
 # patches (optional)
-if ! [ -z "$PKGCONF_PSRC" ]; then
-	echo 'Patches:      '${PKGCONF_PSRC}
-fi
-
-
-# disto (optional)
-if ! [ -z "$PKGCONF_DURL" ]; then
-	echo 'Distro:       '${PKGCONF_DURL}
-fi
-
-
-# Cflags
-if [ -z "$PKGCONF_DEFS" ] && [ -z "$CFLAGS" ]; then
-	echo 'Cflags:'
-elif [ -z "$PKGCONF_DEFS" ]; then
-	echo 'Cflags:      '${CFLAGS}
-elif [ -z "$CFLAGS" ]; then
-	echo 'Cflags:      '${PKGCONF_DEFS}
+if [ -z "${PKGCONF_PSRC}" ]; then
+	pkgconf_psrc='#'
 else
-	echo 'Cflags:      '${PKGCONF_DEFS} ${CFLAGS}
+	pkgconf_psrc="Patches:     ${PKGCONF_PSRC}"
 fi
 
-
-# Libs
-if [ -z "$PKGCONF_LIBS" ]; then
-	echo 'Libs:        '${LDFLAGS}
+# distro (optional)
+if [ -z "${PKGCONF_DURL}" ]; then
+	pkgconf_durl='#'
 else
-	echo 'Libs:        '${PKGCONF_LIBS} ${LDFLAGS}
+	pkgconf_durl="Distro:      ${PKGCONF_DURL}"
 fi
+
+
+# output (without trailing spaces)
+cat << _EOF | grep -v '^#' | sed 's/[ \t]*$//'
+###
+prefix=$pkgconf_prefix
+exec_prefix=$pkgconf_exec_prefix
+includedir=$pkgconf_includedir
+libdir=$pkgconf_libdir
+
+Name:        ${PKGCONF_NAME}
+Description: ${PKGCONF_DESC}
+URL:         ${PKGCONF_USRC}
+Version:     ${PKGCONF_VERSION}
+$pkgconf_repo
+$pkgconf_psrc
+$pkgconf_durl
+
+Cflags:      $pkgconf_cflags
+Libs:        $pkgconf_ldflags
+###
+_EOF
+
+# all done
+exit 0
