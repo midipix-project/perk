@@ -55,7 +55,7 @@ fi
 
 # cflags
 if [ -n "$pkgconf_cflags" ] || [ -n "${PKGCONF_DEFS}" ]; then
-	pkgconf_cflags="            $pkgconf_cflags ${PKGCONF_DEFS}"
+	pkgconf_cflags="$pkgconf_cflags ${PKGCONF_DEFS}"
 	pkgconf_cflags=$(printf '%s' "$pkgconf_cflags" | sed -e 's/^[ \t]*//g')
 fi
 
