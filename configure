@@ -51,6 +51,13 @@ init_vars()
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
 
+	mb_vars=$(cat $mb_project_dir/sofort/config.vars | grep -v '^#')
+
+	for mb_var in $mb_vars; do
+		mb_expr=$mb_var='${'$mb_var':-}'
+		eval "$mb_expr"
+	done
+
 	if [ -z "$mb_config" ]; then
 		. $mb_project_dir/config.project || exit 2
 	else
