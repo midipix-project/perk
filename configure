@@ -5,6 +5,8 @@
 # as well as both LDFLAGS and LDFLAGS_CMDLINE, however
 # the latter variable of each pair should be preferred.
 
+set -eu
+
 usage()
 {
 	cat "$mb_project_dir"/config.usage
