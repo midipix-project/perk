@@ -1,9 +1,4 @@
 #!/bin/sh
-# we are no longer lazy.
-
-# this script respects both CFLAGS and CFLAGS_CMDLINE,
-# as well as both LDFLAGS and LDFLAGS_CMDLINE, however
-# the latter variable of each pair should be preferred.
 
 set -eu
 
