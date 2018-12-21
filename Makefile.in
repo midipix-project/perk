@@ -276,6 +276,8 @@ version.tag:	$(GIT_REFERENCE_INDEX)
 		touch version.tag
 
 distclean:	clean
+		rm -f cfgdefs.mk
+		rm -f usrdefs.mk
 		rm -f Makefile
 
 clean:		clean-implib
