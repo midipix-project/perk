@@ -9,7 +9,7 @@ usage()
 {
 	cat "$mb_project_dir"/config.usage
 
-	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
 		printf '\n\n%s%s\n' \
 			" ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" \
 			"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
@@ -58,12 +58,12 @@ init_vars()
 	fi
 
 	# project-specific config definitions
-	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
 		cat < /dev/null > cfgdefs.mk
 	fi
 
 	# user build-time overrides
-	if [ $mb_use_custom_usrdefs = 'yes' ]; then
+	if [ _$mb_use_custom_usrdefs = _yes ]; then
 		touch usrdefs.mk
 	fi
 
@@ -165,7 +165,7 @@ init_vars()
 verify_build_directory()
 {
 	if [ "$mb_project_dir" = "$mb_pwd" ]; then
-		if [ "$mb_require_out_of_tree" = yes ]; then
+		if [ _$mb_require_out_of_tree = _yes ]; then
 			error_msg "$mb_package: out-of-tree builds are required."
 			error_msg "please invoke configure again from a clean build directory."
 			exit 2
@@ -179,7 +179,7 @@ verify_build_directory()
 verify_source_directory()
 {
 	if [ -z "$mb_source_dir" ]; then
-		if [ "$mb_require_source_dir" = yes ]; then
+		if [ _$mb_require_source_dir = _yes ]; then
 			error_msg "$mb_package: specifying an external source directory is required."
 			error_msg "you can set the source directory either via --source-dir=<path>,"
 			error_msg "or by setting the SOURCE_DIR variable."
@@ -321,7 +321,7 @@ common_defaults()
 	fi
 
 	# debug
-	if [ "$mb_debug" = yes ]; then
+	if [ _$mb_debug = _yes ]; then
 		if [ -z "$mb_cflags_debug" ]; then
 			mb_cflags_debug='-g3 -O0'
 		fi
@@ -467,12 +467,12 @@ config_flags()
 	fi
 
 	# ccstrict
-	if [ "$mb_ccstrict" = 'yes' ]; then
+	if [ _$mb_ccstrict = _yes ]; then
 		mb_cflags_strict='-Wall -Werror -Wextra -Wundef'
 	fi
 
 	# ldstrict
-	if [ "$mb_ldstrict" = 'yes' ]; then
+	if [ _$mb_ldstrict = _yes ]; then
 		mb_ldflags_strict='-Wl,--no-undefined'
 	fi
 }
@@ -601,13 +601,13 @@ config_copy()
 
 config_custom()
 {
-	if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+	if [ _$mb_use_custom_cfgdefs = _yes ]; then
 		eval . $mb_project_dir/project/config/cfgdefs.sh \
 			"$mb_custom_cfgdefs_args"
 		config_copy
 	fi
 
-	if [ $mb_use_custom_usrdefs = 'yes' ]; then
+	if [ _$mb_use_custom_usrdefs = _yes ]; then
 		. $mb_project_dir/project/usrdefs.sh
 	fi
 }
@@ -630,7 +630,7 @@ config_cfghost()
 
 config_support()
 {
-	[ "$mb_disable_shared" = 'yes' ] && return 0
+	[ _$mb_disable_shared = _yes ] && return 0
 
 	mbt_cc=`make .display-cc`
 	mbt_cflags=`make .display-cflags`
@@ -639,11 +639,11 @@ config_support()
 
 	rm -f a.out
 	echo "$mbt_source" | "$mbt_cc" -shared -o a.out -xc -
-	stat a.out >/dev/null 2>&1 && mbt_result='yes'
+	stat a.out >/dev/null 2>&1 && mbt_result=yes
 	rm -f a.out
 
 	if [ "$mbt_result" = 'no' ]; then
-		mb_disable_shared='yes'
+		mb_disable_shared=yes
 		config_copy
 	fi
 }
@@ -784,21 +784,21 @@ for arg ; do
 			mb_shell=${arg#*=}
 			;;
 		--debug)
-			mb_debug='yes'
+			mb_debug=yes
 			;;
 
 		# config
 		--all-static)
-			mb_all_static='yes'
+			mb_all_static=yes
 			;;
 		--all-shared)
-			mb_all_shared='yes'
+			mb_all_shared=yes
 			;;
 		--disable-frontend)
-			mb_disable_frontend='yes'
+			mb_disable_frontend=yes
 			;;
 		--disable-app)
-			mb_disable_frontend='yes'
+			mb_disable_frontend=yes
 			;;
 		--enable-frontend)
 			mb_disable_frontend='no'
@@ -807,10 +807,10 @@ for arg ; do
 			mb_disable_frontend='no'
 			;;
 		--disable-static)
-			mb_disable_static='yes'
+			mb_disable_static=yes
 			;;
 		--disable-shared)
-			mb_disable_shared='yes'
+			mb_disable_shared=yes
 			;;
 		--enable-static)
 			mb_disable_static='no'
@@ -821,14 +821,14 @@ for arg ; do
 
 		# convenience
 		--strict)
-			mb_ccstrict='yes'
-			mb_ldstrict='yes'
+			mb_ccstrict=yes
+			mb_ldstrict=yes
 			;;
 		--ccstrict)
-			mb_ccstrict='yes'
+			mb_ccstrict=yes
 			;;
 		--ldstrict)
-			mb_ldstrict='yes'
+			mb_ldstrict=yes
 			;;
 
 		# project
@@ -839,7 +839,7 @@ for arg ; do
 			mb_program_prefix=${arg#*=}
 			;;
 		--avoid-version)
-			mb_avoid_version='yes'
+			mb_avoid_version=yes
 			;;
 		--source-dir=*)
 			mb_source_dir=${arg#*=}
@@ -885,7 +885,7 @@ for arg ; do
 			;;
 
 		*)
-			if [ $mb_use_custom_cfgdefs = 'yes' ]; then
+			if [ _$mb_use_custom_cfgdefs = _yes ]; then
 				mb_escaped_arg=\'$(printf '%s\n' "$arg" | sed -e "s/'/'\\\\''/g")\'
 				mb_escaped_arg="$mb_custom_cfgdefs_space$mb_escaped_arg"
 				mb_custom_cfgdefs_args="$mb_custom_cfgdefs_args$mb_escaped_arg"
