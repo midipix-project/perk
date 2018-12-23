@@ -43,7 +43,7 @@ warning_msg()
 init_vars()
 {
 	mb_project_dir=$(cd "$(dirname $0)" ; pwd)
-	mb_pwd=`pwd`
+	mb_pwd=$(pwd)
 
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
@@ -422,11 +422,11 @@ native_defaults()
 
 	# os
 	if [ -z "$mb_native_os" ]; then
-		mb_native_os=`uname | tr '[:upper:]' '[:lower:]'`
+		mb_native_os=$(uname | tr '[:upper:]' '[:lower:]')
 	fi
 
-	mb_native_os_sizeof_pointer=`$mb_native_cc -dM -E - < /dev/null \
-			| awk '$2 == "__SIZEOF_POINTER__" { print $3 }'`
+	mb_native_os_sizeof_pointer=$($mb_native_cc -dM -E - < /dev/null \
+			| awk '$2 == "__SIZEOF_POINTER__" { print $3 }')
 
 	mb_native_os_bits=$((8 * ${mb_native_os_sizeof_pointer:-0}))
 
@@ -442,7 +442,7 @@ native_defaults()
 
 	# grumpily support crooked uname output
 	if ! [ -f $mb_project_dir/sysinfo/os/$mb_native_os.mk ]; then
-		mb_native_os=`echo $mb_native_os | cut -d'_' -f1`
+		mb_native_os=$(echo $mb_native_os | cut -d'_' -f1)
 	fi
 
 	# fallback os recipe
@@ -463,7 +463,7 @@ cross_defaults()
 config_flags()
 {
 	mb_ldflags_tmp=" $mb_ldflags "
-	mb_ldflags_libs=`echo "$mb_ldflags_tmp" | sed 's/ -static / /g'`
+	mb_ldflags_libs=$(echo "$mb_ldflags_tmp" | sed 's/ -static / /g')
 
 	if [ "$mb_ldflags_tmp" != "$mb_ldflags_libs" ]; then
 		mb_ldflags="$mb_ldflags_libs"
@@ -595,7 +595,7 @@ config_copy()
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
-			mb_cchost=`make -s -f $mb_pwd/Makefile.tmp cchost`
+			mb_cchost=$(make -s -f $mb_pwd/Makefile.tmp cchost)
 		else
 			mb_cchost=$mb_host
 		fi
@@ -636,8 +636,8 @@ config_support()
 {
 	[ _$mb_disable_shared = _yes ] && return 0
 
-	mbt_cc=`make .display-cc`
-	mbt_cflags=`make .display-cflags`
+	mbt_cc=$(make .display-cc)
+	mbt_cflags=$(make .display-cflags)
 	mbt_source='int foo(int x){return ++x;}'
 	mbt_result='no'
 
