@@ -56,9 +56,9 @@ init_vars()
 	done
 
 	if [ -z "$mb_config" ]; then
-		. $mb_project_dir/config.project || exit 2
+		. $mb_project_dir/config.project
 	else
-		. "$mb_config" || exit 2
+		. "$mb_config"
 	fi
 
 	# project-specific config definitions
@@ -172,7 +172,7 @@ verify_build_directory()
 		if [ _$mb_require_out_of_tree = _yes ]; then
 			error_msg "$mb_package: out-of-tree builds are required."
 			error_msg "please invoke configure again from a clean build directory."
-			exit 2
+			exit 1
 		else
 			mb_project_dir='.'
 		fi
@@ -187,7 +187,7 @@ verify_source_directory()
 			error_msg "$mb_package: specifying an external source directory is required."
 			error_msg "you can set the source directory either via --source-dir=<path>,"
 			error_msg "or by setting the SOURCE_DIR variable."
-			exit 2
+			exit 1
 		fi
 	fi
 }
@@ -360,7 +360,7 @@ native_defaults()
 {
 	# CC (when set, must be valid)
 	if [ -n "$CC" ]; then
-		$CC -dM -E - < /dev/null > /dev/null || exit 2
+		$CC -dM -E - < /dev/null > /dev/null
 	fi
 
 	# compiler
@@ -591,7 +591,7 @@ config_copy()
 											\
 			-e 's^@use_custom_cfgdefs@^'"$mb_use_custom_cfgdefs"'^g'	\
 			-e 's^@use_custom_usrdefs@^'"$mb_use_custom_usrdefs"'^g'	\
-		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp || exit 2
+		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
@@ -625,10 +625,10 @@ config_cfghost()
 
 	sed		-e 's^@cchost@^'"$mb_cchost"'^g'     \
 			-e 's^@cfghost@^'"$mb_cfghost"'^g'   \
-		$mb_pwd/Makefile.tmp > $mb_pwd/Makefile.host || exit 2
+		$mb_pwd/Makefile.tmp > $mb_pwd/Makefile.host
 
-	rm  $mb_pwd/Makefile.tmp                   || exit 2
-	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile || exit 2
+	rm  $mb_pwd/Makefile.tmp
+	mv  $mb_pwd/Makefile.host $mb_pwd/Makefile
 }
 
 
