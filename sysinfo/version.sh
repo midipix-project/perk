@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 usage()
 {
 cat << EOF >&2
@@ -49,13 +51,13 @@ if [ -z "$srcdir" ] || [ -z "$output" ] || [ -z "$prefix" ]; then
 	usage
 fi
 
-cd "$srcdir" || exit 2
+cd "$srcdir"
 
 gitver=$(git rev-parse --verify HEAD 2>/dev/null) || gitver="unknown"
 macro=$(echo "$prefix"_GIT_VERSION | tr '[:lower:]' '[:upper:]')
 
-cd "$workdir" || exit 2
-mkdir  -p $(dirname "$output") || exit 2
+cd "$workdir"
+mkdir  -p $(dirname "$output")
 printf "#define $macro\t\"$gitver\"\n" > "$output"
 
 # all done
