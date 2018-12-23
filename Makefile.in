@@ -258,15 +258,9 @@ dirs.tag:
 		mkdir -p lib
 		touch dirs.tag
 
-cchost:
-		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
-
 host.tag:	Makefile
-		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(CC)" --cflags="$(CFLAGS)"
-		touch host.tag
-
-cchost-native:
-		$(PROJECT_DIR)/sysinfo/host/host.sh --compiler="$(NATIVE_CC)"
+		$(CC) $(CFLAGS) -dumpmachine > host.tmp
+		mv host.tmp host.tag
 
 version.tag:	$(GIT_REFERENCE_INDEX)
 		$(PROJECT_DIR)/sysinfo/version.sh	\
@@ -284,6 +278,7 @@ clean:		clean-implib
 		rm -f tree.tag
 		rm -f dirs.tag
 		rm -f host.tag
+		rm -f host.tmp
 		rm -f version.tag
 		rm -f app.tag
 		rm -f $(SHARED_OBJS)
@@ -465,7 +460,7 @@ clean:		clean-implib
 		@echo $(CFLAGS)
 
 
-.PHONY:		cchost cchost-native package-app \
+.PHONY:		package-app \
 		all install shared static app \
 		shared-objs shared-lib \
 		shared-soname shared-solink \

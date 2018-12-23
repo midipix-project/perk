@@ -382,8 +382,7 @@ native_defaults()
 	fi
 
 	if [ -z "$mb_native_cc_host" ]; then
-		mb_native_cc_host=$($mb_project_dir/sysinfo/host/host.sh \
-			--compiler=$mb_native_cc --cflags="$mb_native_cc_cflags")
+		mb_native_cc_host=$($mb_native_cc $mb_native_cc_cflags -dumpmachine)
 	fi
 
 	if [ -z "$mb_compiler" ]; then
@@ -595,7 +594,14 @@ config_copy()
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
-			mb_cchost=$(make -s -f $mb_pwd/Makefile.tmp cchost)
+			if [ -n "$mb_user_cc" ]; then
+				mbt_cc="$mb_user_cc"
+			else
+				mbt_cc="$mb_native_cc"
+			fi
+
+			mbt_cflags=$(make -f $mb_pwd/Makefile.tmp .display-cflags)
+			mb_cchost=$($mbt_cc $mbt_cflags -dumpmachine)
 		else
 			mb_cchost=$mb_host
 		fi
