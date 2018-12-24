@@ -54,11 +54,20 @@ fi
 cd "$srcdir"
 
 gitver=$(git rev-parse --verify HEAD 2>/dev/null) || gitver="unknown"
-macro=$(echo "$prefix"_GIT_VERSION | tr '[:lower:]' '[:upper:]')
+cvdate=$(git show -s --format=%ci $gitver)
 
+vmacro=$(printf '%s' "$prefix"'_GIT_VERSION' | tr '[:lower:]' '[:upper:]')
+dmacro=$(printf '%s' "$prefix"'_GIT_DATE   ' | tr '[:lower:]' '[:upper:]')
+
+
+# three
 cd "$workdir"
-mkdir  -p $(dirname "$output")
-printf "#define $macro\t\"$gitver\"\n" > "$output"
+mkdir -p $(dirname "$output")
+
+printf '#define %s "%s"\n#define %s "%s"\n' \
+		"$vmacro" "$gitver" \
+		"$dmacro" "$cvdate" \
+	> "$output"
 
 # all done
 exit 0
