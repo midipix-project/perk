@@ -288,6 +288,8 @@ clean:		clean-implib
 		rm -f $(DEFAULT_APP)
 		rm -f $(SHARED_APP)
 		rm -f $(STATIC_APP)
+		rm -f build/$(PACKAGE)_version.h
+		rm -f build/$(PACKAGE).pc
 
 
 .display:	.display-project     .display-pkgconf     .display-env \
