@@ -59,11 +59,10 @@ cvdate=$(git show -s --format=%ci $gitver)
 vmacro=$(printf '%s' "$prefix"'_GIT_VERSION' | tr '[:lower:]' '[:upper:]')
 dmacro=$(printf '%s' "$prefix"'_GIT_DATE   ' | tr '[:lower:]' '[:upper:]')
 
+cd "$workdir"
+
 
 # three
-cd "$workdir"
-mkdir -p $(dirname "$output")
-
 printf '#define %s "%s"\n#define %s "%s"\n' \
 		"$vmacro" "$gitver" \
 		"$dmacro" "$cvdate" \

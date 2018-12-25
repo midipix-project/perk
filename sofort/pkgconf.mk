@@ -6,7 +6,7 @@ else
 
 PKGCONF_VERSION = $(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
 
-build/$(PACKAGE).pc: .pkgconf
+build/$(PACKAGE).pc: .pkgconf dirs.tag
 
 build/$(PACKAGE).pc:
 	@touch $@

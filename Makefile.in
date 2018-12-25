@@ -254,6 +254,7 @@ $(STATIC_APP):	$(STATIC_OBJS) $(APP_OBJS)
 dirs: 		dirs.tag
 
 dirs.tag:
+		mkdir -p build
 		mkdir -p bin
 		mkdir -p lib
 		touch dirs.tag
@@ -262,7 +263,7 @@ host.tag:	Makefile
 		$(CC) $(CFLAGS) -dumpmachine > host.tmp
 		mv host.tmp host.tag
 
-version.tag:	$(GIT_REFERENCE_INDEX)
+version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
 		$(PROJECT_DIR)/sysinfo/version.sh	\
 			-s $(SOURCE_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
