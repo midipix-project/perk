@@ -123,9 +123,9 @@ include ./cfgdefs.mk
 include ./usrdefs.mk
 
 include $(PROJECT_DIR)/sofort/defs.mk
-include $(PROJECT_DIR)/sofort/flavor.mk
-include $(PROJECT_DIR)/sofort/version.mk
 include $(PROJECT_DIR)/sofort/pkgconf.mk
+include $(PROJECT_DIR)/sofort/version.mk
+include $(PROJECT_DIR)/sofort/flavor.mk
 
 include $(PROJECT_DIR)/project/osforce.mk
 include $(PROJECT_DIR)/project/tree.mk
