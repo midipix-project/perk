@@ -54,7 +54,7 @@ fi
 cd "$srcdir"
 
 gitver=$(git rev-parse --verify HEAD 2>/dev/null) || gitver="unknown"
-cvdate=$(git show -s --format=%ci $gitver)
+cvdate=$(git show -s --format=%ci $gitver)        || cvdate=$(date)
 
 vmacro=$(printf '%s' "$prefix"'_GIT_VERSION' | tr '[:lower:]' '[:upper:]')
 dmacro=$(printf '%s' "$prefix"'_GIT_DATE   ' | tr '[:lower:]' '[:upper:]')
