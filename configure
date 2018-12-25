@@ -2,6 +2,8 @@
 
 set -eu
 
+trap config_failure 1 2 EXIT
+
 usage()
 {
 	cat "$mb_project_dir"/config.usage
@@ -182,6 +184,8 @@ verify_build_directory()
 			mb_project_dir='.'
 		fi
 	fi
+
+	rm -f Makefile Makefile.host Makefile.tmp Makefile.failed
 }
 
 
@@ -682,6 +686,26 @@ config_status()
 	printf "\nconfiguration completed successfully.\n\n"
 }
 
+
+config_failure()
+{
+	if [ -f Makefile ]; then
+		mb_error='failed to use the generated Makefile.'
+		printf '\n%s: error: %s\n' "${0}" "$mb_error" >&2
+		mv Makefile Makefile.failed
+	fi
+
+	exit 2
+}
+
+
+config_success()
+{
+	trap '' EXIT
+	exit 0
+}
+
+
 # one: init
 init_vars
 verify_build_directory
@@ -942,4 +966,4 @@ config_status
 
 
 # all done
-exit 0
+config_success
