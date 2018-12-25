@@ -63,13 +63,18 @@ init_vars()
 
 	# project-specific config definitions
 	if [ _$mb_use_custom_cfgdefs = _yes ]; then
-		cat < /dev/null > cfgdefs.mk
+		cat $mb_project_dir/sofort/cfgdefs.in \
+			> cfgdefs.mk
+	else
+		printf '%s %s\n\n' \
+				'# this project does not include' \
+				'a custom config step.'           \
+			> cfgdefs.mk
+		cat $mb_project_dir/sofort/cfgdefs.in >> cfgdefs.mk
 	fi
 
 	# user build-time overrides
-	if [ _$mb_use_custom_usrdefs = _yes ]; then
-		touch usrdefs.mk
-	fi
+	touch usrdefs.mk
 
 	# project
 	mb_nickname=$NICKNAME

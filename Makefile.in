@@ -119,13 +119,8 @@ include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
 include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
 include $(PROJECT_DIR)/sysinfo/os/$(OS).mk
 
-ifeq ($(USE_CUSTOM_CFGDEFS),yes)
 include ./cfgdefs.mk
-endif
-
-ifeq ($(USE_CUSTOM_USRDEFS),yes)
 include ./usrdefs.mk
-endif
 
 include $(PROJECT_DIR)/sofort/defs.mk
 include $(PROJECT_DIR)/sofort/flavor.mk
