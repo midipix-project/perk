@@ -69,6 +69,18 @@ init_vars()
 		eval "$mb_expr"
 	done
 
+	# ccenv
+	. $mb_project_dir/sofort/ccenv/ccenv.sh
+
+	if ! readlink ./ccenv > /dev/null; then
+		if [ -d ./ccenv ]; then
+			rm -f ./ccenv/host.mk
+			rm -f ./ccenv/native.mk
+			rmdir ./ccenv
+		fi
+	fi
+
+	# config.project
 	if [ -z "$mb_config" ]; then
 		. $mb_project_dir/config.project
 	else
@@ -169,19 +181,18 @@ init_vars()
 	mb_elf_config_defs=$ELF_CONFIG_DEFS
 
 	# overrides
-	mb_native_cc=$NATIVE_CC
-	mb_native_cc_host=$NATIVE_CC_HOST
-	mb_native_cc_cfghost=$NATIVE_CC_CFGHOST
-	mb_native_cc_cflags=$NATIVE_CC_CFLAGS
-	mb_native_cc_ldflags=$NATIVE_CC_LDFLAGS
-
-	mb_native_os=$NATIVE_OS
-	mb_native_os_bits=$NATIVE_OS_BITS
-	mb_native_os_underscore=$NATIVE_OS_UNDERSCORE
-
 	mb_user_cc=$CC
 	mb_user_cpp=$CPP
 	mb_user_cxx=$CXX
+
+	mb_native_cc=$NATIVE_CC
+	mb_native_cpp=$NATIVE_CPP
+	mb_native_cxx=$NATIVE_CXX
+
+	mb_native_host=$NATIVE_HOST
+	mb_native_cfghost=$NATIVE_CFGHOST
+	mb_native_cflags=$NATIVE_CFLAGS
+	mb_native_ldflags=$NATIVE_LDFLAGS
 }
 
 
@@ -351,132 +362,6 @@ common_defaults()
 			mb_cflags_debug='-g3 -O0'
 		fi
 	fi
-
-	# toolchain
-	if [ -z "$mb_toolchain" ]; then
-		mb_toolchain='binutils'
-	fi
-
-	# fallback host recipe
-	if [ -n "$mb_host" ]; then
-		if ! [ -f $mb_project_dir/sysinfo/host/$mb_host.mk ]; then
-			if [ -z "$mb_cross_compile" ]; then
-				mb_cross_compile=$mb_host-
-			fi
-
-			mb_host='any-host';
-		fi
-	fi
-
-	# fallback compiler recipe
-	if [ -n "$mb_compiler" ]; then
-		if ! [ -f $mb_project_dir/sysinfo/compiler/$mb_compiler.mk ]; then
-			mb_compiler='any-compiler'
-		fi
-	fi
-}
-
-
-native_defaults()
-{
-	# CC (when set, must be valid)
-	if [ -n "$CC" ]; then
-		$CC -dM -E - < /dev/null > /dev/null
-	fi
-
-	# compiler
-	[ -z "$mb_native_cc" ] && mb_native_cc='cc'
-	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
-
-	[ -z "$mb_native_cc" ] && mb_native_cc='gcc'
-	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
-
-	[ -z "$mb_native_cc" ] && mb_native_cc='clang'
-	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
-
-	[ -z "$mb_native_cc" ] && mb_native_cc='cparser'
-	$mb_native_cc -dM -E - < /dev/null > /dev/null 2>/dev/null || mb_native_cc=
-
-	if [ -z "$mb_native_cc" ]; then
-		echo "configure: info: could not find a working native compiler."
-		mb_native_cc='false'
-	fi
-
-	if [ -z "$mb_native_cc_host" ]; then
-		mb_native_cc_host=$($mb_native_cc $mb_native_cc_cflags -dumpmachine)
-	fi
-
-	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep -q '__clang__' && mb_compiler='clang'
-	fi
-
-	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep -q '__GCC' && mb_compiler='gcc'
-	fi
-
-	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep -q "^gcc" && mb_compiler='gcc'
-	fi
-
-	if [ -z "$mb_compiler" ]; then
-		$mb_native_cc -dM -E - < /dev/null | grep -q '__CPARSER__' && mb_compiler='cparser'
-	fi
-
-	if [ -z "$mb_compiler" ]; then
-		echo "configure: info: could not identify the native compiler."
-		mb_compiler='any-compiler'
-	fi
-
-
-	# host
-	if [ -z "$mb_host" ]; then
-		mb_host='native'
-	fi
-
-
-	# target
-	if [ -z "$mb_target" ]; then
-		mb_target='native'
-	fi
-
-
-	# os
-	if [ -z "$mb_native_os" ]; then
-		mb_native_os=$(uname | tr '[:upper:]' '[:lower:]')
-	fi
-
-	mb_native_os_sizeof_pointer=$($mb_native_cc -dM -E - < /dev/null \
-			| awk '$2 == "__SIZEOF_POINTER__" { print $3 }')
-
-	mb_native_os_bits=$((8 * ${mb_native_os_sizeof_pointer:-0}))
-
-	if [ $mb_native_os_bits = 32 ]; then
-		mb_native_os_underscore='_'
-	else
-		mb_native_os_underscore=''
-	fi
-
-	if [ -z "$mb_native_os_sizeof_pointer" ]; then
-		warning_msg "config error: could not determine size of pointer on native system."
-	fi
-
-	# grumpily support crooked uname output
-	if ! [ -f $mb_project_dir/sysinfo/os/$mb_native_os.mk ]; then
-		mb_native_os=$(echo $mb_native_os | cut -d'_' -f1)
-	fi
-
-	# fallback os recipe
-	if ! [ -f $mb_project_dir/sysinfo/os/$mb_native_os.mk ]; then
-		mb_native_os='any-os';
-	fi
-}
-
-
-cross_defaults()
-{
-	if [ -z "$mb_cross_compile" ] && [ "$mb_host" != native ]; then
-		mb_cross_compile=$mb_host'-'
-	fi
 }
 
 
@@ -517,23 +402,18 @@ config_copy()
 		$mb_project_dir/Makefile.in    \
 			| sed -e 's/[ \t]*$//g' \
 			> $mb_pwd/Makefile.tmp
-
-	if [ -z "$mb_cchost" ]; then
-		if [ "$mb_host" = 'native' ]; then
-			if [ -n "$mb_user_cc" ]; then
-				mbt_cc="$mb_user_cc"
-			else
-				mbt_cc="$mb_native_cc"
-			fi
-
-			mbt_cflags=$(make -f $mb_pwd/Makefile.tmp .display-cflags)
-			mb_cchost=$($mbt_cc $mbt_cflags -dumpmachine)
-		else
-			mb_cchost=$mb_host
-		fi
-	fi
 }
 
+
+config_ccenv()
+{
+	mkdir -p ./ccenv
+	touch ./ccenv/host.mk
+	touch ./ccenv/native.mk
+
+	ccenv_set_host_variables
+	ccenv_set_native_variables
+}
 
 config_custom()
 {
@@ -631,7 +511,32 @@ verify_build_directory
 # two: args
 for arg ; do
 	case "$arg" in
-		--help)	usage
+		--help)
+			usage
+			;;
+		--help=ccenv)
+			ccenv_usage
+			;;
+
+		# ccenv
+		--cross-compile=*)
+			mb_cross_compile=${arg#*=}
+			;;
+		--compiler=*)
+			mb_compiler=${arg#*=}
+			;;
+		--toolchain=*)
+			mb_toolchain=${arg#*=}
+			;;
+		--zealous)
+			mb_agnostic=yes
+			mb_zealous=
+			;;
+		--zealous=*)
+			mb_zealous=${arg#*=}
+			;;
+		--ccenv=*)
+			mb_ccenv=${arg#*=}
 			;;
 
 		# dirs
@@ -724,17 +629,8 @@ for arg ; do
 		--arch=*)
 			mb_arch=${arg#*=}
 			;;
-		--compiler=*)
-			mb_compiler=${arg#*=}
-			;;
-		--toolchain=*)
-			mb_toolchain=${arg#*=}
-			;;
 		--sysroot=*)
 			mb_sysroot=${arg#*=}
-			;;
-		--cross-compile=*)
-			mb_cross_compile=${arg#*=}
 			;;
 		--shell=*)
 			mb_shell=${arg#*=}
@@ -867,14 +763,12 @@ fi
 
 # four: defaults
 common_defaults
-native_defaults
-cross_defaults
-
 
 
 # five: config
 config_flags
 config_copy
+config_ccenv
 config_custom
 config_cfghost
 config_support

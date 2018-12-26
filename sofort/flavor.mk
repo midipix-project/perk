@@ -1,12 +1,6 @@
-ifeq ($(OS_BINFMT),PE)
-include $(PROJECT_DIR)/sysinfo/os/pe.mk
+ifneq ($(OS_DSO_EXRULES),)
+include $(PROJECT_DIR)/sofort/exrules/$(OS_DSO_EXRULES).mk
 endif
-
-ifeq ($(OS_BINFMT),ELF)
-include $(PROJECT_DIR)/sysinfo/os/elf.mk
-endif
-
-
 
 ifeq ($(DISABLE_STATIC),yes)
 package-static:

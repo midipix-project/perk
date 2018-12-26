@@ -51,29 +51,29 @@ DVIDIR			= @dvidir@
 PDFDIR			= @pdfdir@
 PSDIR			= @psdir@
 
-CFLAGS_COMMON 		= @cflags_common@
-CFLAGS_DEBUG 		= @cflags_debug@
-CFLAGS_CMDLINE 		= @cflags_cmdline@
-CFLAGS_CONFIG 		= @cflags_config@
-CFLAGS_SYSROOT 		= @cflags_sysroot@
-CFLAGS_OS		= @cflags_os@
-CFLAGS_SITE		= @cflags_site@
-CFLAGS_PATH 		= @cflags_path@
-CFLAGS_STRICT 		= @cflags_strict@
-CFLAGS_UTIL 		= @cflags_util@
-CFLAGS_LAST 		= @cflags_last@
-CFLAGS_ONCE 		= @cflags_once@
+CFLAGS_COMMON 		+= @cflags_common@
+CFLAGS_DEBUG 		+= @cflags_debug@
+CFLAGS_CMDLINE 		+= @cflags_cmdline@
+CFLAGS_CONFIG 		+= @cflags_config@
+CFLAGS_SYSROOT 		+= @cflags_sysroot@
+CFLAGS_OS		+= @cflags_os@
+CFLAGS_SITE		+= @cflags_site@
+CFLAGS_PATH 		+= @cflags_path@
+CFLAGS_STRICT 		+= @cflags_strict@
+CFLAGS_UTIL 		+= @cflags_util@
+CFLAGS_LAST 		+= @cflags_last@
+CFLAGS_ONCE 		+= @cflags_once@
 
-LDFLAGS_COMMON 		= @ldflags_common@
-LDFLAGS_DEBUG 		= @ldflags_debug@
-LDFLAGS_CMDLINE 	= @ldflags_cmdline@
-LDFLAGS_CONFIG 		= @ldflags_config@
-LDFLAGS_SYSROOT 	= @ldflags_sysroot@
-LDFLAGS_PATH 		= @ldflags_path@
-LDFLAGS_STRICT 		= @ldflags_strict@
-LDFLAGS_UTIL 		= @ldflags_util@
-LDFLAGS_LAST 		= @ldflags_last@
-LDFLAGS_ONCE 		= @ldflags_once@
+LDFLAGS_COMMON 		+= @ldflags_common@
+LDFLAGS_DEBUG 		+= @ldflags_debug@
+LDFLAGS_CMDLINE 	+= @ldflags_cmdline@
+LDFLAGS_CONFIG 		+= @ldflags_config@
+LDFLAGS_SYSROOT 	+= @ldflags_sysroot@
+LDFLAGS_PATH 		+= @ldflags_path@
+LDFLAGS_STRICT 		+= @ldflags_strict@
+LDFLAGS_UTIL 		+= @ldflags_util@
+LDFLAGS_LAST 		+= @ldflags_last@
+LDFLAGS_ONCE 		+= @ldflags_once@
 
 USER_CC                 = @user_cc@
 USER_CPP                = @user_cpp@
@@ -87,15 +87,10 @@ ELF_EH_FRAME 		= @elf_eh_frame@
 ELF_HASH_STYLE 		= @elf_hash_style@
 ELF_CONFIG_DEFS 	= @elf_config_defs@
 
-NATIVE_CC 		= @native_cc@
-NATIVE_CC_HOST		= @native_cc_host@
-NATIVE_CC_CFGHOST	= @native_cc_cfghost@
-NATIVE_CC_CFLAGS	= @native_cc_cflags@
-NATIVE_CC_LDFLAGS	= @native_cc_ldflags@
-
-NATIVE_OS 		= @native_os@
-NATIVE_OS_BITS 		= @native_os_bits@
-NATIVE_OS_UNDERSCORE	= @native_os_underscore@
+NATIVE_HOST		= @native_host@
+NATIVE_CFGHOST		= @native_cfghost@
+NATIVE_CFLAGS		= @native_cflags@
+NATIVE_LDFLAGS		= @native_ldflags@
 
 ALL_SHARED              = @all_shared@
 ALL_STATIC              = @all_static@
@@ -114,10 +109,8 @@ static:
 install-extras:
 install-app-extras:
 
-include $(PROJECT_DIR)/sysinfo/host/$(HOST).mk
-include $(PROJECT_DIR)/sysinfo/compiler/$(COMPILER).mk
-include $(PROJECT_DIR)/sysinfo/toolchain/$(TOOLCHAIN).mk
-include $(PROJECT_DIR)/sysinfo/os/$(OS).mk
+include ./ccenv/host.mk
+include ./ccenv/native.mk
 
 include ./cfgdefs.mk
 include ./usrdefs.mk
@@ -259,7 +252,7 @@ host.tag:	Makefile
 		mv host.tmp host.tag
 
 version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
-		$(PROJECT_DIR)/sysinfo/version.sh	\
+		$(PROJECT_DIR)/sofort/version.sh	\
 			-s $(SOURCE_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
 			-p $(PACKAGE)
@@ -424,10 +417,13 @@ clean:		clean-implib
 
 .display-build:
 		@echo NATIVE_CC:'              '$(NATIVE_CC)
-		@echo NATIVE_CC_HOST:'         '$(NATIVE_CC_HOST)
-		@echo NATIVE_CC_CFGHOST:'      '$(NATIVE_CC_CFGHOST)
-		@echo NATIVE_CC_CFLAGS:'       '$(NATIVE_CC_CFLAGS)
-		@echo NATIVE_CC_LDFLAGS:'      '$(NATIVE_CC_LDFLAGS)
+		@echo NATIVE_CPP:'             '$(NATIVE_CPP)
+		@echo NATIVE_CXX:'             '$(NATIVE_CXX)
+
+		@echo NATIVE_HOST:'            '$(NATIVE_HOST)
+		@echo NATIVE_CFGHOST:'         '$(NATIVE_CFGHOST)
+		@echo NATIVE_CFLAGS:'          '$(NATIVE_CFLAGS)
+		@echo NATIVE_LDFLAGS:'         '$(NATIVE_LDFLAGS)
 		@echo
 		@echo NATIVE_OS:'              '$(NATIVE_OS)
 		@echo NATIVE_OS_BITS:'         '$(NATIVE_OS_BITS)
