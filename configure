@@ -50,9 +50,21 @@ init_vars()
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
 
-	mb_vars=$(cat $mb_project_dir/sofort/config.vars | grep -v '^#')
+	mb_make_vars=$(cat $mb_project_dir/sofort/config.vars \
+		| grep -v -e '^#' -e '^$' | tr '[:lower:]' '[:upper:]')
 
-	for mb_var in $mb_vars; do
+	mb_impl_vars=$(cat $mb_project_dir/sofort/config.vars \
+		| grep -v -e '^#' -e '^$' | sed 's/^/mb_/g')
+
+	mb_proj_vars=$(cat $mb_project_dir/sofort/config.vars \
+		| grep -v -e '^#' -e '^$' | sed 's/^/mb_default_/g')
+
+	mb_flag_vars=$(cat $mb_project_dir/sofort/flag.vars \
+		| grep -v -e '^#' -e '^$')
+
+	mb_vars="$mb_make_vars $mb_impl_vars $mb_proj_vars $mb_flag_vars"
+
+	for mb_var in $mb_vars ; do
 		mb_expr=$mb_var='${'$mb_var':-}'
 		eval "$mb_expr"
 	done
@@ -492,114 +504,19 @@ config_flags()
 
 config_copy()
 {
-	sed 		-e 's^@package@^'"$mb_package"'^g' 				\
-			-e 's^@nickname@^'"$mb_nickname"'^g'				\
-			-e 's^@project_dir@^'"$mb_project_dir"'^g'			\
-			-e 's^@source_dir@^'"$mb_source_dir"'^g'			\
-			-e 's^@git_reference_index@^'"$mb_git_reference_index"'^g'	\
-			-e 's^@custom_install_headers@^'"$mb_custom_install_headers"'^g' \
-			-e 's^@avoid_version@^'"$mb_avoid_version"'^g'			\
-											\
-			-e 's^@pkgname@^'"$mb_pkgname"'^g'				\
-			-e 's^@pkgdesc@^'"$mb_pkgdesc"'^g'				\
-			-e 's^@pkgusrc@^'"$mb_pkgusrc"'^g'				\
-			-e 's^@pkgrepo@^'"$mb_pkgrepo"'^g'				\
-			-e 's^@pkgpsrc@^'"$mb_pkgpsrc"'^g'				\
-			-e 's^@pkgdurl@^'"$mb_pkgdurl"'^g'				\
-			-e 's^@pkgdefs@^'"$mb_pkgdefs"'^g'				\
-			-e 's^@pkglibs@^'"$mb_pkglibs"'^g'				\
-											\
-			-e 's^@build@^'"$mb_build"'^g'					\
-			-e 's^@host@^'"$mb_host"'^g'					\
-			-e 's^@target@^'"$mb_target"'^g'				\
-			-e 's^@arch@^'"$mb_arch"'^g'					\
-			-e 's^@compiler@^'"$mb_compiler"'^g'				\
-			-e 's^@toolchain@^'"$mb_toolchain"'^g'				\
-			-e 's^@sysroot@^'"$mb_sysroot"'^g'				\
-			-e 's^@cross_compile@^'"$mb_cross_compile"'^g'			\
-			-e 's^@shell@^'"$mb_shell"'^g'					\
-											\
-			-e 's^@cflags@^'"$mb_cflags"'^g'				\
-			-e 's^@cflags_debug@^'"$mb_cflags_debug"'^g'			\
-			-e 's^@cflags_common@^'"$mb_cflags_common"'^g'			\
-			-e 's^@cflags_cmdline@^'"$mb_cflags $mb_cflags_cmdline"'^g'	\
-			-e 's^@cflags_config@^'"$mb_cflags_config"'^g'			\
-			-e 's^@cflags_sysroot@^'"$mb_cflags_sysroot"'^g'		\
-			-e 's^@cflags_os@^'"$mb_cflags_os"'^g'				\
-			-e 's^@cflags_site@^'"$mb_cflags_site"'^g'			\
-			-e 's^@cflags_path@^'"$mb_cflags_path"'^g'			\
-			-e 's^@cflags_strict@^'"$mb_cflags_strict"'^g'			\
-			-e 's^@cflags_util@^'"$mb_cflags_util"'^g'			\
-			-e 's^@cflags_last@^'"$mb_cflags_last"'^g'			\
-			-e 's^@cflags_once@^'"$mb_cflags_once"'^g'			\
-											\
-			-e 's^@ldflags@^'"$mb_ldflags"'^g'				\
-			-e 's^@ldflags_debug@^'"$mb_ldflags_debug"'^g'			\
-			-e 's^@ldflags_common@^'"$mb_ldflags_common"'^g'		\
-			-e 's^@ldflags_cmdline@^'"$mb_ldflags $mb_ldflags_cmdline"'^g'	\
-			-e 's^@ldflags_config@^'"$mb_ldflags_config"'^g'		\
-			-e 's^@ldflags_sysroot@^'"$mb_ldflags_sysroot"'^g'		\
-			-e 's^@ldflags_path@^'"$mb_ldflags_path"'^g'			\
-			-e 's^@ldflags_strict@^'"$mb_ldflags_strict"'^g'		\
-			-e 's^@ldflags_util@^'"$mb_ldflags_util"'^g'			\
-			-e 's^@ldflags_last@^'"$mb_ldflags_last"'^g'			\
-			-e 's^@ldflags_once@^'"$mb_ldflags_once"'^g'			\
-											\
-			-e 's^@pe_subsystem@^'"$mb_pe_subsystem"'^g'			\
-			-e 's^@pe_image\_base@^'"$mb_pe_image_base"'^g'			\
-			-e 's^@pe_config\_defs@^'"$mb_pe_config_defs"'^g'		\
-											\
-			-e 's^@elf_eh\_frame@^'"$mb_elf_eh_frame"'^g'			\
-			-e 's^@elf_hash\_style@^'"$mb_elf_hash_style"'^g'		\
-			-e 's^@elf_config\_defs@^'"$mb_elf_config_defs"'^g'		\
-											\
-			-e 's^@prefix@^'"$mb_prefix"'^g'				\
-			-e 's^@exec_prefix@^'"$mb_exec_prefix"'^g'			\
-			-e 's^@bindir@^'"$mb_bindir"'^g'				\
-			-e 's^@sbindir@^'"$mb_sbindir"'^g'				\
-			-e 's^@libdir@^'"$mb_libdir"'^g'				\
-			-e 's^@includedir@^'"$mb_includedir"'^g'			\
-			-e 's^@oldincludedir@^'"$mb_oldincludedir"'^g'			\
-			-e 's^@mandir@^'"$mb_mandir"'^g'				\
-			-e 's^@docdir@^'"$mb_docdir"'^g'				\
-			-e 's^@libexecdir@^'"$mb_libexecdir"'^g'			\
-											\
-			-e 's^@sysconfdir@^'"$mb_sysconfdir"'^g'			\
-			-e 's^@sharedstatedir@^'"$mb_sharedstatedir"'^g'		\
-			-e 's^@localstatedir@^'"$mb_localstatedir"'^g'			\
-			-e 's^@runstatedir@^'"$mb_runstatedir"'^g'			\
-			-e 's^@datarootdir@^'"$mb_datarootdir"'^g'			\
-			-e 's^@datadir@^'"$mb_datadir"'^g'				\
-			-e 's^@infodir@^'"$mb_infodir"'^g'				\
-			-e 's^@localedir@^'"$mb_localedir"'^g'				\
-			-e 's^@htmldir@^'"$mb_htmldir"'^g'				\
-			-e 's^@dvidir@^'"$mb_dvidir"'^g'				\
-			-e 's^@pdfdir@^'"$mb_pdfdir"'^g'				\
-			-e 's^@psdir@^'"$mb_psdir"'^g'					\
-											\
-			-e 's^@native_cc@^'"$mb_native_cc"'^g'				\
-			-e 's^@native_cc_host@^'"$mb_native_cc_host"'^g'		\
-			-e 's^@native_cc_cfghost@^'"$mb_native_cc_cfghost"'^g'		\
-			-e 's^@native_cc_cflags@^'"$mb_native_cc_cflags"'^g'		\
-			-e 's^@native_cc_ldflags@^'"$mb_native_cc_ldflags"'^g'		\
-											\
-			-e 's^@native_os@^'"$mb_native_os"'^g'				\
-			-e 's^@native_os_bits@^'"$mb_native_os_bits"'^g'		\
-			-e 's^@native_os_underscore@^'"$mb_native_os_underscore"'^g'	\
-											\
-			-e 's^@user_cc@^'"$mb_user_cc"'^g'				\
-			-e 's^@user_cpp@^'"$mb_user_cpp"'^g'				\
-			-e 's^@user_cxx@^'"$mb_user_cxx"'^g'				\
-											\
-			-e 's^@all_static@^'"$mb_all_static"'^g'			\
-			-e 's^@all_shared@^'"$mb_all_shared"'^g'			\
-			-e 's^@disable_frontend@^'"$mb_disable_frontend"'^g'		\
-			-e 's^@disable_static@^'"$mb_disable_static"'^g'		\
-			-e 's^@disable_shared@^'"$mb_disable_shared"'^g'		\
-											\
-			-e 's^@use_custom_cfgdefs@^'"$mb_use_custom_cfgdefs"'^g'	\
-			-e 's^@use_custom_usrdefs@^'"$mb_use_custom_usrdefs"'^g'	\
-		$mb_project_dir/Makefile.in > $mb_pwd/Makefile.tmp
+	mb_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/config.vars" \
+			| grep -v '^#')
+
+	mb_sed_substs=" \
+		$(for __var in $mb_vars; do                  \
+			printf '%s"$%s"%s' "-e 's^@$__var@^'" \
+				"mb_$__var" "'^g' ";           \
+		done)"
+
+	eval sed $mb_sed_substs \
+		$mb_project_dir/Makefile.in    \
+			| sed -e 's/[ \t]*$//g' \
+			> $mb_pwd/Makefile.tmp
 
 	if [ -z "$mb_cchost" ]; then
 		if [ "$mb_host" = 'native' ]; then
