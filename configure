@@ -72,7 +72,7 @@ init_vars()
 	# ccenv
 	. $mb_project_dir/sofort/ccenv/ccenv.sh
 
-	if ! readlink ./ccenv > /dev/null; then
+	if ! [ -L ./ccenv ]; then
 		if [ -d ./ccenv ]; then
 			rm -f ./ccenv/host.mk
 			rm -f ./ccenv/native.mk
