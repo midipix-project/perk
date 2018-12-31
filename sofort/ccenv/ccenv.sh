@@ -284,6 +284,8 @@ ccenv_set_cc()
 	ccenv_cc_cmd="$ccenv_cc"
 
 	if [ "$ccenv_cfgtype" = 'native' ]; then
+		ccenv_host=$($ccenv_cc $ccenv_cflags -dumpmachine 2>/dev/null)
+		ccenv_cchost=$ccenv_host
 		return 0
 	fi
 
@@ -947,6 +949,7 @@ ccenv_common_init()
 	ccenv_cfgtype=$1
 	ccenv_cfgfile="$mb_pwd/ccenv/$ccenv_cfgtype.mk"
 	ccenv_freestd=
+	ccenv_cchost=
 
 	if [ $ccenv_cfgtype = 'native' ]; then
 		ccenv_makevar_prefix='NATIVE_'
