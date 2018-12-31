@@ -413,6 +413,8 @@ config_ccenv()
 
 	ccenv_set_host_variables
 	ccenv_set_native_variables
+
+	config_copy
 }
 
 config_custom()
