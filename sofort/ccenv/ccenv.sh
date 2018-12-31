@@ -934,7 +934,28 @@ ccenv_output_defs()
 			| sed -e 's/[ \t]*$//g' \
 		> "$ccenv_mk"
 
-	return 0
+	if [ "$ccenv_cfgtype" = 'host' ]; then
+		for __var in $ccenv_vars; do
+			ccenv_src_var=$__var
+			ccenv_dst_var=mb_${__var#*ccenv_}
+			ccenv_var_expr='${'$ccenv_src_var':-}'
+			eval $ccenv_dst_var=$ccenv_var_expr
+
+		done
+
+		mb_host=$ccenv_host
+		mb_cchost=$ccenv_cchost
+	else
+		for __var in $ccenv_vars; do
+			ccenv_src_var=$__var
+			ccenv_dst_var=mb_native_${__var#*ccenv_}
+			ccenv_var_expr='${'$ccenv_src_var':-}'
+			eval "$ccenv_dst_var=$ccenv_var_expr"
+		done
+
+		mb_native_host=$ccenv_host
+		mb_native_cchost=$ccenv_cchost
+	fi
 }
 
 ccenv_clean_up()
