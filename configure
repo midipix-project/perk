@@ -97,6 +97,10 @@ init_vars()
 				'a custom config step.'           \
 			> cfgdefs.mk
 		cat $mb_project_dir/sofort/cfgdefs.in >> cfgdefs.mk
+
+		if [ -f $mb_project_dir/project/cfgdefs.in ]; then
+			cat $mb_project_dir/project/cfgdefs.in >> cfgdefs.mk
+		fi
 	fi
 
 	# user build-time overrides
