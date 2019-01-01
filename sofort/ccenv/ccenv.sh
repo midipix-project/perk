@@ -700,13 +700,18 @@ ccenv_set_os()
 
 	case "$ccenv_cchost" in
 		*-*-*-* )
-			ccenv_tip=${ccenv_host%-*}
+			ccenv_tip=${ccenv_cchost%-*}
 			ccenv_os=${ccenv_tip#*-*-}
 			;;
-
-		*-*-* )
-			ccenv_tip=${ccenv_host%-*}
+		*-*-musl | *-*-gnu )
+			ccenv_tip=${ccenv_cchost%-*}
 			ccenv_os=${ccenv_tip#*-}
+			;;
+		*-*-* )
+			ccenv_os=${ccenv_cchost#*-*-}
+			;;
+		*-* )
+			ccenv_os=${ccenv_cchost#*-}
 			;;
 	esac
 
