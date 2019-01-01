@@ -297,20 +297,6 @@ common_defaults()
 	[ -z "$mb_pdfdir" ] 		&& mb_pdfdir=$mb_docdir
 	[ -z "$mb_psdir" ] 		&& mb_psdir=$mb_docdir
 
-
-	# build
-	[ -z "$mb_build" ] 		&& mb_build=$mb_default_build
-	[ -z "$mb_host" ] 		&& mb_host=$mb_default_host
-	[ -z "$mb_cchost" ] 		&& mb_cchost=$mb_default_cchost
-	[ -z "$mb_cfghost" ] 		&& mb_cfghost=$mb_default_cfghost
-	[ -z "$mb_target" ] 		&& mb_target=$mb_default_target
-	[ -z "$mb_arch" ] 		&& mb_arch=$mb_default_arch
-	[ -z "$mb_compiler" ] 		&& mb_compiler=$mb_default_compiler
-	[ -z "$mb_toolchain" ] 		&& mb_toolchain=$mb_default_toolchain
-	[ -z "$mb_sysroot" ] 		&& mb_sysroot=$mb_default_sysroot
-	[ -z "$mb_cross_compile" ] 	&& mb_cross_compile=$mb_default_cross_compile
-	[ -z "$mb_shell" ] 		&& mb_shell=$mb_default_shell
-
 	# switches
 	[ -z "$mb_cflags_debug" ]	&& mb_cflags_debug=$mb_default_cflags_debug
 	[ -z "$mb_cflags_common" ]	&& mb_cflags_common=$mb_default_cflags_common
@@ -335,14 +321,6 @@ common_defaults()
 	[ -z "$mb_ldflags_util" ]	&& mb_ldflags_util=$mb_default_ldflags_util
 	[ -z "$mb_ldflags_last" ]	&& mb_ldflags_last=$mb_default_ldflags_last
 	[ -z "$mb_ldflags_once" ]	&& mb_ldflags_once=$mb_default_ldflags_once
-
-	[ -z "$mb_pe_subsystem" ]	&& mb_pe_subsystem=$mb_default_pe_subsystem
-	[ -z "$mb_pe_image_base" ]	&& mb_pe_image_base=$mb_default_pe_image_base
-	[ -z "$mb_pe_config_defs" ]	&& mb_pe_config_defs=$mb_default_pe_config_defs
-
-	[ -z "$mb_elf_eh_frame" ]	&& mb_elf_eh_frame=$mb_default_elf_eh_frame
-	[ -z "$mb_elf_hash_style" ]	&& mb_elf_hash_style=$mb_default_elf_hash_style
-	[ -z "$mb_elf_config_defs" ]	&& mb_elf_config_defs=$mb_default_elf_config_defs
 
 	# config
 	[ -z "$mb_all_static" ]		&& mb_all_static='no'
