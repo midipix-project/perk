@@ -50,16 +50,23 @@ init_vars()
 	mb_custom_cfgdefs_args=''
 	mb_custom_cfgdefs_space=''
 
-	mb_make_vars=$(cat $mb_project_dir/sofort/config.vars \
+	sfrt_impl_dir=$mb_project_dir/sofort
+	sfrt_config_dir=$sfrt_impl_dir/config
+	sfrt_core_dir=$sfrt_impl_dir/core
+	sfrt_config_vars=$sfrt_config_dir/config.vars
+	sfrt_flag_vars=$sfrt_config_dir/flag.vars
+	sfrt_cfgdefs_in=$sfrt_config_dir/cfgdefs.in
+
+	mb_make_vars=$(cat $sfrt_config_vars \
 		| grep -v -e '^#' -e '^$' | tr '[:lower:]' '[:upper:]')
 
-	mb_impl_vars=$(cat $mb_project_dir/sofort/config.vars \
+	mb_impl_vars=$(cat $sfrt_config_vars \
 		| grep -v -e '^#' -e '^$' | sed 's/^/mb_/g')
 
-	mb_proj_vars=$(cat $mb_project_dir/sofort/config.vars \
+	mb_proj_vars=$(cat $sfrt_config_vars \
 		| grep -v -e '^#' -e '^$' | sed 's/^/mb_default_/g')
 
-	mb_flag_vars=$(cat $mb_project_dir/sofort/flag.vars \
+	mb_flag_vars=$(cat $sfrt_flag_vars \
 		| grep -v -e '^#' -e '^$')
 
 	mb_vars="$mb_make_vars $mb_impl_vars $mb_proj_vars $mb_flag_vars"
@@ -89,14 +96,13 @@ init_vars()
 
 	# project-specific config definitions
 	if [ _$mb_use_custom_cfgdefs = _yes ]; then
-		cat $mb_project_dir/sofort/cfgdefs.in \
-			> cfgdefs.mk
+		cat $sfrt_cfgdefs_in > cfgdefs.mk
 	else
 		printf '%s %s\n\n' \
 				'# this project does not include' \
 				'a custom config step.'           \
 			> cfgdefs.mk
-		cat $mb_project_dir/sofort/cfgdefs.in >> cfgdefs.mk
+		cat $sfrt_cfgdefs_in >> cfgdefs.mk
 
 		if [ -f $mb_project_dir/project/cfgdefs.in ]; then
 			cat $mb_project_dir/project/cfgdefs.in >> cfgdefs.mk
@@ -397,7 +403,7 @@ config_flags()
 
 config_copy()
 {
-	mb_vars=$(cut -d'=' -f1 "$mb_project_dir/sofort/config.vars" \
+	mb_vars=$(cut -d'=' -f1 $sfrt_config_vars \
 			| grep -v '^#')
 
 	mb_sed_substs=" \

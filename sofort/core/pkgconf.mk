@@ -25,7 +25,7 @@ build/$(PACKAGE).pc:
 		PKGCONF_LIBDIR='$(LIBDIR)'           \
 		PKGCONF_INCLUDEDIR='$(INCLUDEDIR)'   \
 		PKGCONF_VERSION='$(PKGCONF_VERSION)' \
-	$(PROJECT_DIR)/sofort/pkgconf.sh > $@
+	$(PROJECT_DIR)/sofort/tools/pkgconf.sh > $@
 
 install-pkgconf: build/$(PACKAGE).pc
 	mkdir -p $(DESTDIR)$(LIBDIR)/pkgconfig

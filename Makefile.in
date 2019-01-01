@@ -115,10 +115,10 @@ include ./ccenv/native.mk
 include ./cfgdefs.mk
 include ./usrdefs.mk
 
-include $(PROJECT_DIR)/sofort/defs.mk
-include $(PROJECT_DIR)/sofort/pkgconf.mk
-include $(PROJECT_DIR)/sofort/version.mk
-include $(PROJECT_DIR)/sofort/flavor.mk
+include $(PROJECT_DIR)/sofort/core/defs.mk
+include $(PROJECT_DIR)/sofort/core/pkgconf.mk
+include $(PROJECT_DIR)/sofort/core/version.mk
+include $(PROJECT_DIR)/sofort/core/flavor.mk
 
 include $(PROJECT_DIR)/project/osforce.mk
 include $(PROJECT_DIR)/project/tree.mk
@@ -252,7 +252,7 @@ host.tag:	Makefile
 		mv host.tmp host.tag
 
 version.tag:	$(GIT_REFERENCE_INDEX) dirs.tag
-		$(PROJECT_DIR)/sofort/version.sh	\
+		$(PROJECT_DIR)/sofort/tools/version.sh	\
 			-s $(SOURCE_DIR)		\
 			-o build/$(PACKAGE)_version.h	\
 			-p $(PACKAGE)
