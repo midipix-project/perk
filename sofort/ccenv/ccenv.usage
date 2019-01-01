@@ -61,12 +61,6 @@ A few words on sofort's tool-finding logic
 - AR=/path/to/ar --> set AR to the specified absolute path
 
 
-# consistency:
-- in the above case of AR=ar, using $(command -v ar) ensures
-  that the same tool is used throughout the lifetime of the
-  build project.
-
-
 # host generated config file and variable names:
 - ccenv/host.mk
 - AR, NM, OBJDUMP, ...
