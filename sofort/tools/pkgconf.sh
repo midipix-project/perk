@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu
+
 # prefix, exec_prefix
 if [ "$PKGCONF_PREFIX" = "$PKGCONF_EXEC_PREFIX" ]; then
 	pkgconf_prefix="${PKGCONF_PREFIX}"
