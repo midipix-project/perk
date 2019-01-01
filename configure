@@ -460,27 +460,6 @@ config_cfghost()
 }
 
 
-config_support()
-{
-	[ _$mb_disable_shared = _yes ] && return 0
-
-	mbt_cc=$(make .display-cc)
-	mbt_cflags=$(make .display-cflags)
-	mbt_source='int foo(int x){return ++x;}'
-	mbt_result=no
-
-	rm -f a.out
-	printf '%s' "$mbt_source" | $mbt_cc -shared -o a.out -xc -
-	[ -f a.out ] && mbt_result=yes
-	rm -f a.out
-
-	if [ $mbt_result = no ]; then
-		mb_disable_shared=yes
-		config_copy
-	fi
-}
-
-
 config_host()
 {
 	make -s host.tag && return 0
@@ -787,7 +766,6 @@ config_copy
 config_ccenv
 config_custom
 config_cfghost
-config_support
 config_host
 config_status
 

@@ -963,6 +963,20 @@ ccenv_output_defs()
 	fi
 }
 
+ccenv_dso_verify()
+{
+	ccenv_str='int foo(int x){return ++x;}'
+	ccenv_cmd="$ccenv_cc -xc - -shared -o a.out"
+
+	rm -f a.out
+
+	printf '%s' "$ccenv_str" | $ccenv_cmd \
+		> /dev/null 2>/dev/null       \
+	|| mb_disable_shared=yes
+
+	rm -f a.out
+}
+
 ccenv_clean_up()
 {
 	rm -f $ccenv_image
@@ -1042,6 +1056,7 @@ ccenv_set_toolchain_variables()
 ccenv_set_host_variables()
 {
 	ccenv_set_toolchain_variables 'host'
+	ccenv_dso_verify
 }
 
 ccenv_set_native_variables()
