@@ -4,6 +4,17 @@ mb_require_out_of_tree=no
 mb_custom_install_headers=no
 mb_avoid_version=no
 
+# config
+mb_all_static=
+mb_all_shared=
+mb_disable_frontend=
+mb_disable_static=
+mb_disable_shared=
+
+# custom config step
+mb_use_custom_cfgdefs=no
+mb_use_custom_cfgtest=no
+
 # pkgconfig
 mb_pkgname='perk'
 mb_pkgdesc='perk'
@@ -14,24 +25,14 @@ mb_pkgdurl=
 mb_pkgdefs=
 mb_pkglibs=
 
-# build
-mb_default_build=
-mb_default_host=
-mb_default_cchost=
-mb_default_cfghost=
-mb_default_target=
-mb_default_arch=
-mb_default_compiler=
-mb_default_toolchain=
-mb_default_sysroot=
-mb_default_cross_compile=
-mb_default_shell=sh
-
+# ccenv
+mb_ccenv_create_log=
+mb_ccenv_skip_native=
 
 # switches
 mb_default_cflags_common="-std=c99 -D_XOPEN_SOURCE=700"
-mb_default_cflags_common="$mb_default_cflags_common -I\$(PROJECT_DIR)/src/internal"
-mb_default_cflags_common="$mb_default_cflags_common -I\$(PROJECT_DIR)/include"
+mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/src/internal"
+mb_default_cflags_common="$mb_default_cflags_common -I\$(SOURCE_DIR)/include"
 mb_default_cflags_common="$mb_default_cflags_common -Ibuild"
 
 mb_default_cflags_debug=
@@ -54,22 +55,3 @@ mb_default_ldflags_strict=
 mb_default_ldflags_util=
 mb_default_ldflags_last=
 mb_default_ldflags_once=
-
-mb_default_pe_subsystem=windows
-mb_default_pe_image_base=
-mb_default_pe_config_defs=
-
-mb_default_elf_eh_frame=
-mb_default_elf_hash_style=
-mb_default_elf_config_defs=
-
-
-# config
-mb_all_static=
-mb_all_shared=
-mb_disable_frontend=
-mb_disable_static=
-mb_disable_shared=
-
-mb_use_custom_cfgdefs=no
-mb_use_custom_usrdefs=no
