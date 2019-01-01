@@ -1061,5 +1061,7 @@ ccenv_set_host_variables()
 
 ccenv_set_native_variables()
 {
-	ccenv_set_toolchain_variables 'native'
+	if [ _$mb_ccenv_skip_native != _yes ]; then
+		ccenv_set_toolchain_variables 'native'
+	fi
 }
