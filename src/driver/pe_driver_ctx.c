@@ -24,6 +24,16 @@ static const struct pe_source_version pe_src_version = {
 	PERK_GIT_VERSION
 };
 
+/* default fd context */
+static const struct pe_fd_ctx pe_default_fdctx = {
+	.fdin  = STDIN_FILENO,
+	.fdout = STDOUT_FILENO,
+	.fderr = STDERR_FILENO,
+	.fdcwd = AT_FDCWD,
+	.fddst = AT_FDCWD,
+	.fdlog = (-1),
+};
+
 struct pe_driver_ctx_alloc {
 	struct argv_meta *		meta;
 	struct pe_driver_ctx_impl	ctx;
@@ -127,16 +137,8 @@ int pe_get_driver_ctx(
 
 	(void)envp;
 
-	if (!fdctx) {
-		fdctx = &(const struct pe_fd_ctx) {
-			.fdin  = STDIN_FILENO,
-			.fdout = STDOUT_FILENO,
-			.fderr = STDERR_FILENO,
-			.fdlog = (-1),
-			.fdcwd = AT_FDCWD,
-			.fddst = AT_FDCWD,
-		};
-	}
+	if (!fdctx)
+		fdctx = &pe_default_fdctx;
 
 	argv_optv_init(pe_default_options,optv);
 
