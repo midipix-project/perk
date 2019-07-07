@@ -45,7 +45,7 @@ int pe_read_import_lookup(
 	}
 
 	if (m->ii_flag) {
-		m->ii_ordinal           = m->u.ii_import_lookup_entry_32 & 0x7fff;
+		m->ii_ordinal           = m->u.ii_import_lookup_entry_32 & 0xffff;
 		m->ii_hint_name_tbl_rva = 0;
 	} else {
 		m->ii_ordinal           = 0;
