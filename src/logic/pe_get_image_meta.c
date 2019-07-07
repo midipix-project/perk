@@ -399,7 +399,8 @@ int pe_get_image_meta(
 
 	/* .idata */
 	struct pe_raw_import_hdr * 	pidata;
-	union  pe_raw_import_lookup *	pitem;
+	unsigned char *			pitem;
+	size_t				psize;
 
 	i = pe_get_named_section_index(m,".idata");
 	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_import_tbl);
@@ -444,17 +445,42 @@ int pe_get_image_meta(
 
 			/* items */
 			if (m->m_idata[i].ih_import_lookup_tbl_rva) {
-				for (pitem = m->m_idata[i].ih_aitems; pe_read_long(pitem->ii_import_lookup_entry_32); pitem++)
-					m->m_idata[i].ih_count++;
+				if (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32) {
+					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_32;
+
+					for (; pe_read_long(pitem); m->m_idata[i].ih_count++)
+						pitem += sizeof(uint32_t);
+				} else if (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS) {
+					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_64;
+
+					for (; pe_read_quad(pitem); m->m_idata[i].ih_count++)
+						pitem += sizeof(uint64_t);
+				} else {
+					return pe_free_image_meta_impl(
+						m,PERK_CUSTOM_ERROR(
+							dctx,PERK_ERR_UNSUPPORTED_ABI));
+				}
 
 				if (!(m->m_idata[i].ih_items = calloc(m->m_idata[i].ih_count,sizeof(*(m->m_idata[i].ih_items)))))
 					return pe_free_image_meta_impl(
 						m,PERK_SYSTEM_ERROR(dctx));
 			}
 
+			switch (m->m_opt.oh_std.coh_magic) {
+				case PE_MAGIC_PE32:
+					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_32;
+					psize = sizeof(uint32_t);
+					break;
+
+				case PE_MAGIC_PE32_PLUS:
+					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_64;
+					psize = sizeof(uint64_t);
+					break;
+			}
+
 			for (j=0; j<m->m_idata[i].ih_count; j++) {
 				if ((ret = pe_read_import_lookup(
-						&(m->m_idata[i].ih_aitems[j]),
+						pitem + j*psize,
 						&(m->m_idata[i].ih_items[j]),
 						m->m_opt.oh_std.coh_magic)))
 					return pe_free_image_meta_impl(

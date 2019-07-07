@@ -257,7 +257,7 @@ perk_api int  pe_read_import_header     (const struct pe_raw_import_hdr *,      
 perk_api int  pe_read_coff_symbol       (const struct pe_raw_coff_symbol *,     struct pe_meta_coff_symbol *,
                                          const struct pe_meta_coff_file_hdr *,  void * base);
 
-perk_api int  pe_read_import_lookup     (const union  pe_raw_import_lookup *,   struct pe_meta_import_lookup *,
+perk_api int  pe_read_import_lookup     (const unsigned char *,                 struct pe_meta_import_lookup *,
                                          uint32_t magic);
 
 /* package info */

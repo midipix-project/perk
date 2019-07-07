@@ -25,18 +25,18 @@ int pe_read_import_header(const struct pe_raw_import_hdr * p, struct pe_meta_imp
 }
 
 int pe_read_import_lookup(
-	const union pe_raw_import_lookup * p,
+	const unsigned char * p,
 	struct pe_meta_import_lookup * m,
 	uint32_t magic)
 {
 	switch (magic) {
 		case PE_MAGIC_PE32:
-			m->u.ii_import_lookup_entry_64 = pe_read_long(p->ii_import_lookup_entry_32);
+			m->u.ii_import_lookup_entry_64 = pe_read_long(p);
 			m->ii_flag = (uint32_t)m->u.ii_import_lookup_entry_64 >> 31;
 			break;
 
 		case PE_MAGIC_PE32_PLUS:
-			m->u.ii_import_lookup_entry_64 = pe_read_quad(p->ii_import_lookup_entry_64);
+			m->u.ii_import_lookup_entry_64 = pe_read_quad(p);
 			m->ii_flag = m->u.ii_import_lookup_entry_64 >> 63;
 			break;
 
