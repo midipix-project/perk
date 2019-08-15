@@ -170,6 +170,7 @@ int pe_get_driver_ctx(
 							fdctx->fdout,
 							program,entry->arg,
 							optv,meta);
+					break;
 
 				case TAG_VERSION:
 					cctx.drvflags |= PERK_DRIVER_VERSION;
