@@ -7,6 +7,8 @@
 #include <string.h>
 
 #include <perk/perk.h>
+#include <perk/perk_consts.h>
+#include <perk/perk_structs.h>
 #include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 

@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #include <perk/perk.h>
+#include <perk/perk_consts.h>
 #include <perk/perk_meta.h>
 
 static const char * const pe_framework_str[PE_FRAMEWORK_CAP] = {

@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
+#include <perk/perk_consts.h>
 #include <perk/perk_meta.h>
 
 /* todo: object, unrecognized */

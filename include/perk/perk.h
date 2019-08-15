@@ -5,8 +5,6 @@
 #include <stdio.h>
 
 #include "perk_api.h"
-#include "perk_consts.h"
-#include "perk_structs.h"
 #include "perk_meta.h"
 
 #ifdef __cplusplus
@@ -20,6 +18,7 @@ extern "C" {
 #warning pass -DPERK_PRE_ALPHA to suppress this warning.
 #endif
 #endif
+
 
 /* status codes */
 #define PERK_OK				0x00
@@ -64,6 +63,16 @@ enum pe_custom_error {
 	PERK_ERR_UNSUPPORTED_ABI,
 	PERK_ERR_CAP,
 };
+
+struct pe_raw_image;
+struct pe_raw_image_dos_hdr;
+struct pe_raw_coff_image_hdr;
+struct pe_raw_coff_object_hdr;
+union  pe_raw_opt_hdr;
+struct pe_raw_sec_hdr;
+struct pe_raw_export_hdr;
+struct pe_raw_import_hdr;
+struct pe_raw_coff_symbol;
 
 struct pe_raw_image {
 	void *		map_addr;

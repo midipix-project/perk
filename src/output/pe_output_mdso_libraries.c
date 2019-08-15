@@ -14,6 +14,7 @@
 #include <mdso/mdso_structs.h>
 
 #include <perk/perk.h>
+#include <perk/perk_consts.h>
 #include <perk/perk_output.h>
 #include "perk_reader_impl.h"
 #include "perk_driver_impl.h"

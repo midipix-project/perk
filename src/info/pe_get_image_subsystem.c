@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <perk/perk.h>
+#include <perk/perk_consts.h>
 #include <perk/perk_meta.h>
 
 static const char * const pe_subsystem_str[0x10] = {
