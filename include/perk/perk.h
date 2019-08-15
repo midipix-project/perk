@@ -16,8 +16,8 @@ extern "C" {
 /* pre-alpha */
 #ifndef PERK_APP
 #ifndef PERK_PRE_ALPHA
-#error  libperk: pre-alpha: ABI is not final!
-#error  to use the library, please pass -DPERK_PRE_ALPHA to the compiler.
+#warning libperk: pre-alpha: ABI is not final!
+#warning pass -DPERK_PRE_ALPHA to suppress this warning.
 #endif
 #endif
 
