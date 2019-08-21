@@ -55,11 +55,11 @@ fi
 
 # ldflags (--libs)
 if [ -n "$pkgconf_libdir" ] &&  [ -n "${PKGCONF_NAME}" ]; then
-	pkgconf_ldflags="-L$pkgconf_libdir -l${PKGCONF_NAME}"
+	pkgconf_ldflags='-L${libdir}'" -l${PKGCONF_NAME}"
 elif [ -n "${PKGCONF_NAME}" ]; then
 	pkgconf_ldflags="-l${PKGCONF_NAME}"
 else
-	pkgconf_ldflags="-L$pkgconf_libdir"
+	pkgconf_ldflags='-L${libdir}'
 fi
 
 
