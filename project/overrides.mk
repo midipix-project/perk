@@ -1,1 +1,1 @@
-src/$(PACKAGE).o: CFLAGS_CONFIG += -Wno-unused-parameter
+src/$(PACKAGE).o: CFLAGS_LAST += -Wno-unused-parameter
