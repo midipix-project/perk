@@ -150,6 +150,12 @@ static void argv_usage(
 	const struct	argv_option **,
 	const char *	mode);
 
+static void argv_usage_plain(
+	int		fd,
+	const char *	header,
+	const struct	argv_option **,
+	const char *	mode);
+
 static struct argv_meta * argv_get(
 	char **,
 	const struct argv_option **,
@@ -763,11 +769,12 @@ static void argv_free(struct argv_meta * xmeta)
 	}
 }
 
-static void argv_usage(
+static void argv_usage_impl(
 	int				fd,
 	const char *    		header,
 	const struct argv_option **	options,
-	const char *			mode)
+	const char *			mode,
+	int				fcolor)
 {
 	const struct argv_option **	optv;
 	const struct argv_option *	option;
@@ -789,12 +796,13 @@ static void argv_usage(
 	const char			cblue []  = "\x1b[34m";
 	const char			ccyan []  = "\x1b[36m";
 	const char *			color     = ccyan;
-	bool				fcolor;
+
+	(void)argv_usage;
+	(void)argv_usage_plain;
 
 	fshort = mode ? !strcmp(mode,"short") : 0;
 	flong  = fshort ? 0 : mode && !strcmp(mode,"long");
 	fboth  = !fshort && !flong;
-	fcolor = isatty(fd);
 
 	if (fcolor)
 		argv_dprintf(fd,"%s%s",cbold,cgreen);
@@ -934,6 +942,24 @@ static void argv_usage(
 
 	if (fcolor)
 		argv_dprintf(fd,creset);
+}
+
+static void argv_usage(
+	int				fd,
+	const char *    		header,
+	const struct argv_option **	options,
+	const char *			mode)
+{
+	argv_usage_impl(fd,header,options,mode,isatty(fd));
+}
+
+static void argv_usage_plain(
+	int				fd,
+	const char *    		header,
+	const struct argv_option **	options,
+	const char *			mode)
+{
+	argv_usage_impl(fd,header,options,mode,0);
 }
 
 #endif
