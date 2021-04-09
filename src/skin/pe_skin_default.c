@@ -40,5 +40,15 @@ const struct argv_option pe_default_options[] = {
 			"list .dsometa (mdso) dependency libraries "
 			"along with referenced symbols"},
 
+	{"hdrdump",	'X',TAG_HDRDUMP,ARGV_OPTARG_OPTIONAL,0,
+			"dos|image.dos|"
+			"coff|coff.image|coff.object|coff.optional|"
+			"sectbl|section.table|"
+			"exphdr|export.header|"
+			"imptbl|import.table",0,
+			"output struct-based information for "
+			"either all headers (the default) "
+			"or a specific header"},
+
 	{0,0,0,0,0,0,0,0}
 };

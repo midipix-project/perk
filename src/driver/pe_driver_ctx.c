@@ -215,6 +215,43 @@ int pe_get_driver_ctx(
 				case TAG_DSOSYMS:
 					cctx.fmtflags |= PERK_OUTPUT_MDSO_SYMS;
 					break;
+
+				case TAG_HDRDUMP:
+					if (!entry->arg) {
+						cctx.hdrdump = 0;
+						cctx.hdrdump = ~cctx.hdrdump;
+					} else if (!strcmp(entry->arg,"dos")) {
+						cctx.hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
+					} else if (!strcmp(entry->arg,"image.dos")) {
+						cctx.hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
+					} else if (!strcmp(entry->arg,"coff")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
+						cctx.hdrdump |= PERK_HDRDUMP_COFF_OBJECT_HEADER;
+						cctx.hdrdump |= PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.image")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
+					} else if (!strcmp(entry->arg,"coff.obj")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.object")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.opt")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.optional")) {
+						cctx.hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"sectbl")) {
+						cctx.hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
+					} else if (!strcmp(entry->arg,"section.table")) {
+						cctx.hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
+					} else if (!strcmp(entry->arg,"exphdr")) {
+						cctx.hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
+					} else if (!strcmp(entry->arg,"export.header")) {
+						cctx.hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
+					} else if (!strcmp(entry->arg,"imptbl")) {
+						cctx.hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
+					} else if (!strcmp(entry->arg,"import.table")) {
+						cctx.hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
+					}
+					break;
 			}
 		} else
 			nunits++;

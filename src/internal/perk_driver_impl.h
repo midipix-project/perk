@@ -27,6 +27,7 @@ enum app_tags {
 	TAG_IMPSYMS,
 	TAG_DSOLIBS,
 	TAG_DSOSYMS,
+	TAG_HDRDUMP,
 };
 
 struct pe_driver_ctx_impl {
