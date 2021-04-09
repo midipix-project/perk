@@ -98,6 +98,9 @@ int pe_hdrdump_import_tbl(
 {
 	int idx;
 
+	if (meta->m_stats.t_nimplibs == 0)
+		return 0;
+
 	for (idx=0; idx<=meta->m_stats.t_nimplibs; idx++)
 		if (pe_hdrdump_import_hdr_impl(dctx,meta,idx) < 0)
 			return PERK_NESTED_ERROR(dctx);
