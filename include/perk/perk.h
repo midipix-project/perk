@@ -217,7 +217,7 @@ perk_api int  pe_output_mdso_libraries  (const struct pe_driver_ctx *, const str
 perk_api int  pe_hdrdump_image_dos_hdr  (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_coff_image_hdr (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_coff_object_hdr(const struct pe_driver_ctx *, const struct pe_image_meta *);
-perk_api int  pe_hdrdump_opt_hdr        (const struct pe_driver_ctx *, const struct pe_image_meta *);
+perk_api int  pe_hdrdump_coff_opt_hdr   (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_sec_tbl        (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_export_hdr     (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_hdrdump_import_tbl     (const struct pe_driver_ctx *, const struct pe_image_meta *);

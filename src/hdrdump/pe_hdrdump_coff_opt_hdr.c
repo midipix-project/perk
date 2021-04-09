@@ -182,7 +182,7 @@ static int pe_hdrdump_opt_hdr_64(
 	return 0;
 }
 
-int pe_hdrdump_opt_hdr(
+int pe_hdrdump_coff_opt_hdr(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {

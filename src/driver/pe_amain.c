@@ -62,7 +62,7 @@ static void pe_perform_hdrdump_actions(
 		pe_hdrdump_coff_object_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OPT_HEADER)
-		pe_hdrdump_opt_hdr(dctx,uctx->meta);
+		pe_hdrdump_coff_opt_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_SECTION_TABLE)
 		pe_hdrdump_sec_tbl(dctx,uctx->meta);
