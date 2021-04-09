@@ -48,6 +48,32 @@ static ssize_t pe_version(struct pe_driver_ctx * dctx, int fdout)
 			verclr[4],verinfo->commit,verclr[5]);
 }
 
+static void pe_perform_hdrdump_actions(
+	const struct pe_driver_ctx *	dctx,
+	struct pe_unit_ctx *		uctx)
+{
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMAGE_DOS_HEADER)
+		pe_hdrdump_image_dos_hdr(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_IMAGE_HEADER)
+		pe_hdrdump_coff_image_hdr(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OBJECT_HEADER)
+		pe_hdrdump_coff_object_hdr(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OPT_HEADER)
+		pe_hdrdump_opt_hdr(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_SECTION_TABLE)
+		pe_hdrdump_sec_tbl(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_EXPORT_HEADER)
+		pe_hdrdump_export_hdr(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMPORT_TABLE)
+		pe_hdrdump_import_tbl(dctx,uctx->meta);
+}
+
 static void pe_perform_unit_actions(
 	const struct pe_driver_ctx *	dctx,
 	struct pe_unit_ctx *		uctx)
@@ -74,6 +100,9 @@ static void pe_perform_unit_actions(
 
 	if ((flags & PERK_OUTPUT_MDSO_LIBS) || (flags & PERK_OUTPUT_MDSO_SYMS))
 		pe_output_mdso_libraries(dctx,uctx->meta);
+
+	if (dctx->cctx->hdrdump)
+		pe_perform_hdrdump_actions(dctx,uctx);
 }
 
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)
