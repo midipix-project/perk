@@ -6,7 +6,10 @@
 
 #include <perk/perk.h>
 
+#define PE_UNUSED_PARAMETER(p) (void)p
+
 int main(int argc, char ** argv, char ** envp)
 {
+	PE_UNUSED_PARAMETER(argc);
 	return pe_main(argv,envp,0);
 }
