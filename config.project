@@ -1,6 +1,7 @@
 # project
 mb_package=perk
 mb_require_out_of_tree=no
+mb_require_source_dir=no
 mb_custom_install_headers=no
 mb_avoid_version=no
 
@@ -13,13 +14,20 @@ mb_disable_shared=
 
 # custom config step
 mb_use_custom_cfgdefs=no
+mb_use_custom_cfginit=no
+mb_use_custom_cfgfini=no
 mb_use_custom_cfgtest=no
+
+# advanced make options
+mb_make=
+mb_makefile=
+mb_makemode=
 
 # pkgconfig
 mb_pkgname='perk'
 mb_pkgdesc='perk'
 mb_pkgusrc=
-mb_pkgrepo='git://midipix.org/perk'
+mb_pkgrepo='https://git.foss21.org/perk'
 mb_pkgpsrc=
 mb_pkgdurl=
 mb_pkgdefs=
