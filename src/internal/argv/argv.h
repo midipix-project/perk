@@ -563,7 +563,9 @@ static void argv_show_error(int fd, struct argv_ctx * ctx)
 				opt_short_name[0] ? "-" : "",
 				opt_short_name,
 				opt_short_name[0] ? "," : "",
-				ctx->erropt->long_name ? "--" : "",
+				ctx->erropt->long_name
+					? (ctx->erropt->flags & ARGV_OPTION_HYBRID_ONLY) ? "-" : "--"
+					: "",
 				ctx->erropt->long_name,
 				ctx->erropt->paradigm ? "one of the following values:" : "a value",
 				ctx->erropt->paradigm ? "{" : "",
