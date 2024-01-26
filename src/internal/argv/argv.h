@@ -536,10 +536,11 @@ static const char * argv_program_name(const char * program_path)
 
 static void argv_show_error(int fd, struct argv_ctx * ctx)
 {
-	char * ch;
-	char * cap;
-	char   opt_vendor_buf[256];
-	char   opt_short_name[2] = {0,0};
+	const char * src;
+	char *       dst;
+	char *       cap;
+	char         opt_vendor_buf[256];
+	char         opt_short_name[2] = {0,0};
 
 	if (ctx->erropt && ctx->erropt->short_name)
 		opt_short_name[0] = ctx->erropt->short_name;
@@ -556,14 +557,22 @@ static void argv_show_error(int fd, struct argv_ctx * ctx)
 			break;
 
 		case ARGV_ERROR_VENDOR_OPTION:
-			memset(opt_vendor_buf,0,sizeof(opt_vendor_buf));
-			strncpy(opt_vendor_buf,ctx->errch,sizeof(opt_vendor_buf) - 1);
-
+			src = ctx->errch;
+			dst = opt_vendor_buf;
 			cap = &opt_vendor_buf[sizeof(opt_vendor_buf)];
 
-			for (ch=opt_vendor_buf; ch && *ch && ch<cap; ch++)
-				if ((*ch == '=') || (*ch == ',') || (*ch == ':'))
-					*ch = '\0';
+			for (; src && *src && dst<cap; ) {
+				if ((*src == '=') || (*src == ',') || (*src == ':')) {
+					src  = 0;
+				} else {
+					*dst++ = *src++;
+				}
+			}
+
+			if (dst == cap)
+				dst--;
+
+			*dst = '\0';
 
 			argv_dprintf(fd,"'-%s' is not a valid vendor option\n",opt_vendor_buf);
 			break;
