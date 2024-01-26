@@ -1,6 +1,6 @@
 /****************************************************************************/
 /*  argv.h: a thread-safe argument vector parser and usage screen generator */
-/*  Copyright (C) 2015--2021  SysDeer Technologies, LLC                     */
+/*  Copyright (C) 2015--2024  SysDeer Technologies, LLC                     */
 /*  Released under GPLv2 and GPLv3; see COPYING.PERK.                       */
 /****************************************************************************/
 
@@ -83,6 +83,7 @@ enum argv_error {
 	ARGV_ERROR_INTERNAL,
 	ARGV_ERROR_SHORT_OPTION,
 	ARGV_ERROR_LONG_OPTION,
+	ARGV_ERROR_VENDOR_OPTION,
 	ARGV_ERROR_OPTARG_NONE,
 	ARGV_ERROR_OPTARG_REQUIRED,
 	ARGV_ERROR_OPTARG_PARADIGM,
@@ -398,7 +399,11 @@ static void argv_scan(
 						fval = ch;
 				}
 			} else {
-				ferr = ARGV_ERROR_SHORT_OPTION;
+				if ((ch == &parg[0][1]) && (ch[0] == 'W') && ch[1]) {
+					ferr = ARGV_ERROR_VENDOR_OPTION;
+				} else {
+					ferr = ARGV_ERROR_SHORT_OPTION;
+				}
 			}
 
 		} else if (!fnoscan && (fhybrid || is_long_option(ch))) {
@@ -531,7 +536,10 @@ static const char * argv_program_name(const char * program_path)
 
 static void argv_show_error(int fd, struct argv_ctx * ctx)
 {
-	char opt_short_name[2] = {0,0};
+	char * ch;
+	char * cap;
+	char   opt_vendor_buf[256];
+	char   opt_short_name[2] = {0,0};
 
 	if (ctx->erropt && ctx->erropt->short_name)
 		opt_short_name[0] = ctx->erropt->short_name;
@@ -545,6 +553,19 @@ static void argv_show_error(int fd, struct argv_ctx * ctx)
 
 		case ARGV_ERROR_LONG_OPTION:
 			argv_dprintf(fd,"'--%s' is not a valid long option\n",ctx->errch);
+			break;
+
+		case ARGV_ERROR_VENDOR_OPTION:
+			memset(opt_vendor_buf,0,sizeof(opt_vendor_buf));
+			strncpy(opt_vendor_buf,ctx->errch,sizeof(opt_vendor_buf) - 1);
+
+			cap = &opt_vendor_buf[sizeof(opt_vendor_buf)];
+
+			for (ch=opt_vendor_buf; ch && *ch && ch<cap; ch++)
+				if ((*ch == '=') || (*ch == ',') || (*ch == ':'))
+					*ch = '\0';
+
+			argv_dprintf(fd,"'-%s' is not a valid vendor option\n",opt_vendor_buf);
 			break;
 
 		case ARGV_ERROR_OPTARG_NONE:
