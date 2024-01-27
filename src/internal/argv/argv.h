@@ -438,7 +438,12 @@ static void argv_scan(
 					ch   = val;
 
 				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE)) {
-					ferr = ARGV_ERROR_HYBRID_SPACE;
+					if (option->optarg == ARGV_OPTARG_OPTIONAL) {
+						fval = false;
+
+					} else {
+						ferr = ARGV_ERROR_HYBRID_SPACE;
+					}
 
 				} else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL)) {
 					ferr = ARGV_ERROR_HYBRID_EQUAL;
