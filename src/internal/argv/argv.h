@@ -418,49 +418,67 @@ static void argv_scan(
 					ch = *parg;
 				}
 
-				if (fhybrid && !(option->flags & ARGV_OPTION_HYBRID_SWITCH))
+				/* now verify the proper setting of option values */
+				if (fhybrid && !(option->flags & ARGV_OPTION_HYBRID_SWITCH)) {
 					ferr = ARGV_ERROR_HYBRID_NONE;
-				else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY))
+
+				} else if (!fhybrid && (option->flags & ARGV_OPTION_HYBRID_ONLY)) {
 					ferr = ARGV_ERROR_HYBRID_ONLY;
-				else if (option->optarg == ARGV_OPTARG_NONE) {
+
+				} else if (option->optarg == ARGV_OPTARG_NONE) {
 					if (val[0]) {
 						ferr = ARGV_ERROR_OPTARG_NONE;
 						ctx->errch = val + 1;
-					} else
+					} else {
 						fval = false;
+					}
+
 				} else if (val[0] && (option->flags & ARGV_OPTION_HYBRID_JOINED)) {
 					fval = true;
 					ch   = val;
-				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE))
+
+				} else if (fhybrid && !val[0] && !(option->flags & ARGV_OPTION_HYBRID_SPACE)) {
 					ferr = ARGV_ERROR_HYBRID_SPACE;
-				else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL))
+
+				} else if (fhybrid && (val[0]=='=') && !(option->flags & ARGV_OPTION_HYBRID_EQUAL)) {
 					ferr = ARGV_ERROR_HYBRID_EQUAL;
-				else if (fhybrid && (val[0]==',') && !(option->flags & ARGV_OPTION_HYBRID_COMMA))
+
+				} else if (fhybrid && (val[0]==',') && !(option->flags & ARGV_OPTION_HYBRID_COMMA)) {
 					ferr = ARGV_ERROR_HYBRID_COMMA;
-				else if (!fhybrid && (val[0]==','))
+
+				} else if (!fhybrid && (val[0]==',')) {
 					ferr = ARGV_ERROR_HYBRID_COMMA;
-				else if (val[0] && !val[1])
+
+				} else if (val[0] && !val[1]) {
 					ferr = ARGV_ERROR_OPTARG_REQUIRED;
-				else if (val[0] && val[1]) {
+
+				} else if (val[0] && val[1]) {
 					fval = true;
 					ch   = ++val;
+
 				} else if (option->optarg == ARGV_OPTARG_REQUIRED) {
-					if (!val[0] && !*parg)
+					if (!val[0] && !*parg) {
 						ferr = ARGV_ERROR_OPTARG_REQUIRED;
-					else if (*parg && is_short_option(*parg))
+
+					} else if (*parg && is_short_option(*parg)) {
 						ferr = ARGV_ERROR_OPTARG_REQUIRED;
-					else if (*parg && is_long_option(*parg))
+
+					} else if (*parg && is_long_option(*parg)) {
 						ferr = ARGV_ERROR_OPTARG_REQUIRED;
-					else if (*parg && is_last_option(*parg))
+
+					} else if (*parg && is_last_option(*parg)) {
 						ferr = ARGV_ERROR_OPTARG_REQUIRED;
-					else
+
+					} else {
 						fval = true;
+					}
 				} else {
 					/* ARGV_OPTARG_OPTIONAL */
 					fval = val[0];
 				}
-			} else
+			} else {
 				ferr = ARGV_ERROR_LONG_OPTION;
+			}
 		}
 
 		if (ferr == ARGV_ERROR_OK)
