@@ -74,6 +74,7 @@ static char * dsolib_name(const struct pe_image_meta * m, int i)
 {
 	uintptr_t				va;
 	uint64_t				rva;
+	char *					addr;
 	uint32_t				roffset;
 	struct mdso_raw_meta_record_m32 *	mdso32;
 	struct mdso_raw_meta_record_m64 *	mdso64;
@@ -94,7 +95,7 @@ static char * dsolib_name(const struct pe_image_meta * m, int i)
 	if (pe_get_roffset_from_rva(m,(uint32_t)rva,&roffset) < 0)
 		return 0;
 
-	return m->r_image.map_addr + roffset;
+	return (addr = m->r_image.map_addr) + roffset;
 }
 
 static unsigned char * dsosym_meta(const struct pe_image_meta * m, int j)
@@ -133,6 +134,7 @@ static char * dsosym_string(const struct pe_image_meta * m, int j)
 {
 	uint64_t			va;
 	uint32_t			rva;
+	char *				addr;
 	uint32_t			roffset;
 	struct mdso_raw_sym_entry_m32 *	sym32;
 	struct mdso_raw_sym_entry_m64 *	sym64;
@@ -158,7 +160,7 @@ static char * dsosym_string(const struct pe_image_meta * m, int j)
 	if (pe_get_roffset_from_rva(m,rva,&roffset) < 0)
 		return 0;
 
-	return m->r_image.map_addr + roffset;
+	return (addr = m->r_image.map_addr) + roffset;
 }
 
 int pe_output_mdso_libraries(
