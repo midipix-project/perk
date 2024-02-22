@@ -326,7 +326,7 @@ struct pe_raw_coff_symbol_name {
 			unsigned char	cs_zeroes	[0x04];		/* 0x00 */
 			unsigned char	cs_offset	[0x04];		/* 0x04 */
 		} long_name;
-	};
+	} cs_u;
 };
 
 
