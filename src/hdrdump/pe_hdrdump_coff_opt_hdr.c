@@ -23,15 +23,19 @@ static int pe_hdrdump_opt_hdr_32(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
-	uint64_t	faddr;
-	uint64_t	vaddr;
+	void *          uaddr;
+	const char *    haddr;
+	const char *    maddr;
+	uintptr_t	faddr;
+	uintptr_t	vaddr;
 	char *		ch;
 	char		buf[8192];
 
-	if (!PE_ADDR)
-		return 0;
+	uaddr = &meta->r_opt->opt_hdr_32;
+	maddr = meta->r_image.map_addr;
 
-	faddr = (char *)(PE_ADDR) - (char *)meta->r_image.map_addr;
+	haddr = uaddr;
+	faddr = haddr - maddr;
 	vaddr = meta->m_opt.oh_mem.coh_image_base + faddr;
 
 	ch  = buf;
@@ -109,15 +113,19 @@ static int pe_hdrdump_opt_hdr_64(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
-	uint64_t	faddr;
-	uint64_t	vaddr;
+	void *          uaddr;
+	const char *    haddr;
+	const char *    maddr;
+	uintptr_t	faddr;
+	uintptr_t	vaddr;
 	char *		ch;
 	char		buf[8192];
 
-	if (!PE_ADDR)
-		return 0;
+	uaddr = PE_ADDR;
+	maddr = meta->r_image.map_addr;
 
-	faddr = (char *)(PE_ADDR) - (char *)meta->r_image.map_addr;
+	haddr = uaddr;
+	faddr = haddr - maddr;
 	vaddr = meta->m_opt.oh_mem.coh_image_base + faddr;
 
 	ch  = buf;
@@ -186,6 +194,9 @@ int pe_hdrdump_coff_opt_hdr(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
+	if (!meta->r_opt)
+		return 0;
+
 	switch (pe_image_bits(meta)) {
 		case 32:
 			return pe_hdrdump_opt_hdr_32(dctx,meta);
