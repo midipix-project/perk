@@ -332,7 +332,7 @@ struct pe_raw_coff_symbol_name {
 
 struct pe_raw_coff_strtbl {
 	unsigned char	cst_size			[0x04];		/* 0x00 */
-	unsigned char	cst_data			[0x01];		/* 0x04 */
+	unsigned char	cst_data			[];		/* 0x04 */
 };
 
 
