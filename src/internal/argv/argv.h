@@ -904,7 +904,7 @@ static void argv_usage_impl(
 		/* color */
 		if (fcolor) {
 			color = (color == ccyan) ? cblue : ccyan;
-			argv_dprintf(fd,color);
+			argv_dprintf(fd,color,0);
 		}
 
 		/* description, using either paradigm or argname if applicable */
