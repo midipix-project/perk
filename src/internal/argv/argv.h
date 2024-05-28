@@ -916,7 +916,7 @@ static void argv_usage_impl(
 
 		/* long/hybrid option prefix (-/--) */
 		prefix = option->flags & ARGV_OPTION_HYBRID_ONLY
-				? " -" : "--";
+				? "  -" : " --";
 
 		/* option string */
 		if (fboth && option->short_name && option->long_name)
