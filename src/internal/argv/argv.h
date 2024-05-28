@@ -833,6 +833,7 @@ static void argv_usage_impl(
 {
 	const struct argv_option **	optv;
 	const struct argv_option *	option;
+	int                             nlong;
 	bool				fshort,flong,fboth;
 	size_t				len,optlen,desclen;
 	char				cache;
@@ -865,7 +866,7 @@ static void argv_usage_impl(
 	if (header)
 		argv_dprintf(fd,"%s",header);
 
-	for (optlen=0,optv=options; *optv; optv++) {
+	for (optlen=0,nlong=0,optv=options; *optv; optv++) {
 		option = *optv;
 
 		/* indent + comma */
@@ -884,6 +885,11 @@ static void argv_usage_impl(
 		/* optlen */
 		if (len > optlen)
 			optlen = len;
+
+		/* long (vs. hybrid-only) option? */
+		if (option->long_name)
+			if (!(option->flags & ARGV_OPTION_HYBRID_ONLY))
+				nlong++;
 	}
 
 	if (optlen >= optcap) {
@@ -917,6 +923,10 @@ static void argv_usage_impl(
 		/* long/hybrid option prefix (-/--) */
 		prefix = option->flags & ARGV_OPTION_HYBRID_ONLY
 				? "  -" : " --";
+
+		/* avoid extra <stace> when all long opts are hybrid-only */
+		if (nlong == 0)
+			prefix++;
 
 		/* option string */
 		if (fboth && option->short_name && option->long_name)
