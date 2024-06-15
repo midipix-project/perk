@@ -750,7 +750,8 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 
 		if (!(imeta->argv = calloc(argc+1,sizeof(char *))))
 			return argv_free_impl(imeta);
-		else if (!(imeta->strbuf = calloc(1,size+1)))
+
+		if (!(imeta->strbuf = calloc(1,size+1)))
 			return argv_free_impl(imeta);
 
 		for (i=0,dst=imeta->strbuf; i<argc; i++) {
@@ -760,15 +761,18 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 		}
 
 		imeta->meta.argv = imeta->argv;
-	} else
+	} else {
 		imeta->meta.argv = argv;
+	}
 
-	if (!(imeta->meta.entries = calloc(
-				ctx->nentries+1,
-				sizeof(struct argv_entry))))
+	imeta->meta.entries = calloc(
+		ctx->nentries+1,
+		sizeof(struct argv_entry));
+
+	if (!imeta->meta.entries)
 		return argv_free_impl(imeta);
-	else
-		return &imeta->meta;
+
+	return &imeta->meta;
 }
 
 static struct argv_meta * argv_get(
