@@ -106,12 +106,12 @@ struct argv_option {
 };
 
 struct argv_entry {
-	const char *	arg;
-	int		tag;
-	bool		fopt;
-	bool		fval;
-	bool		fnoscan;
-	enum argv_error errcode;
+	const char *            arg;
+	int                     tag;
+	bool                    fopt;
+	bool                    fval;
+	bool                    fnoscan;
+	enum argv_error         errcode;
 };
 
 struct argv_meta {
