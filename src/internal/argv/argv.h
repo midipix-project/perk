@@ -698,7 +698,7 @@ static void argv_show_status(
 		argv_dprintf(fd,"argv[%d]: %s\n",argc,*argv);
 
 	argv_dprintf(fd,"\n\nparsed entries:\n");
-	for (entry=meta->entries; entry->arg || entry->fopt; entry++)
+	for (entry=meta->entries; entry->arg || entry->fopt; entry++) {
 		if (entry->fopt) {
 			option = option_from_tag(optv,entry->tag);
 			short_name[0] = option->short_name;
@@ -709,8 +709,10 @@ static void argv_show_status(
 			else
 				argv_dprintf(fd,"[-%s,--%s]\n",
 					short_name,option->long_name);
-		} else
+		} else {
 			argv_dprintf(fd,"<program arg> := %s\n",entry->arg);
+		}
+	}
 
 	argv_dprintf(fd,"\n\n");
 }
