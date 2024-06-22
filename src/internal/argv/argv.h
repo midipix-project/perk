@@ -856,8 +856,10 @@ static void argv_show_status(
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
 {
+	int				i;
 	int				argc;
 	char **				argv;
+	struct argv_keyval *            keyv;
 	struct argv_entry *		entry;
 	const struct argv_option *	option;
 	char				short_name[2] = {0};
@@ -887,6 +889,27 @@ static void argv_show_status(
 			else
 				argv_dprintf(fd,"[-%s,--%s]\n",
 					short_name,option->long_name);
+
+			if (entry->keyv) {
+				for (i=0,keyv=entry->keyv; keyv->keyword; i++,keyv++) {
+					switch (keyv->flags) {
+						case ARGV_KEYVAL_ASSIGN:
+							argv_dprintf(fd,"\tkeyval[%d]: <%s>=%s\n",
+								i,keyv->keyword,keyv->value);
+							break;
+
+						case ARGV_KEYVAL_OVERRIDE:
+							argv_dprintf(fd,"\tkeyval[%d]: <%s>:=%s\n",
+								i,keyv->keyword,keyv->value);
+							break;
+
+						default:
+							argv_dprintf(fd,"\tkeyval[%d]: <%s>\n",
+								i,keyv->keyword);
+						break;
+					}
+				}
+			}
 		} else {
 			argv_dprintf(fd,"<program arg> := %s\n",entry->arg);
 		}
