@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <unistd.h>
 
 #define ARGV_VERBOSITY_NONE		0x00
@@ -57,15 +58,26 @@
 #define ARGV_OPTION_HYBRID_EQUAL	0x04
 #define ARGV_OPTION_HYBRID_COMMA	0x08
 #define ARGV_OPTION_HYBRID_JOINED	0x10
+
+#define ARGV_OPTION_KEYVAL_PAIR         0X20
+#define ARGV_OPTION_KEYVAL_ARRAY        0X40
+#define ARGV_OPTION_KEYVAL_MASK         (ARGV_OPTION_KEYVAL_PAIR \
+					| ARGV_OPTION_KEYVAL_ARRAY)
+
 #define ARGV_OPTION_HYBRID_CIRCUS	(ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_JOINED)
+
 #define ARGV_OPTION_HYBRID_DUAL		(ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_EQUAL)
+
 #define ARGV_OPTION_HYBRID_SWITCH	(ARGV_OPTION_HYBRID_ONLY \
 					| ARGV_OPTION_HYBRID_SPACE \
 					| ARGV_OPTION_HYBRID_EQUAL \
 					| ARGV_OPTION_HYBRID_COMMA \
 					| ARGV_OPTION_HYBRID_JOINED)
+
+#define ARGV_KEYVAL_ASSIGN              0x01
+#define ARGV_KEYVAL_OVERRIDE            0x02
 
 enum argv_optarg {
 	ARGV_OPTARG_NONE,
@@ -92,6 +104,9 @@ enum argv_error {
 	ARGV_ERROR_HYBRID_SPACE,
 	ARGV_ERROR_HYBRID_EQUAL,
 	ARGV_ERROR_HYBRID_COMMA,
+	ARGV_ERROR_KEYVAL_KEY,
+	ARGV_ERROR_KEYVAL_VALUE,
+	ARGV_ERROR_KEYVAL_ALLOC,
 };
 
 struct argv_option {
@@ -105,8 +120,15 @@ struct argv_option {
 	const char *		description;
 };
 
+struct argv_keyval {
+	const char *           keyword;
+	const char *           value;
+	int                    flags;
+};
+
 struct argv_entry {
 	const char *            arg;
+	struct argv_keyval *    keyv;
 	int                     tag;
 	bool                    fopt;
 	bool                    fval;
@@ -129,6 +151,7 @@ struct argv_ctx {
 	const char *			errch;
 	const struct argv_option *	erropt;
 	const char *			program;
+	size_t				keyvlen;
 };
 
 #ifdef ARGV_DRIVER
@@ -136,6 +159,8 @@ struct argv_ctx {
 struct argv_meta_impl {
 	char **			argv;
 	char *			strbuf;
+	char *                  keyvbuf;
+	char *                  keyvmark;
 	struct argv_meta	meta;
 };
 
@@ -305,12 +330,131 @@ static inline const struct argv_option * option_from_tag(
 	return 0;
 }
 
+static inline int argv_scan_keyval_array(struct argv_meta_impl * meta, struct argv_entry * entry)
+{
+	const char *            ch;
+	char *                  dst;
+	int                     ncomma;
+	int                     cint;
+	struct argv_keyval *    keyv;
+
+	/* count key[val] elements, assume no comma after last element */
+	for (ch=entry->arg,ncomma=1; *ch; ch++) {
+		if ((ch[0]=='\\') && (ch[1]==',')) {
+			ch++;
+
+		} else if ((ch[0]==',')) {
+			ncomma++;
+		}
+	}
+
+	/* keyval string buffer */
+	dst = meta->keyvmark;
+
+	/* allocate keyval array */
+	if (!(entry->keyv = calloc(ncomma+1,sizeof(*entry->keyv))))
+		return ARGV_ERROR_KEYVAL_ALLOC;
+
+	/* create keyval array */
+	entry->keyv->keyword = dst;
+
+	for (ch=entry->arg,keyv=entry->keyv; *ch; ch++) {
+		if ((ch[0]=='\\') && (ch[1]==',')) {
+			*dst++ = ',';
+			ch++;
+
+		} else if ((ch[0]==':') && (ch[1]=='=')) {
+			if (!keyv->keyword[0])
+				return ARGV_ERROR_KEYVAL_KEY;
+
+			keyv->flags = ARGV_KEYVAL_OVERRIDE;
+			keyv->value = ++dst;
+			ch++;
+
+		} else if ((ch[0]=='=')) {
+			if (!keyv->keyword[0])
+				return ARGV_ERROR_KEYVAL_KEY;
+
+			keyv->flags = ARGV_KEYVAL_ASSIGN;
+			keyv->value = ++dst;
+
+		} else if ((ch[0]==',')) {
+			for (; isblank(cint = ch[1]); )
+				ch++;
+
+			if (ch[1]) {
+				keyv++;
+				keyv->keyword = ++dst;
+			}
+		} else {
+			*dst++ = *ch;
+		}
+	}
+
+	/* keyval string buffer */
+	meta->keyvmark = ++dst;
+
+	return ARGV_ERROR_OK;
+}
+
+static inline int argv_scan_keyval_pair(struct argv_meta_impl * meta, struct argv_entry * entry)
+{
+	const char *            ch;
+	char *                  dst;
+	struct argv_keyval *    keyv;
+
+	/* keyval string buffer */
+	dst = meta->keyvmark;
+
+	/* allocate keyval array */
+	if (!(entry->keyv = calloc(2,sizeof(*entry->keyv))))
+		return ARGV_ERROR_KEYVAL_ALLOC;
+
+	/* create keyval array */
+	entry->keyv->keyword = dst;
+
+	for (ch=entry->arg,keyv=entry->keyv; *ch && !keyv->flags; ch++) {
+		if ((ch[0]=='\\') && (ch[1]==',')) {
+			*dst++ = ',';
+			ch++;
+
+		} else if ((ch[0]==':') && (ch[1]=='=')) {
+			if (!keyv->keyword[0])
+				return ARGV_ERROR_KEYVAL_KEY;
+
+			keyv->flags = ARGV_KEYVAL_OVERRIDE;
+			keyv->value = ++dst;
+			ch++;
+
+		} else if ((ch[0]=='=')) {
+			if (!keyv->keyword[0])
+				return ARGV_ERROR_KEYVAL_KEY;
+
+			keyv->flags = ARGV_KEYVAL_ASSIGN;
+			keyv->value = ++dst;
+
+		} else {
+			*dst++ = *ch;
+		}
+	}
+
+	for (; *ch; )
+		*dst++ = *ch++;
+
+	/* keyval string buffer */
+	meta->keyvmark = ++dst;
+
+	return ARGV_ERROR_OK;
+}
+
 static void argv_scan(
 	char **				argv,
 	const struct argv_option **	optv,
 	struct argv_ctx *		ctx,
 	struct argv_meta *		meta)
 {
+	struct argv_meta_impl *         imeta;
+	uintptr_t                       addr;
 	char **				parg;
 	const char *			ch;
 	const char *			val;
@@ -323,6 +467,9 @@ static void argv_scan(
 	bool				fshort;
 	bool				fhybrid;
 	bool				fnoscan;
+
+	addr  = (uintptr_t)meta - offsetof(struct argv_meta_impl,meta);
+	imeta = (struct argv_meta_impl *)addr;
 
 	parg	= &argv[1];
 	ch	= *parg;
@@ -495,13 +642,20 @@ static void argv_scan(
 			if (!option && !ctx->unitidx)
 				ctx->unitidx = parg - argv;
 
+		if (ferr == ARGV_ERROR_OK)
+			if (option && (option->flags & ARGV_OPTION_KEYVAL_MASK))
+				if (ctx->mode == ARGV_MODE_SCAN)
+					ctx->keyvlen += strlen(ch) + 1;
+
 		if (ferr != ARGV_ERROR_OK) {
 			ctx->errcode = ferr;
 			ctx->errch   = ctx->errch ? ctx->errch : ch;
 			ctx->erropt  = option;
 			ctx->erridx  = parg - argv;
 			return;
-		} else if (ctx->mode == ARGV_MODE_SCAN) {
+		}
+
+		if (ctx->mode == ARGV_MODE_SCAN) {
 			if (!fnoscan)
 				ctx->nentries++;
 			else if (fval)
@@ -511,12 +665,12 @@ static void argv_scan(
 				parg++;
 				ch = *parg;
 			}
+
 		} else if (ctx->mode == ARGV_MODE_COPY) {
 			if (fnoscan) {
 				if (fval) {
 					mentry->arg	= ch;
 					mentry->fnoscan = true;
-					mentry++;
 				}
 
 				parg++;
@@ -526,7 +680,6 @@ static void argv_scan(
 				mentry->tag	= option->tag;
 				mentry->fopt	= true;
 				mentry->fval	= fval;
-				mentry++;
 
 				if (fval) {
 					parg++;
@@ -534,11 +687,28 @@ static void argv_scan(
 				}
 			} else {
 				mentry->arg = ch;
-				mentry++;
 				parg++;
 				ch = *parg;
 			}
 		}
+
+		if (option && (option->flags & ARGV_OPTION_KEYVAL_PAIR))
+			if (ctx->mode == ARGV_MODE_COPY)
+				ferr = argv_scan_keyval_pair(imeta,mentry);
+
+		if (option && (option->flags & ARGV_OPTION_KEYVAL_ARRAY))
+			if (ctx->mode == ARGV_MODE_COPY)
+				ferr = argv_scan_keyval_array(imeta,mentry);
+
+		if (ferr != ARGV_ERROR_OK) {
+			ctx->errcode = ferr;
+			ctx->errch   = ctx->errch ? ctx->errch : ch;
+			ctx->erropt  = option;
+			ctx->erridx  = parg - argv;
+			return;
+		}
+
+		mentry++;
 	}
 }
 
@@ -663,6 +833,14 @@ static void argv_show_error(int fd, struct argv_ctx * ctx)
 
 			break;
 
+		case ARGV_ERROR_KEYVAL_KEY:
+			argv_dprintf(fd,"illegal key detected in keyval argument\n");
+			break;
+
+		case ARGV_ERROR_KEYVAL_VALUE:
+			argv_dprintf(fd,"illegal value detected in keyval argument\n");
+			break;
+
 		case ARGV_ERROR_INTERNAL:
 			argv_dprintf(fd,"internal error");
 			break;
@@ -719,6 +897,17 @@ static void argv_show_status(
 
 static struct argv_meta * argv_free_impl(struct argv_meta_impl * imeta)
 {
+	struct argv_entry * entry;
+	void *              addr;
+
+	if (imeta->keyvbuf)
+		for (entry=imeta->meta.entries; entry->fopt || entry->arg; entry++)
+			if (entry->keyv)
+				free((addr = entry->keyv));
+
+	if (imeta->keyvbuf)
+		free(imeta->keyvbuf);
+
 	if (imeta->argv)
 		free(imeta->argv);
 
@@ -774,6 +963,15 @@ static struct argv_meta * argv_alloc(char ** argv, struct argv_ctx * ctx)
 	if (!imeta->meta.entries)
 		return argv_free_impl(imeta);
 
+	if (ctx->keyvlen) {
+		imeta->keyvbuf = calloc(
+			ctx->keyvlen,
+			sizeof(char));
+
+		if (!(imeta->keyvmark = imeta->keyvbuf))
+			return argv_free_impl(imeta);
+	}
+
 	return &imeta->meta;
 }
 
@@ -784,7 +982,7 @@ static struct argv_meta * argv_get(
 	int				fd)
 {
 	struct argv_meta *	meta;
-	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0,0,0};
+	struct argv_ctx		ctx = {flags,ARGV_MODE_SCAN,0,0,0,0,0,0,0,0};
 
 	argv_scan(argv,optv,&ctx,0);
 
