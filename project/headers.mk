@@ -1,6 +1,7 @@
 API_HEADERS = \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_api.h \
+	$(SOURCE_DIR)/include/$(PACKAGE)/perk_arbits.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_consts.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_meta.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_output.h \
