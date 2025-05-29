@@ -64,6 +64,12 @@ enum pe_custom_error {
 	PERK_ERR_CAP,
 };
 
+enum pe_cmd {
+	PERK_CMD_DEFAULT,
+	PERK_CMD_PERK,
+	PERK_CMD_CAP,
+};
+
 struct pe_raw_image;
 struct pe_raw_image_dos_hdr;
 struct pe_raw_coff_image_hdr;
@@ -165,6 +171,7 @@ struct pe_common_ctx {
 	uint64_t			actflags;
 	uint64_t			fmtflags;
 	uint64_t			hdrdump;
+	enum pe_cmd                     cmd;
 };
 
 struct pe_driver_ctx {
@@ -201,6 +208,9 @@ perk_api void pe_free_unit_ctx          (struct pe_unit_ctx *);
 
 perk_api int  pe_get_driver_fdctx       (const struct pe_driver_ctx *, struct pe_fd_ctx *);
 perk_api int  pe_set_driver_fdctx       (struct pe_driver_ctx *, const struct pe_fd_ctx *);
+
+/* cmd api */
+perk_api int  pe_cmd_perk               (const struct pe_driver_ctx *, const char *);
 
 /* utility api */
 perk_api int  pe_main                   (char **, char **, const struct pe_fd_ctx *);

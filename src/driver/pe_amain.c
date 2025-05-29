@@ -48,63 +48,6 @@ static ssize_t pe_version(struct pe_driver_ctx * dctx, int fdout)
 			verclr[4],verinfo->commit,verclr[5]);
 }
 
-static void pe_perform_hdrdump_actions(
-	const struct pe_driver_ctx *	dctx,
-	struct pe_unit_ctx *		uctx)
-{
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMAGE_DOS_HEADER)
-		pe_hdrdump_image_dos_hdr(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_IMAGE_HEADER)
-		pe_hdrdump_coff_image_hdr(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OBJECT_HEADER)
-		pe_hdrdump_coff_object_hdr(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OPT_HEADER)
-		pe_hdrdump_coff_opt_hdr(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_SECTION_TABLE)
-		pe_hdrdump_sec_tbl(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_EXPORT_HEADER)
-		pe_hdrdump_export_hdr(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMPORT_TABLE)
-		pe_hdrdump_import_tbl(dctx,uctx->meta);
-}
-
-static void pe_perform_unit_actions(
-	const struct pe_driver_ctx *	dctx,
-	struct pe_unit_ctx *		uctx)
-{
-	uint64_t flags = dctx->cctx->fmtflags;
-
-	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
-		pe_output_image_category(dctx,uctx->meta);
-
-	if (flags & PERK_OUTPUT_IMAGE_SECTIONS)
-		pe_output_image_sections(dctx,uctx->meta);
-
-	if (flags & PERK_OUTPUT_IMAGE_SYMBOLS)
-		pe_output_image_symbols(dctx,uctx->meta);
-
-	if (flags & PERK_OUTPUT_IMAGE_STRINGS)
-		pe_output_image_strings(dctx,uctx->meta);
-
-	if (flags & PERK_OUTPUT_EXPORT_SYMS)
-		pe_output_export_symbols(dctx,uctx->meta);
-
-	if ((flags & PERK_OUTPUT_IMPORT_LIBS) || (flags & PERK_OUTPUT_IMPORT_SYMS))
-		pe_output_import_libraries(dctx,uctx->meta);
-
-	if ((flags & PERK_OUTPUT_MDSO_LIBS) || (flags & PERK_OUTPUT_MDSO_SYMS))
-		pe_output_mdso_libraries(dctx,uctx->meta);
-
-	if (dctx->cctx->hdrdump)
-		pe_perform_hdrdump_actions(dctx,uctx);
-}
-
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 {
 	pe_output_error_vector(dctx);
@@ -118,7 +61,6 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 	int			fdout;
 	uint64_t		flags;
 	struct pe_driver_ctx *	dctx;
-	struct pe_unit_ctx *	uctx;
 	const char **		unit;
 
 	flags = PERK_DRIVER_FLAGS;
@@ -133,11 +75,14 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 		if ((pe_version(dctx,fdout)) < 0)
 			return pe_exit(dctx,PERK_ERROR);
 
-	for (unit=dctx->units; *unit; unit++) {
-		if (!(pe_get_unit_ctx(dctx,*unit,&uctx))) {
-			pe_perform_unit_actions(dctx,uctx);
-			pe_free_unit_ctx(uctx);
-		}
+	switch (dctx->cctx->cmd) {
+		case PERK_CMD_PERK:
+			for (unit=dctx->units; *unit; unit++)
+				pe_cmd_perk(dctx,*unit);
+			break;
+
+		default:
+			break;
 	}
 
 	return pe_exit(dctx,dctx->errv[0] ? PERK_ERROR : PERK_OK);

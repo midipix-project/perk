@@ -1,4 +1,5 @@
 API_SRCS = \
+	src/cmds/pe_cmd_perk.c \
 	src/driver/pe_amain.c \
 	src/driver/pe_driver_ctx.c \
 	src/driver/pe_unit_ctx.c \
@@ -31,6 +32,7 @@ API_SRCS = \
 	src/reader/pe_read_optional_header.c \
 	src/reader/pe_read_section_header.c \
 	src/skin/pe_skin_default.c \
+	src/skin/pe_skin_perk.c \
 
 INTERNAL_SRCS = \
 	src/internal/$(PACKAGE)_dprintf_impl.c \

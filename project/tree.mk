@@ -1,5 +1,6 @@
 tree.tag:
 		mkdir -p src
+		mkdir -p src/cmds
 		mkdir -p src/driver
 		mkdir -p src/hdrdump
 		mkdir -p src/info

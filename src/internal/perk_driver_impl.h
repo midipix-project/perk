@@ -13,10 +13,12 @@
 #define PERK_OPTV_ELEMENTS 64
 
 extern const struct argv_option pe_default_options[];
+extern const struct argv_option pe_perk_options[];
 
 enum app_tags {
 	TAG_HELP,
 	TAG_VERSION,
+	TAG_CMD,
 	TAG_PRETTY,
 	TAG_CATEGORY,
 	TAG_SECTIONS,

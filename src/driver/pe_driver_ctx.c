@@ -24,6 +24,17 @@ static const struct pe_source_version pe_src_version = {
 	PERK_GIT_VERSION
 };
 
+/* perk command names */
+static const char * const perk_cmd_name[PERK_CMD_CAP] = {
+	[PERK_CMD_PERK]     = "perk",
+};
+
+/* perk command options */
+static const struct argv_option * perk_cmd_options[PERK_CMD_CAP] = {
+	[PERK_CMD_DEFAULT]  = pe_default_options,
+	[PERK_CMD_PERK]     = pe_perk_options,
+};
+
 /* default fd context */
 static const struct pe_fd_ctx pe_default_fdctx = {
 	.fdin  = STDIN_FILENO,
@@ -62,13 +73,30 @@ static int pe_driver_usage(
 	const char *			program,
 	const char *			arg,
 	const struct argv_option **	optv,
-	struct argv_meta *		meta)
+	struct argv_meta *		meta,
+	enum pe_cmd                     cmd)
 {
-	char header[512];
+	char		header[512];
+	char *		cmdarg[2];
+	const char *	cmdname;
+
+	if (cmd == PERK_CMD_DEFAULT) {
+		cmdarg[0] = "";
+		cmdarg[1] = "";
+		cmdname   = "";
+	} else {
+		cmdarg[0] = " (--cmd=";
+		cmdarg[1] = ")";
+		cmdname   = perk_cmd_name[cmd];
+	}
 
 	snprintf(header,sizeof(header),
-		"Usage: %s [options] <file>...\n" "Options:\n",
-		program);
+		"Usage: %s [options] ...\n"
+		"Usage: %s [options] [--cmd=<command>] <arg> <arg> ...\n\n"
+		"Notes: --cmd must precede all non-option arguments, as well as\n"
+		"       all arguments that are specific to the selected command.\n\n"
+		"Options%s%s%s:\n",
+		program,program,cmdarg[0],cmdname,cmdarg[1]);
 
 	argv_usage(fdout,header,optv,arg);
 	argv_free(meta);
@@ -113,6 +141,162 @@ static struct pe_driver_ctx_impl * pe_driver_ctx_alloc(
 	return &ictx->ctx;
 }
 
+static int pe_cmd_from_program(const char * program)
+{
+	const char *	dot;
+	const char *	hyphen;
+	const char *	mark;
+
+	dot    = strrchr(program,'.');
+	hyphen = strrchr(program,'-');
+
+	if (hyphen > dot)
+		mark = ++hyphen;
+	else if (dot > hyphen)
+		mark = ++dot;
+	else
+		mark = program;
+
+	if (!strcmp(mark,"perk")) {
+		return PERK_CMD_PERK;
+
+	} else {
+		return PERK_CMD_DEFAULT;
+	}
+}
+
+static int pe_cctx_update(
+	const char *                    program,
+	const struct argv_option **     optv,
+	struct argv_meta *              meta,
+	uint32_t                        flags,
+	const struct pe_fd_ctx *        fdctx,
+	struct pe_common_ctx *          cctx,
+	size_t *                        nunits)
+{
+	struct argv_entry *		entry;
+	const char *			pretty;
+
+	pretty = 0;
+
+	/* get options, count units */
+	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
+		if (entry->fopt) {
+			switch (entry->tag) {
+				case TAG_HELP:
+					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
+						return pe_driver_usage(
+							fdctx->fdout,
+							program,entry->arg,
+							optv,0,cctx->cmd);
+					break;
+
+				case TAG_CMD:
+					if (*nunits)
+						return pe_driver_usage(
+							fdctx->fderr,
+							program,0,
+							optv,0,cctx->cmd);
+
+					cctx->cmd = pe_cmd_from_program(entry->arg);
+					break;
+
+				case TAG_VERSION:
+					cctx->drvflags |= PERK_DRIVER_VERSION;
+					break;
+
+				case TAG_PRETTY:
+					pretty = entry->arg;
+					break;
+
+				case TAG_CATEGORY:
+					cctx->fmtflags |= PERK_OUTPUT_IMAGE_CATEGORY;
+					break;
+
+				case TAG_SECTIONS:
+					cctx->fmtflags |= PERK_OUTPUT_IMAGE_SECTIONS;
+					break;
+
+				case TAG_SYMBOLS:
+					cctx->fmtflags |= PERK_OUTPUT_IMAGE_SYMBOLS;
+					break;
+
+				case TAG_STRINGS:
+					cctx->fmtflags |= PERK_OUTPUT_IMAGE_STRINGS;
+					break;
+
+				case TAG_EXPSYMS:
+					cctx->fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
+					break;
+
+				case TAG_IMPLIBS:
+					cctx->fmtflags |= PERK_OUTPUT_IMPORT_LIBS;
+					break;
+
+				case TAG_IMPSYMS:
+					cctx->fmtflags |= PERK_OUTPUT_IMPORT_SYMS;
+					break;
+
+				case TAG_DSOLIBS:
+					cctx->fmtflags |= PERK_OUTPUT_MDSO_LIBS;
+					break;
+
+				case TAG_DSOSYMS:
+					cctx->fmtflags |= PERK_OUTPUT_MDSO_SYMS;
+					break;
+
+				case TAG_HDRDUMP:
+					if (!entry->arg) {
+						cctx->hdrdump = 0;
+						cctx->hdrdump = ~cctx->hdrdump;
+					} else if (!strcmp(entry->arg,"dos")) {
+						cctx->hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
+					} else if (!strcmp(entry->arg,"image.dos")) {
+						cctx->hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
+					} else if (!strcmp(entry->arg,"coff")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
+						cctx->hdrdump |= PERK_HDRDUMP_COFF_OBJECT_HEADER;
+						cctx->hdrdump |= PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.image")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
+					} else if (!strcmp(entry->arg,"coff.obj")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.object")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.opt")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"coff.optional")) {
+						cctx->hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
+					} else if (!strcmp(entry->arg,"sectbl")) {
+						cctx->hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
+					} else if (!strcmp(entry->arg,"section.table")) {
+						cctx->hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
+					} else if (!strcmp(entry->arg,"exphdr")) {
+						cctx->hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
+					} else if (!strcmp(entry->arg,"export.header")) {
+						cctx->hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
+					} else if (!strcmp(entry->arg,"imptbl")) {
+						cctx->hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
+					} else if (!strcmp(entry->arg,"import.table")) {
+						cctx->hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
+					}
+					break;
+			}
+		} else {
+			(*nunits)++;
+		}
+	}
+
+	if (pretty && !strcmp(pretty,"yaml")) {
+		cctx->fmtflags |= PERK_PRETTY_YAML;
+
+	} else if (pretty && !strcmp(pretty,"dlltool")) {
+		cctx->fmtflags |= PERK_PRETTY_DLLTOOL;
+	}
+
+	return 0;
+}
+
 static int pe_get_driver_ctx_fail(struct argv_meta * meta)
 {
 	argv_free(meta);
@@ -130,137 +314,126 @@ int pe_get_driver_ctx(
 	struct pe_common_ctx		cctx;
 	const struct argv_option *	optv[PERK_OPTV_ELEMENTS];
 	struct argv_meta *		meta;
-	struct argv_entry *		entry;
 	size_t				nunits;
 	const char *			program;
-	const char *			pretty;
+	char **				parg;
+	char **				pargcap;
+	char **				cmdargv;
+	char *				cmdmark;
+	struct argv_ctx			actx = {ARGV_VERBOSITY_NONE,
+                                               ARGV_MODE_SCAN,
+                                               0,0,0,0,0,0,0,0};
+
 
 	(void)envp;
 
+	/* fdctx */
 	if (!fdctx)
 		fdctx = &pe_default_fdctx;
 
-	argv_optv_init(pe_default_options,optv);
+	/* cctx */
+	memset(&cctx,0,sizeof(cctx));
 
+	program       = argv_program_name(argv[0]);\
+	cctx.cmd      = pe_cmd_from_program(program);
+	cctx.drvflags = flags;
+	nunits	      = 0;
+
+	/* missing arguments? */
+	argv_optv_init(perk_cmd_options[cctx.cmd],optv);
+
+	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
+		return pe_driver_usage(
+			fdctx->fderr,
+			program,0,
+			optv,0,cctx.cmd);
+
+	/* initial argv scan: ... --cmd=xxx ... */
+	argv_scan(argv,optv,&actx,0);
+
+	/* position of last base perk argument */
+	if (actx.erridx && actx.unitidx)
+		pargcap = &argv[actx.unitidx];
+
+	else if (actx.erridx)
+		pargcap = &argv[actx.erridx];
+
+	else
+		for (pargcap=argv; *pargcap; pargcap++)
+			(void)0;
+
+	/* scan for --cmd */
+	for (parg=argv, cmdargv=0; (parg<pargcap) && !cmdargv; parg++) {
+		if (!strcmp(*parg,"--cmd") && parg[1]) {
+				cmdargv = &parg[2];
+				cmdmark = parg[2];
+		} else if (!strncmp(*parg,"--cmd=",6)) {
+				cmdargv = &parg[1];
+				cmdmark = parg[1];
+		}
+	}
+
+	/* invalid perk arguments? */
+	if (!actx.erridx) {
+		(void)0;
+
+	} else if (&argv[actx.erridx] >= cmdargv) {
+		(void)0;
+
+	} else {
+		if (flags & PERK_DRIVER_VERBOSITY_ERRORS)
+			argv_get(
+				argv,optv,
+				ARGV_VERBOSITY_ERRORS,
+				fdctx->fderr);
+		return -1;
+	}
+
+	/* process argv entries preceding --cmd */
+	if (cmdargv) {
+		*cmdargv = 0;
+
+		if (!(meta = argv_get(
+				argv,optv,
+				pe_argv_flags(flags),
+				fdctx->fderr)))
+			return -1;
+
+		if (pe_cctx_update(
+				program,optv,meta,flags,
+				fdctx,&cctx,&nunits)) {
+			argv_free(meta);
+			return -1;
+		}
+
+		argv_free(meta);
+
+		*cmdargv-- = cmdmark;
+		*cmdargv   = argv[0];
+		argv       = cmdargv;
+	}
+
+	/* set option vector by command */
+	if (cctx.cmd == PERK_CMD_DEFAULT) {
+		argv_optv_init(pe_default_options,optv);
+
+	} else if (cctx.cmd == PERK_CMD_PERK) {
+		argv_optv_init(pe_perk_options,optv);
+	}
+
+	/* process the selected tool's command-line arguments */
 	if (!(meta = argv_get(
 			argv,optv,
 			pe_argv_flags(flags),
 			fdctx->fderr)))
 		return -1;
 
-	pretty	= 0;
-	nunits	= 0;
-	program = argv_program_name(argv[0]);
-	memset(&cctx,0,sizeof(cctx));
-	cctx.drvflags = flags;
-
-	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
-		return pe_driver_usage(
-			fdctx->fderr,
-			program,
-			0,optv,meta);
-
-	/* get options, count units */
-	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
-		if (entry->fopt) {
-			switch (entry->tag) {
-				case TAG_HELP:
-					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
-						return pe_driver_usage(
-							fdctx->fdout,
-							program,entry->arg,
-							optv,meta);
-					break;
-
-				case TAG_VERSION:
-					cctx.drvflags |= PERK_DRIVER_VERSION;
-					break;
-
-				case TAG_PRETTY:
-					pretty = entry->arg;
-					break;
-
-				case TAG_CATEGORY:
-					cctx.fmtflags |= PERK_OUTPUT_IMAGE_CATEGORY;
-					break;
-
-				case TAG_SECTIONS:
-					cctx.fmtflags |= PERK_OUTPUT_IMAGE_SECTIONS;
-					break;
-
-				case TAG_SYMBOLS:
-					cctx.fmtflags |= PERK_OUTPUT_IMAGE_SYMBOLS;
-					break;
-
-				case TAG_STRINGS:
-					cctx.fmtflags |= PERK_OUTPUT_IMAGE_STRINGS;
-					break;
-
-				case TAG_EXPSYMS:
-					cctx.fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
-					break;
-
-				case TAG_IMPLIBS:
-					cctx.fmtflags |= PERK_OUTPUT_IMPORT_LIBS;
-					break;
-
-				case TAG_IMPSYMS:
-					cctx.fmtflags |= PERK_OUTPUT_IMPORT_SYMS;
-					break;
-
-				case TAG_DSOLIBS:
-					cctx.fmtflags |= PERK_OUTPUT_MDSO_LIBS;
-					break;
-
-				case TAG_DSOSYMS:
-					cctx.fmtflags |= PERK_OUTPUT_MDSO_SYMS;
-					break;
-
-				case TAG_HDRDUMP:
-					if (!entry->arg) {
-						cctx.hdrdump = 0;
-						cctx.hdrdump = ~cctx.hdrdump;
-					} else if (!strcmp(entry->arg,"dos")) {
-						cctx.hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
-					} else if (!strcmp(entry->arg,"image.dos")) {
-						cctx.hdrdump  = PERK_HDRDUMP_IMAGE_DOS_HEADER;
-					} else if (!strcmp(entry->arg,"coff")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
-						cctx.hdrdump |= PERK_HDRDUMP_COFF_OBJECT_HEADER;
-						cctx.hdrdump |= PERK_HDRDUMP_COFF_OPT_HEADER;
-					} else if (!strcmp(entry->arg,"coff.image")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_IMAGE_HEADER;
-					} else if (!strcmp(entry->arg,"coff.obj")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
-					} else if (!strcmp(entry->arg,"coff.object")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_OBJECT_HEADER;
-					} else if (!strcmp(entry->arg,"coff.opt")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
-					} else if (!strcmp(entry->arg,"coff.optional")) {
-						cctx.hdrdump  = PERK_HDRDUMP_COFF_OPT_HEADER;
-					} else if (!strcmp(entry->arg,"sectbl")) {
-						cctx.hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
-					} else if (!strcmp(entry->arg,"section.table")) {
-						cctx.hdrdump  = PERK_HDRDUMP_SECTION_TABLE;
-					} else if (!strcmp(entry->arg,"exphdr")) {
-						cctx.hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
-					} else if (!strcmp(entry->arg,"export.header")) {
-						cctx.hdrdump  = PERK_HDRDUMP_EXPORT_HEADER;
-					} else if (!strcmp(entry->arg,"imptbl")) {
-						cctx.hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
-					} else if (!strcmp(entry->arg,"import.table")) {
-						cctx.hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
-					}
-					break;
-			}
-		} else
-			nunits++;
+	if (pe_cctx_update(
+			program,optv,meta,flags,
+			fdctx,&cctx,&nunits)) {
+		argv_free(meta);
+		return -1;
 	}
-
-	if (pretty && !strcmp(pretty,"yaml"))
-		cctx.fmtflags |= PERK_PRETTY_YAML;
-	else if (pretty && !strcmp(pretty,"dlltool"))
-		cctx.fmtflags |= PERK_PRETTY_DLLTOOL;
 
 	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))
 		return pe_get_driver_ctx_fail(meta);
