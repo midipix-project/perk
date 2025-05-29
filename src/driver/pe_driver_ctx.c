@@ -169,7 +169,6 @@ static int pe_cctx_update(
 	const char *                    program,
 	const struct argv_option **     optv,
 	struct argv_meta *              meta,
-	uint32_t                        flags,
 	const struct pe_fd_ctx *        fdctx,
 	struct pe_common_ctx *          cctx,
 	size_t *                        nunits)
@@ -184,11 +183,10 @@ static int pe_cctx_update(
 		if (entry->fopt) {
 			switch (entry->tag) {
 				case TAG_HELP:
-					if (flags & PERK_DRIVER_VERBOSITY_USAGE)
-						return pe_driver_usage(
-							fdctx->fdout,
-							program,entry->arg,
-							optv,0,cctx->cmd);
+					return pe_driver_usage(
+						fdctx->fdout,
+						program,entry->arg,
+						optv,0,cctx->cmd);
 					break;
 
 				case TAG_CMD:
@@ -342,7 +340,7 @@ int pe_get_driver_ctx(
 	/* missing arguments? */
 	argv_optv_init(perk_cmd_options[cctx.cmd],optv);
 
-	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_USAGE))
+	if (!argv[1] && (flags & PERK_DRIVER_VERBOSITY_UTILITY))
 		return pe_driver_usage(
 			fdctx->fderr,
 			program,0,
@@ -400,7 +398,7 @@ int pe_get_driver_ctx(
 			return -1;
 
 		if (pe_cctx_update(
-				program,optv,meta,flags,
+				program,optv,meta,
 				fdctx,&cctx,&nunits)) {
 			argv_free(meta);
 			return -1;
@@ -429,12 +427,21 @@ int pe_get_driver_ctx(
 		return -1;
 
 	if (pe_cctx_update(
-			program,optv,meta,flags,
+			program,optv,meta,
 			fdctx,&cctx,&nunits)) {
 		argv_free(meta);
 		return -1;
 	}
 
+	/* utility mode and no action to take? */
+	if (cctx.drvflags & PERK_DRIVER_VERBOSITY_UTILITY)
+		if (!nunits && !(cctx.drvflags & PERK_DRIVER_VERSION))
+			return pe_driver_usage(
+				fdctx->fdout,
+				program,0,
+				optv,meta,cctx.cmd);
+
+	/* context allocation */
 	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))
 		return pe_get_driver_ctx_fail(meta);
 
