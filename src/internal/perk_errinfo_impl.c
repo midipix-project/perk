@@ -7,8 +7,9 @@
 #include <perk/perk.h>
 #include "perk_driver_impl.h"
 #include "perk_errinfo_impl.h"
+#include "perk_visibility_impl.h"
 
-int pe_record_error(
+perk_hidden int pe_record_error(
 	const struct pe_driver_ctx *	dctx,
 	int				esyscode,
 	int				elibcode,

@@ -1,7 +1,8 @@
 #include "perk_driver_impl.h"
+#include "perk_visibility_impl.h"
 #include "argv/argv.h"
 
-const struct argv_option pe_default_options[] = {
+const perk_hidden struct argv_option pe_default_options[] = {
 	{"version",	'v',TAG_VERSION,ARGV_OPTARG_NONE,0,0,0,
 			"show version information"},
 

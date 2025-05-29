@@ -11,6 +11,7 @@
 #include <perk/perk_consts.h>
 #include <perk/perk_structs.h>
 #include "perk_hdrdump_impl.h"
+#include "perk_visibility_impl.h"
 
 #define PE_TABWIDTH	8
 #define PE_HDRSPACE	40
@@ -24,7 +25,7 @@ static const char pe_hex_header_dot[] =
 static const char pe_hex_footer[] =
 	"|---------------------------------------------------|      |-----------------|\n\n";
 
-size_t pe_output_hex_header(
+perk_hidden size_t pe_output_hex_header(
 	char *		buf,
 	const char *	sname,
 	uint64_t	faddr,
@@ -94,7 +95,7 @@ size_t pe_output_hex_header(
 	return ch - buf;
 }
 
-size_t pe_output_hex_footer(char * buf)
+perk_hidden size_t pe_output_hex_footer(char * buf)
 {
 	size_t	nlen;
 
@@ -107,7 +108,7 @@ size_t pe_output_hex_footer(char * buf)
 	return PE_HDRSPACE + nlen;
 }
 
-size_t pe_output_raw_element(
+perk_hidden size_t pe_output_raw_element(
 	char *		ch,
 	const void *	rdata,
 	const char *	mname,

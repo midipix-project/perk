@@ -15,5 +15,6 @@ INTERNAL_HEADERS = \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_errinfo_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_hdrdump_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_reader_impl.h \
+	$(SOURCE_DIR)/src/internal/$(PACKAGE)_visibility_impl.h \
 
 ALL_HEADERS = $(API_HEADERS) $(INTERNAL_HEADERS)

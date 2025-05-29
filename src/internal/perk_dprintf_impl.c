@@ -4,7 +4,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-int pe_dprintf(int fd, const char * fmt, ...)
+#include "perk_visibility_impl.h"
+
+perk_hidden int pe_dprintf(int fd, const char * fmt, ...)
 {
 	int	ret;
 	int	cnt;
