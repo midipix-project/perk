@@ -14,7 +14,7 @@ INTERNAL_HEADERS = \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_driver_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_endian_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_errinfo_impl.h \
-	$(SOURCE_DIR)/src/internal/$(PACKAGE)_hdrdump_impl.h \
+	$(SOURCE_DIR)/src/internal/$(PACKAGE)_hexdump_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_reader_impl.h \
 	$(SOURCE_DIR)/src/internal/$(PACKAGE)_visibility_impl.h \
 

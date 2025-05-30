@@ -11,7 +11,7 @@
 #include <perk/perk_structs.h>
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
-#include "perk_hdrdump_impl.h"
+#include "perk_hexdump_impl.h"
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
@@ -19,7 +19,7 @@
 #define PE_RAW_STRUCT coff_object_hdr
 #define PE_OUTPUT(x)  PE_OUTPUT_TABLE(x)
 
-int pe_hdrdump_coff_object_hdr(
+int pe_hexdump_coff_object_hdr(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {

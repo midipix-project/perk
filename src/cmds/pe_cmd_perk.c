@@ -16,25 +16,25 @@ static void pe_perform_hdrdump_actions(
 	const struct pe_unit_ctx *	uctx)
 {
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMAGE_DOS_HEADER)
-		pe_hdrdump_image_dos_hdr(dctx,uctx->meta);
+		pe_hexdump_image_dos_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_IMAGE_HEADER)
-		pe_hdrdump_coff_image_hdr(dctx,uctx->meta);
+		pe_hexdump_coff_image_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OBJECT_HEADER)
-		pe_hdrdump_coff_object_hdr(dctx,uctx->meta);
+		pe_hexdump_coff_object_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_COFF_OPT_HEADER)
-		pe_hdrdump_coff_opt_hdr(dctx,uctx->meta);
+		pe_hexdump_coff_opt_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_SECTION_TABLE)
-		pe_hdrdump_sec_tbl(dctx,uctx->meta);
+		pe_hexdump_sec_tbl(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_EXPORT_HEADER)
-		pe_hdrdump_export_hdr(dctx,uctx->meta);
+		pe_hexdump_export_hdr(dctx,uctx->meta);
 
 	if (dctx->cctx->hdrdump & PERK_HDRDUMP_IMPORT_TABLE)
-		pe_hdrdump_import_tbl(dctx,uctx->meta);
+		pe_hexdump_import_tbl(dctx,uctx->meta);
 }
 
 static void pe_perform_unit_actions(

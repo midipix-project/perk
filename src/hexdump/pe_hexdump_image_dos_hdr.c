@@ -11,15 +11,15 @@
 #include <perk/perk_structs.h>
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
-#include "perk_hdrdump_impl.h"
+#include "perk_hexdump_impl.h"
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
-#define PE_ADDR       meta->r_coff
-#define PE_RAW_STRUCT coff_image_hdr
+#define PE_ADDR       meta->r_dos
+#define PE_RAW_STRUCT image_dos_hdr
 #define PE_OUTPUT(x)  PE_OUTPUT_TABLE(x)
 
-int pe_hdrdump_coff_image_hdr(
+int pe_hexdump_image_dos_hdr(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
@@ -36,23 +36,34 @@ int pe_hdrdump_coff_image_hdr(
 		return PERK_CUSTOM_ERROR(
 			dctx,PERK_ERR_UNSUPPORTED_ABI);
 
-	faddr = (char *)(PE_ADDR) - (char *)meta->r_image.map_addr;
-	vaddr = meta->m_opt.oh_mem.coh_image_base + faddr;
+	faddr = 0;
+	vaddr = meta->m_opt.oh_mem.coh_image_base;
 
 	ch  = buf;
 	ch += pe_output_hex_header(
 		ch,
-		"struct pe_raw_coff_image_hdr",
+		"struct pe_raw_image_dos_hdr",
 		faddr,vaddr,bits);
 
-	ch += PE_OUTPUT(cfh_signature);
-	ch += PE_OUTPUT(cfh_machine);
-	ch += PE_OUTPUT(cfh_num_of_sections);
-	ch += PE_OUTPUT(cfh_time_date_stamp);
-	ch += PE_OUTPUT(cfh_ptr_to_sym_tbl);
-	ch += PE_OUTPUT(cfh_num_of_syms);
-	ch += PE_OUTPUT(cfh_size_of_opt_hdr);
-	ch += PE_OUTPUT(cfh_characteristics);
+	ch += PE_OUTPUT(dos_magic);
+	ch += PE_OUTPUT(dos_cblp);
+	ch += PE_OUTPUT(dos_cp);
+	ch += PE_OUTPUT(dos_crlc);
+	ch += PE_OUTPUT(dos_cparhdr);
+	ch += PE_OUTPUT(dos_minalloc);
+	ch += PE_OUTPUT(dos_maxalloc);
+	ch += PE_OUTPUT(dos_ss);
+	ch += PE_OUTPUT(dos_sp);
+	ch += PE_OUTPUT(dos_csum);
+	ch += PE_OUTPUT(dos_ip);
+	ch += PE_OUTPUT(dos_cs);
+	ch += PE_OUTPUT(dos_lfarlc);
+	ch += PE_OUTPUT(dos_ovno);
+	ch += PE_OUTPUT(dos_res);
+	ch += PE_OUTPUT(dos_oemid);
+	ch += PE_OUTPUT(dos_oeminfo);
+	ch += PE_OUTPUT(dos_res2);
+	ch += PE_OUTPUT(dos_lfanew);
 
 	ch += pe_output_hex_footer(ch);
 

@@ -3,7 +3,7 @@ tree.tag:
 		mkdir -p src/arbits
 		mkdir -p src/cmds
 		mkdir -p src/driver
-		mkdir -p src/hdrdump
+		mkdir -p src/hexdump
 		mkdir -p src/info
 		mkdir -p src/internal
 		mkdir -p src/logic

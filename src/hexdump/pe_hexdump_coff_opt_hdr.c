@@ -11,7 +11,7 @@
 #include <perk/perk_structs.h>
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
-#include "perk_hdrdump_impl.h"
+#include "perk_hexdump_impl.h"
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
@@ -19,7 +19,7 @@
 #define PE_RAW_STRUCT opt_hdr_32
 #define PE_OUTPUT(x)  PE_OUTPUT_TABLE(x)
 
-static int pe_hdrdump_opt_hdr_32(
+static int pe_hexdump_opt_hdr_32(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
@@ -109,7 +109,7 @@ static int pe_hdrdump_opt_hdr_32(
 #define PE_RAW_STRUCT opt_hdr_64
 #define PE_OUTPUT(x)  PE_OUTPUT_TABLE(x)
 
-static int pe_hdrdump_opt_hdr_64(
+static int pe_hexdump_opt_hdr_64(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
@@ -190,7 +190,7 @@ static int pe_hdrdump_opt_hdr_64(
 	return 0;
 }
 
-int pe_hdrdump_coff_opt_hdr(
+int pe_hexdump_coff_opt_hdr(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
@@ -199,10 +199,10 @@ int pe_hdrdump_coff_opt_hdr(
 
 	switch (pe_image_bits(meta)) {
 		case 32:
-			return pe_hdrdump_opt_hdr_32(dctx,meta);
+			return pe_hexdump_opt_hdr_32(dctx,meta);
 
 		case 64:
-			return pe_hdrdump_opt_hdr_64(dctx,meta);
+			return pe_hexdump_opt_hdr_64(dctx,meta);
 
 		default:
 			return PERK_CUSTOM_ERROR(

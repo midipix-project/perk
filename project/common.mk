@@ -8,13 +8,13 @@ API_SRCS = \
 	src/driver/pe_amain.c \
 	src/driver/pe_driver_ctx.c \
 	src/driver/pe_unit_ctx.c \
-	src/hdrdump/pe_hdrdump_export_hdr.c \
-	src/hdrdump/pe_hdrdump_image_dos_hdr.c \
-	src/hdrdump/pe_hdrdump_import_tbl.c \
-	src/hdrdump/pe_hdrdump_coff_image_hdr.c \
-	src/hdrdump/pe_hdrdump_coff_object_hdr.c \
-	src/hdrdump/pe_hdrdump_coff_opt_hdr.c \
-	src/hdrdump/pe_hdrdump_sec_tbl.c \
+	src/hexdump/pe_hexdump_export_hdr.c \
+	src/hexdump/pe_hexdump_image_dos_hdr.c \
+	src/hexdump/pe_hexdump_import_tbl.c \
+	src/hexdump/pe_hexdump_coff_image_hdr.c \
+	src/hexdump/pe_hexdump_coff_object_hdr.c \
+	src/hexdump/pe_hexdump_coff_opt_hdr.c \
+	src/hexdump/pe_hexdump_sec_tbl.c \
 	src/info/pe_get_image_abi.c \
 	src/info/pe_get_image_framework.c \
 	src/info/pe_get_image_subsystem.c \
@@ -42,7 +42,7 @@ API_SRCS = \
 INTERNAL_SRCS = \
 	src/internal/$(PACKAGE)_dprintf_impl.c \
 	src/internal/$(PACKAGE)_errinfo_impl.c \
-	src/internal/$(PACKAGE)_hdrdump_impl.c \
+	src/internal/$(PACKAGE)_hexdump_impl.c \
 
 APP_SRCS = \
 	src/perk.c
