@@ -295,13 +295,13 @@ static int pe_cctx_update(
 	return 0;
 }
 
-static int pe_get_driver_ctx_fail(struct argv_meta * meta)
+static int pe_lib_get_driver_ctx_fail(struct argv_meta * meta)
 {
 	argv_free(meta);
 	return -1;
 }
 
-int pe_get_driver_ctx(
+int pe_lib_get_driver_ctx(
 	char **				argv,
 	char **				envp,
 	uint32_t			flags,
@@ -443,7 +443,7 @@ int pe_get_driver_ctx(
 
 	/* context allocation */
 	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))
-		return pe_get_driver_ctx_fail(meta);
+		return pe_lib_get_driver_ctx_fail(meta);
 
 	ctx->ctx.program	= program;
 	ctx->ctx.cctx		= &ctx->cctx;
@@ -452,13 +452,13 @@ int pe_get_driver_ctx(
 	return PERK_OK;
 }
 
-static void pe_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
+static void pe_lib_free_driver_ctx_impl(struct pe_driver_ctx_alloc * ictx)
 {
 	argv_free(ictx->meta);
 	free(ictx);
 }
 
-void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
+void pe_lib_free_driver_ctx(struct pe_driver_ctx * ctx)
 {
 	struct pe_driver_ctx_alloc *	ictx;
 	uintptr_t			addr;
@@ -467,7 +467,7 @@ void pe_free_driver_ctx(struct pe_driver_ctx * ctx)
 		addr = (uintptr_t)ctx - offsetof(struct pe_driver_ctx_impl,ctx);
 		addr = addr - offsetof(struct pe_driver_ctx_alloc,ctx);
 		ictx = (struct pe_driver_ctx_alloc *)addr;
-		pe_free_driver_ctx_impl(ictx);
+		pe_lib_free_driver_ctx_impl(ictx);
 	}
 }
 
@@ -476,7 +476,7 @@ const struct pe_source_version * pe_source_version(void)
 	return &pe_src_version;
 }
 
-int pe_get_driver_fdctx(
+int pe_lib_get_driver_fdctx(
 	const struct pe_driver_ctx *	dctx,
 	struct pe_fd_ctx *		fdctx)
 {
@@ -494,7 +494,7 @@ int pe_get_driver_fdctx(
 	return 0;
 }
 
-int pe_set_driver_fdctx(
+int pe_lib_set_driver_fdctx(
 	struct pe_driver_ctx *	dctx,
 	const struct pe_fd_ctx *	fdctx)
 {

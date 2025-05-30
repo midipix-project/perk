@@ -234,19 +234,20 @@ struct pe_info_string {
 };
 
 /* driver api */
-perk_api int  pe_get_driver_ctx         (char ** argv, char ** envp, uint32_t flags,
+perk_api int  pe_lib_get_driver_ctx     (char ** argv, char ** envp, uint32_t flags,
                                          const struct pe_fd_ctx *,
                                          struct pe_driver_ctx **);
 
-perk_api void pe_free_driver_ctx        (struct pe_driver_ctx *);
+perk_api void pe_lib_free_driver_ctx    (struct pe_driver_ctx *);
 
-perk_api int  pe_get_unit_ctx           (const struct pe_driver_ctx *, const char * path,
+perk_api int  pe_lib_get_unit_ctx       (const struct pe_driver_ctx *, const char * path,
                                          struct pe_unit_ctx **);
 
-perk_api void pe_free_unit_ctx          (struct pe_unit_ctx *);
+perk_api void pe_lib_free_unit_ctx      (struct pe_unit_ctx *);
 
-perk_api int  pe_get_driver_fdctx       (const struct pe_driver_ctx *, struct pe_fd_ctx *);
-perk_api int  pe_set_driver_fdctx       (struct pe_driver_ctx *, const struct pe_fd_ctx *);
+perk_api int  pe_lib_get_driver_fdctx   (const struct pe_driver_ctx *, struct pe_fd_ctx *);
+
+perk_api int  pe_lib_set_driver_fdctx   (struct pe_driver_ctx *, const struct pe_fd_ctx *);
 
 /* cmd api */
 perk_api int  pe_cmd_perk               (const struct pe_driver_ctx *, const char *);

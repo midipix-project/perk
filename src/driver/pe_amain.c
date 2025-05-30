@@ -51,7 +51,7 @@ static ssize_t pe_version(struct pe_driver_ctx * dctx, int fdout)
 static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 {
 	pe_output_error_vector(dctx);
-	pe_free_driver_ctx(dctx);
+	pe_lib_free_driver_ctx(dctx);
 	return ret;
 }
 
@@ -66,7 +66,7 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 	flags = PERK_DRIVER_FLAGS;
 	fdout = fdctx ? fdctx->fdout : STDOUT_FILENO;
 
-	if ((ret = pe_get_driver_ctx(argv,envp,flags,fdctx,&dctx)))
+	if ((ret = pe_lib_get_driver_ctx(argv,envp,flags,fdctx,&dctx)))
 		return (ret == PERK_USAGE)
 			? !argv || !argv[0] || !argv[1]
 			: PERK_ERROR;

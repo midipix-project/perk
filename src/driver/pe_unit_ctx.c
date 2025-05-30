@@ -14,7 +14,7 @@
 #include "perk_driver_impl.h"
 #include "perk_errinfo_impl.h"
 
-static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
+static int pe_lib_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
 {
 	if (ctx) {
 		pe_free_image_meta(ctx->meta);
@@ -25,7 +25,7 @@ static int pe_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
 	return ret;
 }
 
-int pe_get_unit_ctx(
+int pe_lib_get_unit_ctx(
 	const struct pe_driver_ctx *	dctx,
 	const char *			path,
 	struct pe_unit_ctx **		pctx)
@@ -48,11 +48,11 @@ int pe_get_unit_ctx(
 		: PROT_READ;
 
 	if (pe_map_raw_image(dctx,-1,path,prot,&ctx->map))
-		return pe_free_unit_ctx_impl(ctx,
+		return pe_lib_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
 	if (pe_get_image_meta(dctx,&ctx->map,&ctx->meta))
-		return pe_free_unit_ctx_impl(ctx,
+		return pe_lib_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
 	ctx->path	= path;
@@ -64,7 +64,7 @@ int pe_get_unit_ctx(
 	return 0;
 }
 
-void pe_free_unit_ctx(struct pe_unit_ctx * ctx)
+void pe_lib_free_unit_ctx(struct pe_unit_ctx * ctx)
 {
 	struct pe_unit_ctx_impl *	ictx;
 	uintptr_t			addr;
@@ -72,6 +72,6 @@ void pe_free_unit_ctx(struct pe_unit_ctx * ctx)
 	if (ctx) {
 		addr = (uintptr_t)ctx - offsetof(struct pe_unit_ctx_impl,uctx);
 		ictx = (struct pe_unit_ctx_impl *)addr;
-		pe_free_unit_ctx_impl(ictx,0);
+		pe_lib_free_unit_ctx_impl(ictx,0);
 	}
 }

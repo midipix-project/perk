@@ -73,11 +73,11 @@ int pe_cmd_perk(const struct pe_driver_ctx * dctx, const char * path)
 	int                     ret;
 	struct pe_unit_ctx *	uctx;
 
-	if ((ret = pe_get_unit_ctx(dctx,path,&uctx)) < 0)
+	if ((ret = pe_lib_get_unit_ctx(dctx,path,&uctx)) < 0)
 		return ret;
 
 	pe_perform_unit_actions(dctx,uctx);
-	pe_free_unit_ctx(uctx);
+	pe_lib_free_unit_ctx(uctx);
 
 	return 0;
 }

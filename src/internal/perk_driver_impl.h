@@ -80,42 +80,42 @@ static inline void pe_driver_set_ectx(
 static inline int pe_driver_fdin(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fdin;
 }
 
 static inline int pe_driver_fdout(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fdout;
 }
 
 static inline int pe_driver_fderr(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fderr;
 }
 
 static inline int pe_driver_fdlog(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fdlog;
 }
 
 static inline int pe_driver_fdcwd(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fdcwd;
 }
 
 static inline int pe_driver_fddst(const struct pe_driver_ctx * dctx)
 {
 	struct pe_fd_ctx fdctx;
-	pe_get_driver_fdctx(dctx,&fdctx);
+	pe_lib_get_driver_fdctx(dctx,&fdctx);
 	return fdctx.fddst;
 }
 
