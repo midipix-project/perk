@@ -92,7 +92,7 @@ static char * dsolib_name(const struct pe_image_meta * m, int i)
 		rva     = va - m->m_opt.oh_mem.coh_image_base;
 	}
 
-	if (pe_get_roffset_from_rva(m,(uint32_t)rva,&roffset) < 0)
+	if (pe_meta_get_roffset_from_rva(m,(uint32_t)rva,&roffset) < 0)
 		return 0;
 
 	return (addr = m->r_image.map_addr) + roffset;
@@ -117,14 +117,14 @@ static unsigned char * dsosym_meta(const struct pe_image_meta * m, int j)
 		rva   = va;
 	}
 
-	if ((idx = pe_get_named_section_index(m,MDSO_META_SECTION)) >= 0)
-		if (idx != pe_get_block_section_index(m,&(struct pe_block){rva,0}))
+	if ((idx = pe_meta_get_named_section_index(m,MDSO_META_SECTION)) >= 0)
+		if (idx != pe_meta_get_block_section_index(m,&(struct pe_block){rva,0}))
 			return (unsigned char *)(-1);
 
 	if (va > rva)
 		return 0;
 
-	if (pe_get_roffset_from_rva(m,rva,&roffset) < 0)
+	if (pe_meta_get_roffset_from_rva(m,rva,&roffset) < 0)
 		return 0;
 
 	return (unsigned char *)m->r_image.map_addr + roffset;
@@ -150,14 +150,14 @@ static char * dsosym_string(const struct pe_image_meta * m, int j)
 		rva   = va;
 	}
 
-	if ((idx = pe_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0)
-		if (idx != pe_get_block_section_index(m,&(struct pe_block){rva,0}))
+	if ((idx = pe_meta_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0)
+		if (idx != pe_meta_get_block_section_index(m,&(struct pe_block){rva,0}))
 			return (char *)(-2);
 
 	if (va > rva)
 		return 0;
 
-	if (pe_get_roffset_from_rva(m,rva,&roffset) < 0)
+	if (pe_meta_get_roffset_from_rva(m,rva,&roffset) < 0)
 		return 0;
 
 	return (addr = m->r_image.map_addr) + roffset;

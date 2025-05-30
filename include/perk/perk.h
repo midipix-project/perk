@@ -284,20 +284,20 @@ perk_api int  pe_map_raw_image                  (const struct pe_driver_ctx *,
 perk_api int  pe_unmap_raw_image                (struct pe_raw_image *);
 
 /* image meta api */
-perk_api int  pe_get_image_meta                 (const struct pe_driver_ctx *,
+perk_api int  pe_meta_get_image_meta            (const struct pe_driver_ctx *,
                                                  const struct pe_raw_image *,
                                                  struct pe_image_meta **);
 
-perk_api void pe_free_image_meta                (struct pe_image_meta *);
+perk_api void pe_meta_free_image_meta           (struct pe_image_meta *);
 
-perk_api int  pe_get_named_section_index        (const struct pe_image_meta *, const char *);
-perk_api int  pe_get_block_section_index        (const struct pe_image_meta *, const struct pe_block *);
+perk_api int  pe_meta_get_named_section_index   (const struct pe_image_meta *, const char *);
+perk_api int  pe_meta_get_block_section_index   (const struct pe_image_meta *, const struct pe_block *);
 
-perk_api int  pe_get_roffset_from_rva           (const struct pe_image_meta *, uint32_t, uint32_t *);
-perk_api int  pe_get_rva_from_roffset           (const struct pe_image_meta *, uint32_t, uint32_t *);
+perk_api int  pe_meta_get_roffset_from_rva      (const struct pe_image_meta *, uint32_t, uint32_t *);
+perk_api int  pe_meta_get_rva_from_roffset      (const struct pe_image_meta *, uint32_t, uint32_t *);
 
-perk_api int  pe_get_expsym_by_name             (const struct pe_image_meta *, const char *, struct pe_expsym *);
-perk_api int  pe_get_expsym_by_index            (const struct pe_image_meta *, unsigned,     struct pe_expsym *);
+perk_api int  pe_meta_get_expsym_by_name        (const struct pe_image_meta *, const char *, struct pe_expsym *);
+perk_api int  pe_meta_get_expsym_by_index       (const struct pe_image_meta *, unsigned,     struct pe_expsym *);
 
 /* info api */
 perk_api int  pe_info_get_image_abi             (const struct pe_image_meta *, struct pe_info_string *);

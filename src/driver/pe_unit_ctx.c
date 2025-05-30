@@ -17,7 +17,7 @@
 static int pe_lib_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
 {
 	if (ctx) {
-		pe_free_image_meta(ctx->meta);
+		pe_meta_free_image_meta(ctx->meta);
 		pe_unmap_raw_image(&ctx->map);
 		free(ctx);
 	}
@@ -51,7 +51,7 @@ int pe_lib_get_unit_ctx(
 		return pe_lib_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
-	if (pe_get_image_meta(dctx,&ctx->map,&ctx->meta))
+	if (pe_meta_get_image_meta(dctx,&ctx->map,&ctx->meta))
 		return pe_lib_free_unit_ctx_impl(ctx,
 			PERK_NESTED_ERROR(dctx));
 
