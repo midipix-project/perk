@@ -180,7 +180,7 @@ int pe_output_mdso_libraries(
 	if (!m->m_stats.t_ndsolibs)
 		return 0;
 
-	if (pe_get_image_abi(m,0) == PE_ABI_UNSUPPORTED)
+	if (pe_info_get_image_abi(m,0) == PE_ABI_UNSUPPORTED)
 		return PERK_CUSTOM_ERROR(
 			dctx,PERK_ERR_UNSUPPORTED_ABI);
 

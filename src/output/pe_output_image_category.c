@@ -24,10 +24,10 @@ int pe_output_image_category(
 
 	fdout = pe_driver_fdout(dctx);
 
-	pe_get_image_abi      (meta,&abi);
-	pe_get_image_subtype  (meta,&subtype);
-	pe_get_image_subsystem(meta,&subsystem);
-	pe_get_image_framework(meta,&framework);
+	pe_info_get_image_abi      (meta,&abi);
+	pe_info_get_image_subtype  (meta,&subtype);
+	pe_info_get_image_subsystem(meta,&subsystem);
+	pe_info_get_image_framework(meta,&framework);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (pe_dprintf(

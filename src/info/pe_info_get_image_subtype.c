@@ -19,7 +19,7 @@ static const char * const pe_subtype_str[PE_SUBTYPE_CAP] = {
 	[PE_SUBTYPE_OBJ]            = "obj",
 };
 
-int pe_get_image_subtype(const struct pe_image_meta * m, struct pe_info_string * infostr)
+int pe_info_get_image_subtype(const struct pe_image_meta * m, struct pe_info_string * infostr)
 {
 	int subtype;
 

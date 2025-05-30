@@ -15,10 +15,10 @@ API_SRCS = \
 	src/hexdump/pe_hexdump_coff_object_hdr.c \
 	src/hexdump/pe_hexdump_coff_opt_hdr.c \
 	src/hexdump/pe_hexdump_sec_tbl.c \
-	src/info/pe_get_image_abi.c \
-	src/info/pe_get_image_framework.c \
-	src/info/pe_get_image_subsystem.c \
-	src/info/pe_get_image_subtype.c \
+	src/info/pe_info_get_image_abi.c \
+	src/info/pe_info_get_image_framework.c \
+	src/info/pe_info_get_image_subsystem.c \
+	src/info/pe_info_get_image_subtype.c \
 	src/logic/pe_get_image_meta.c \
 	src/logic/pe_map_raw_image.c \
 	src/output/pe_output_error.c \

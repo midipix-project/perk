@@ -16,7 +16,7 @@ static const char * const pe_abi_str[PE_ABI_CAP] = {
 	[PE_ABI_PE64]           = "PE64",
 };
 
-int pe_get_image_abi(const struct pe_image_meta * m, struct pe_info_string * infostr)
+int pe_info_get_image_abi(const struct pe_image_meta * m, struct pe_info_string * infostr)
 {
 	int abi;
 

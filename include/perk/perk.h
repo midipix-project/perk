@@ -300,10 +300,10 @@ perk_api int  pe_get_expsym_by_name             (const struct pe_image_meta *, c
 perk_api int  pe_get_expsym_by_index            (const struct pe_image_meta *, unsigned,     struct pe_expsym *);
 
 /* info api */
-perk_api int  pe_get_image_abi                  (const struct pe_image_meta *, struct pe_info_string *);
-perk_api int  pe_get_image_subtype              (const struct pe_image_meta *, struct pe_info_string *);
-perk_api int  pe_get_image_subsystem            (const struct pe_image_meta *, struct pe_info_string *);
-perk_api int  pe_get_image_framework            (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_info_get_image_abi             (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_info_get_image_subtype         (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_info_get_image_subsystem       (const struct pe_image_meta *, struct pe_info_string *);
+perk_api int  pe_info_get_image_framework       (const struct pe_image_meta *, struct pe_info_string *);
 
 /* low-level api */
 perk_api int  pe_read_dos_header                (const struct pe_raw_image_dos_hdr *,   struct pe_meta_image_dos_hdr *);

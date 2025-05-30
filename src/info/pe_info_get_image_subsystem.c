@@ -23,7 +23,7 @@ static const char * const pe_subsystem_str[0x10] = {
 	[PE_IMAGE_SUBSYSTEM_XBOX]                     = "xbox"
 };
 
-int pe_get_image_subsystem(const struct pe_image_meta * m, struct pe_info_string * infostr)
+int pe_info_get_image_subsystem(const struct pe_image_meta * m, struct pe_info_string * infostr)
 {
 	int subsystem;
 

@@ -26,7 +26,7 @@ static const char * const pe_framework_str[PE_FRAMEWORK_CAP] = {
 	[PE_FRAMEWORK_WIN32]    = "win32",
 };
 
-int pe_get_image_framework(const struct pe_image_meta * m, struct pe_info_string * infostr)
+int pe_info_get_image_framework(const struct pe_image_meta * m, struct pe_info_string * infostr)
 {
 	int framework;
 
