@@ -39,7 +39,7 @@ void pe_meta_free_image_meta(struct pe_image_meta * meta)
 	pe_free_image_meta_impl(meta,0);
 }
 
-int pe_meta_get_named_section_index(const struct pe_image_meta * m, const char * name)
+static int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
 {
 	int i; for (i=0; i<m->m_coff.cfh_num_of_sections; i++)
 		if (!(strcmp(name,m->m_sectbl[i].sh_name)))
@@ -48,7 +48,12 @@ int pe_meta_get_named_section_index(const struct pe_image_meta * m, const char *
 	return -1;
 }
 
-int pe_meta_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
+int pe_meta_get_named_section_index(const struct pe_image_meta * m, const char * name)
+{
+	return pe_get_named_section_index(m,name);
+}
+
+static int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
 {
 	int i;
 	uint32_t low,high;
@@ -65,6 +70,11 @@ int pe_meta_get_block_section_index(const struct pe_image_meta * m, const struct
 	}
 
 	return -1;
+}
+
+int pe_meta_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
+{
+	return pe_get_block_section_index(m,block);
 }
 
 int pe_meta_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32_t * roffset)
@@ -110,7 +120,7 @@ int pe_meta_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffse
 	return -1;
 }
 
-int pe_meta_get_expsym_by_name(
+static int pe_get_expsym_by_name(
 	const struct pe_image_meta *	m,
 	const char *			name,
 	struct pe_expsym *		expsym)
@@ -144,7 +154,15 @@ int pe_meta_get_expsym_by_name(
 	return -1;
 }
 
-int pe_meta_get_expsym_by_index(
+int pe_meta_get_expsym_by_name(
+	const struct pe_image_meta *	m,
+	const char *			name,
+	struct pe_expsym *		expsym)
+{
+	return pe_get_expsym_by_name(m,name,expsym);
+}
+
+static int pe_get_expsym_by_index(
 	const struct pe_image_meta *	m,
 	unsigned			index,
 	struct pe_expsym *		expsym)
@@ -171,6 +189,15 @@ int pe_meta_get_expsym_by_index(
 	}
 
 	return 0;
+}
+
+
+int pe_meta_get_expsym_by_index(
+	const struct pe_image_meta *	m,
+	unsigned			index,
+	struct pe_expsym *		expsym)
+{
+	return pe_get_expsym_by_index(m,index,expsym);
 }
 
 static void pe_detect_image_abi(struct pe_image_meta * m)
@@ -230,7 +257,7 @@ static void pe_detect_image_subtype(struct pe_image_meta * m)
 static bool pe_image_is_psxscl(const struct pe_image_meta * m)
 {
 	return (!m->m_stats.t_nimplibs
-		&& !pe_meta_get_expsym_by_name(m,"__psx_init",0));
+		&& !pe_get_expsym_by_name(m,"__psx_init",0));
 }
 
 static bool pe_image_is_cygwin(const struct pe_image_meta * m)
@@ -257,22 +284,22 @@ static bool pe_image_is_msys(const struct pe_image_meta * m)
 
 static bool pe_image_is_mingw(const struct pe_image_meta * m)
 {
-	return ((pe_meta_get_named_section_index(m,".CRT") >= 0)
-		&& (pe_meta_get_named_section_index(m,".bss") >= 0)
-		&& (pe_meta_get_named_section_index(m,".tls") >= 0));
+	return ((pe_get_named_section_index(m,".CRT") >= 0)
+		&& (pe_get_named_section_index(m,".bss") >= 0)
+		&& (pe_get_named_section_index(m,".tls") >= 0));
 }
 
 static void pe_detect_image_framework(struct pe_image_meta * m)
 {
 	int framework;
 
-	if (pe_meta_get_named_section_index(m,".midipix") >= 0)
+	if (pe_get_named_section_index(m,".midipix") >= 0)
 		framework = PE_FRAMEWORK_MIDIPIX;
 
-	else if (pe_meta_get_named_section_index(m,".freestd") >= 0)
+	else if (pe_get_named_section_index(m,".freestd") >= 0)
 		framework = PE_FRAMEWORK_FREESTD;
 
-	else if (pe_meta_get_named_section_index(m,".cygheap") >= 0)
+	else if (pe_get_named_section_index(m,".cygheap") >= 0)
 		framework = PE_FRAMEWORK_CYGONE;
 
 	else if (pe_image_is_psxscl(m))
@@ -376,8 +403,8 @@ int pe_meta_get_image_meta(
 	}
 
 	/* .edata */
-	i = pe_meta_get_named_section_index(m,".edata");
-	s = pe_meta_get_block_section_index(m,&m->m_opt.oh_dirs.coh_export_tbl);
+	i = pe_get_named_section_index(m,".edata");
+	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_export_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
@@ -404,8 +431,8 @@ int pe_meta_get_image_meta(
 	unsigned char *			pitem;
 	size_t				psize;
 
-	i = pe_meta_get_named_section_index(m,".idata");
-	s = pe_meta_get_block_section_index(m,&m->m_opt.oh_dirs.coh_import_tbl);
+	i = pe_get_named_section_index(m,".idata");
+	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_import_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
@@ -501,7 +528,7 @@ int pe_meta_get_image_meta(
 	}
 
 	/* .dsometa */
-	if ((i = pe_meta_get_named_section_index(m,MDSO_META_SECTION)) >= 0) {
+	if ((i = pe_get_named_section_index(m,MDSO_META_SECTION)) >= 0) {
 		m->h_dsometa = &m->m_sectbl[i];
 		m->r_dsometa = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 
@@ -511,7 +538,7 @@ int pe_meta_get_image_meta(
 	}
 
 	/* .dsosyms */
-	if ((i = pe_meta_get_named_section_index(m,MDSO_SYMS_SECTION)) >= 0) {
+	if ((i = pe_get_named_section_index(m,MDSO_SYMS_SECTION)) >= 0) {
 		m->h_dsosyms = &m->m_sectbl[i];
 		m->r_dsosyms = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 
@@ -521,13 +548,13 @@ int pe_meta_get_image_meta(
 	}
 
 	/* .dsostrs */
-	if ((i = pe_meta_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0) {
+	if ((i = pe_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0) {
 		m->h_dsostrs = &m->m_sectbl[i];
 		m->r_dsostrs = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 	}
 
 	/* .dsodata */
-	if ((i = pe_meta_get_named_section_index(m,MDSO_DATA_SECTION)) >= 0) {
+	if ((i = pe_get_named_section_index(m,MDSO_DATA_SECTION)) >= 0) {
 		m->h_dsodata = &m->m_sectbl[i];
 		m->r_dsodata = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 	}
