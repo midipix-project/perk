@@ -16,7 +16,7 @@
 #include "perk_driver_impl.h"
 #include "perk_errinfo_impl.h"
 
-int pe_map_raw_image(
+int pe_raw_map_raw_image(
 	const struct pe_driver_ctx *	dctx,
 	int				fd,
 	const char *			path,
@@ -60,7 +60,7 @@ int pe_map_raw_image(
 		: 0;
 }
 
-int pe_unmap_raw_image(struct pe_raw_image * map)
+int pe_raw_unmap_raw_image(struct pe_raw_image * map)
 {
 	return munmap(map->map_addr,map->map_size);
 }

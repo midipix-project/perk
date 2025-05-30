@@ -20,7 +20,7 @@ API_SRCS = \
 	src/info/pe_info_get_image_subsystem.c \
 	src/info/pe_info_get_image_subtype.c \
 	src/logic/pe_image_meta_data.c \
-	src/logic/pe_map_raw_image.c \
+	src/logic/pe_image_raw_data.c \
 	src/output/pe_output_error.c \
 	src/output/pe_output_export_symbols.c \
 	src/output/pe_output_image_category.c \

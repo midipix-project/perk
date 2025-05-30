@@ -277,11 +277,11 @@ perk_api int  pe_output_error_record            (const struct pe_driver_ctx *, c
 perk_api int  pe_output_error_vector            (const struct pe_driver_ctx *);
 
 /* raw image api */
-perk_api int  pe_map_raw_image                  (const struct pe_driver_ctx *,
+perk_api int  pe_raw_map_raw_image              (const struct pe_driver_ctx *,
                                                  int fd, const char * path, int prot,
                                                  struct pe_raw_image *);
 
-perk_api int  pe_unmap_raw_image                (struct pe_raw_image *);
+perk_api int  pe_raw_unmap_raw_image            (struct pe_raw_image *);
 
 /* image meta api */
 perk_api int  pe_meta_get_image_meta            (const struct pe_driver_ctx *,
