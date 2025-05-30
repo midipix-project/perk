@@ -6,6 +6,7 @@
 
 #include "perk_api.h"
 #include "perk_meta.h"
+#include "perk_arbits.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -61,6 +62,27 @@ enum pe_custom_error {
 	PERK_ERR_BAD_COFF_HEADER,
 	PERK_ERR_BAD_IMAGE_TYPE,
 	PERK_ERR_UNSUPPORTED_ABI,
+	PERK_ERR_AR_FAIL,
+	PERK_ERR_AR_EMPTY_FILE,
+	PERK_ERR_AR_INVALID_SIGNATURE,
+	PERK_ERR_AR_INVALID_HEADER,
+	PERK_ERR_AR_TRUNCATED_DATA,
+	PERK_ERR_AR_DUPLICATE_LONG_NAMES,
+	PERK_ERR_AR_DUPLICATE_ARMAP_MEMBER,
+	PERK_ERR_AR_MISPLACED_ARMAP_MEMBER,
+	PERK_ERR_AR_NO_ACTION_SPECIFIED,
+	PERK_ERR_AR_NO_INPUT_SPECIFIED,
+	PERK_ERR_AR_DRIVER_MISMATCH,
+	PERK_ERR_AR_ARMAP_MISMATCH,
+	PERK_ERR_AR_INVALID_ARMAP_NUMBER_OF_SYMS,
+	PERK_ERR_AR_INVALID_ARMAP_SIZE_OF_REFS,
+	PERK_ERR_AR_INVALID_ARMAP_SIZE_OF_STRS,
+	PERK_ERR_AR_INVALID_ARMAP_STRING_TABLE,
+	PERK_ERR_AR_INVALID_ARMAP_MEMBER_OFFSET,
+	PERK_ERR_AR_INVALID_ARMAP_NAME_OFFSET,
+	PERK_ERR_AR_DLUNIT_NOT_SPECIFIED,
+	PERK_ERR_AR_OUTPUT_NOT_SPECIFIED,
+	PERK_ERR_AR_OUTPUT_NOT_APPLICABLE,
 	PERK_ERR_CAP,
 };
 
@@ -83,6 +105,11 @@ struct pe_raw_coff_symbol;
 struct pe_raw_image {
 	void *		map_addr;
 	size_t		map_size;
+};
+
+struct pe_raw_archive {
+	void *				map_addr;
+	size_t				map_size;
 };
 
 struct pe_expsym {
@@ -136,6 +163,18 @@ struct pe_image_meta {
 	enum pe_abi			m_abi;
 	enum pe_subtype			m_subtype;
 	enum pe_framework		m_framework;
+};
+
+struct pe_archive_meta {
+	struct pe_raw_archive           r_archive;
+	struct ar_raw_signature *       r_signature;
+
+	struct ar_meta_signature *      m_signature;
+
+	struct ar_meta_member_info **   a_memberv;
+	struct ar_meta_member_info *    a_arref_longnames;
+	struct ar_meta_armap_info       a_armap_primary;
+	struct ar_meta_armap_info       a_armap_pecoff;
 };
 
 struct pe_source_version {
