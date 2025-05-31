@@ -51,6 +51,7 @@ struct pe_unit_ctx_impl {
 	struct pe_raw_archive       armap;
 	struct pe_archive_meta *    armeta;
 	struct pe_image_meta **     objmeta;
+	const struct pe_image_meta**usrobjmeta;
 	struct pe_unit_ctx          uctx;
 };
 

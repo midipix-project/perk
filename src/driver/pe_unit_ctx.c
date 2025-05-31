@@ -26,6 +26,7 @@ static int pe_lib_free_unit_ctx_impl(struct pe_unit_ctx_impl * ctx, int ret)
 		pe_ar_free_archive_meta(ctx->armeta);
 		pe_meta_free_image_meta(ctx->meta);
 		pe_raw_unmap_raw_image(&ctx->map);
+		free(ctx->usrobjmeta);
 		free(ctx->objmeta);
 		free(ctx);
 	}
@@ -45,6 +46,7 @@ static int pe_lib_create_object_vector_or_verify_archive(
 	bool                            fpurearch;
 	struct pe_image_meta *          meta;
 	struct pe_image_meta **         objmeta;
+	const struct pe_image_meta **   usrobjmeta;
 	size_t                          veclen;
 	struct pe_raw_image             map;
 	struct ar_meta_member_info **   pmember;
@@ -67,10 +69,16 @@ static int pe_lib_create_object_vector_or_verify_archive(
 	if (fvector && !(ctx->objmeta = calloc(veclen,sizeof(meta))))
 		return PERK_BUFFER_ERROR(dctx);
 
+	if (fvector && !(ctx->usrobjmeta = calloc(veclen,sizeof(*usrobjmeta))))
+		return PERK_BUFFER_ERROR(dctx);
+
 	if (!actx->a_memberv)
 		return 0;
 
-	for (pmember=actx->a_memberv,objmeta=ctx->objmeta; *pmember; pmember++) {
+	objmeta    = ctx->objmeta;
+	usrobjmeta = ctx->usrobjmeta;
+
+	for (pmember=actx->a_memberv; *pmember; pmember++) {
 		errinfp = idctx->errinfp;
 
 		switch (pmember[0]->ar_member_attr) {
@@ -100,6 +108,7 @@ static int pe_lib_create_object_vector_or_verify_archive(
 
 					if (fvector) {
 						*objmeta++ = meta;
+						*usrobjmeta++ = meta;
 					} else {
 						pe_meta_free_image_meta(meta);
 					};
@@ -178,6 +187,7 @@ int pe_lib_get_unit_ctx(
 	ctx->uctx.path	  = &ctx->path;
 	ctx->uctx.meta	  = ctx->meta;
 	ctx->uctx.armeta  = ctx->armeta;
+	ctx->uctx.objmeta = ctx->usrobjmeta;
 
 	*pctx = &ctx->uctx;
 	return 0;
