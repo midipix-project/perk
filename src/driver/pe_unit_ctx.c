@@ -143,7 +143,7 @@ int pe_lib_get_unit_ctx(
 	pe_driver_set_ectx(
 		dctx,0,path);
 
-	prot = (dctx->cctx->actflags & PERK_ACTION_MAP_READWRITE)
+	prot = (dctx->cctx->drvflags & PERK_DRIVER_MAP_WRITE_ACCESS)
 		? PROT_READ | PROT_WRITE
 		: PROT_READ;
 

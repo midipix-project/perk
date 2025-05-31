@@ -35,6 +35,7 @@ extern "C" {
 
 #define PERK_DRIVER_VERSION		0x0010
 #define PERK_DRIVER_DRY_RUN		0x0020
+#define PERK_DRIVER_MAP_WRITE_ACCESS    0x0040
 
 #define PERK_DRIVER_ANNOTATE_ALWAYS	0x1000
 #define PERK_DRIVER_ANNOTATE_NEVER	0x2000
@@ -43,9 +44,6 @@ extern "C" {
 #define PERK_DRIVER_AR_STRICT_PE        0x10000
 #define PERK_DRIVER_AR_STRICT_PE_ARCH   0x20000
 #define PERK_DRIVER_AR_OBJECT_VECTOR    0x40000
-
-/* unit action flags */
-#define PERK_ACTION_MAP_READWRITE	0x0001
 
 /* error flags */
 #define PERK_ERROR_TOP_LEVEL		0x0001
@@ -214,7 +212,6 @@ struct pe_error_info {
 
 struct pe_common_ctx {
 	uint64_t			drvflags;
-	uint64_t			actflags;
 	uint64_t			fmtflags;
 	uint64_t			hdrdump;
 	enum pe_cmd                     cmd;
