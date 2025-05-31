@@ -40,6 +40,10 @@ extern "C" {
 #define PERK_DRIVER_ANNOTATE_NEVER	0x2000
 #define PERK_DRIVER_ANNOTATE_FULL	0x4000
 
+#define PERK_DRIVER_AR_STRICT_PE        0x10000
+#define PERK_DRIVER_AR_STRICT_PE_ARCH   0x20000
+#define PERK_DRIVER_AR_OBJECT_VECTOR    0x40000
+
 /* unit action flags */
 #define PERK_ACTION_MAP_READWRITE	0x0001
 
@@ -83,6 +87,9 @@ enum pe_custom_error {
 	PERK_ERR_AR_DLUNIT_NOT_SPECIFIED,
 	PERK_ERR_AR_OUTPUT_NOT_SPECIFIED,
 	PERK_ERR_AR_OUTPUT_NOT_APPLICABLE,
+	PERK_ERR_AR_NON_PE_MEMBERS,
+	PERK_ERR_AR_MIXED_PE_MEMBERS,
+	PERK_ERR_AR_NESTED_ARCHIVE,
 	PERK_ERR_CAP,
 };
 
@@ -225,6 +232,8 @@ struct pe_driver_ctx {
 struct pe_unit_ctx {
 	const char * const *		path;
 	const struct pe_image_meta *	meta;
+	const struct pe_archive_meta *	armeta;
+	const struct pe_image_meta **	objmeta;
 	void *				any;
 };
 

@@ -27,13 +27,17 @@ static const char * const pe_error_strings[PERK_ERR_CAP] = {
 	[PERK_ERR_NULL_CONTEXT]    = "null driver or unit context",
 	[PERK_ERR_NULL_IMAGE]      = "null image base pointer",
 	[PERK_ERR_INVALID_CONTEXT] = "invalid driver or unit context",
-	[PERK_ERR_INVALID_IMAGE]   = "invalid PE image",
+	[PERK_ERR_INVALID_IMAGE]   = "invalid PE image, object, or common archive",
 	[PERK_ERR_IMAGE_SIZE_ZERO] = "PE image size cannot be zero",
 	[PERK_ERR_IMAGE_MALFORMED] = "malformed PE image detected",
 	[PERK_ERR_BAD_DOS_HEADER]  = "bad DOS header",
 	[PERK_ERR_BAD_COFF_HEADER] = "bad COFF header",
 	[PERK_ERR_BAD_IMAGE_TYPE]  = "bad PE image type",
 	[PERK_ERR_UNSUPPORTED_ABI] = "unsupported image abi",
+
+	[PERK_ERR_AR_NON_PE_MEMBERS]   = "format of current archive member is not PE/COFF",
+	[PERK_ERR_AR_MIXED_PE_MEMBERS] = "archive mixes objects of different architectures",
+	[PERK_ERR_AR_NESTED_ARCHIVE]   = "nested archives are currently not supported",
 };
 
 static const char * pe_output_error_header(const struct pe_error_info * erri)

@@ -13,7 +13,10 @@
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS \
-				| PERK_DRIVER_VERBOSITY_UTILITY
+				| PERK_DRIVER_VERBOSITY_UTILITY \
+				| PERK_DRIVER_AR_STRICT_PE \
+				| PERK_DRIVER_AR_STRICT_PE_ARCH \
+				| PERK_DRIVER_AR_OBJECT_VECTOR
 #endif
 
 static const char vermsg[] = "%s%s%s (git://midipix.org/perk): "

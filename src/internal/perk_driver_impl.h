@@ -48,6 +48,9 @@ struct pe_unit_ctx_impl {
 	const char *		path;
 	struct pe_raw_image	map;
 	struct pe_image_meta *	meta;
+	struct pe_raw_archive	armap;
+	struct pe_archive_meta *armeta;
+	struct pe_image_meta ** objmeta;
 	struct pe_unit_ctx	uctx;
 };
 
