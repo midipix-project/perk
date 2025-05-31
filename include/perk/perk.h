@@ -320,6 +320,13 @@ perk_api int  pe_read_coff_symbol               (const struct pe_raw_coff_symbol
 perk_api int  pe_read_import_lookup             (const unsigned char *,                 struct pe_meta_import_lookup *,
                                                  uint32_t magic);
 
+/* archiver api */
+perk_api int  pe_ar_get_archive_meta            (const struct pe_driver_ctx *,
+                                                 const struct pe_raw_archive *,
+                                                 struct pe_archive_meta **);
+
+perk_api void pe_ar_free_archive_meta           (struct pe_archive_meta *);
+
 /* package info */
 perk_api const struct pe_source_version * pe_source_version(void);
 
