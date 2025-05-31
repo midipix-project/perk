@@ -7,20 +7,20 @@
 /* attribute not only redundant, but also tricky if not properly      */
 /* supported by the toolchain.                                        */
 /*                                                                    */
-/* When targeting Midipix, __PE__, __dllexport and __dllimport are    */
-/* always defined by the toolchain. Otherwise, the absnece of these   */
-/* macros has been detected by sofort's ccenv.sh during ./configure,  */
-/* and they have accordingly been added to CFLAGS_OS.                 */
+/* When targeting Midipix hosts, where elf-like visibility is fully   */
+/* supported and may be detected via the __PE_VISIBILITY__ macro,     */
+/* we utilize the attribute to render private symbols invisibile      */
+/* to dlsym(), as well as reduce the size of the .gotstrs section.    */
 /**********************************************************************/
 
-#ifdef __PE__
+#if defined(__PE_VISIBILITY__)
+#define perk_hidden _ATTR_VISIBILITY_HIDDEN
+#elif defined(__PE__)
 #define perk_hidden
-#else
-#ifdef _ATTR_VISIBILITY_HIDDEN
+#elif defined(_ATTR_VISIBILITY_HIDDEN)
 #define perk_hidden _ATTR_VISIBILITY_HIDDEN
 #else
 #define perk_hidden
-#endif
 #endif
 
 #endif
