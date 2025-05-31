@@ -174,10 +174,10 @@ int pe_lib_get_unit_ctx(
 			PERK_NESTED_ERROR(dctx));
 	}
 
-	ctx->path	= path;
-	ctx->uctx.path	= &ctx->path;
-	ctx->uctx.meta	= ctx->meta;
-	ctx->uctx.armeta= ctx->armeta;
+	ctx->path	  = path;
+	ctx->uctx.path	  = &ctx->path;
+	ctx->uctx.meta	  = ctx->meta;
+	ctx->uctx.armeta  = ctx->armeta;
 
 	*pctx = &ctx->uctx;
 	return 0;
