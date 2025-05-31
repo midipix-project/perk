@@ -224,7 +224,6 @@ struct pe_driver_ctx {
 
 struct pe_unit_ctx {
 	const char * const *		path;
-	const struct pe_raw_image *	map;
 	const struct pe_image_meta *	meta;
 	void *				any;
 };

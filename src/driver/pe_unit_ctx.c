@@ -57,7 +57,6 @@ int pe_lib_get_unit_ctx(
 
 	ctx->path	= path;
 	ctx->uctx.path	= &ctx->path;
-	ctx->uctx.map	= &ctx->map;
 	ctx->uctx.meta	= ctx->meta;
 
 	*pctx = &ctx->uctx;
