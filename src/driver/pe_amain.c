@@ -84,6 +84,10 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 				pe_cmd_perk(dctx,*unit);
 			break;
 
+		case PERK_CMD_AR:
+			pe_cmd_ar(dctx);
+			break;
+
 		default:
 			break;
 	}

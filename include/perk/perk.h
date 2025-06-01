@@ -94,6 +94,7 @@ enum pe_custom_error {
 enum pe_cmd {
 	PERK_CMD_DEFAULT,
 	PERK_CMD_PERK,
+	PERK_CMD_AR,
 	PERK_CMD_CAP,
 };
 
@@ -256,6 +257,7 @@ perk_api int  pe_lib_set_driver_fdctx           (struct pe_driver_ctx *, const s
 
 /* cmd api */
 perk_api int  pe_cmd_perk                       (const struct pe_driver_ctx *, const char *);
+perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *);
 
 /* utility api */
 perk_api int  pe_main                           (char **, char **, const struct pe_fd_ctx *);

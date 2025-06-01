@@ -4,6 +4,7 @@ API_SRCS = \
 	src/arbits/pe_armap_bsd_64.c \
 	src/arbits/pe_armap_sysv_32.c \
 	src/arbits/pe_armap_sysv_64.c \
+	src/cmds/pe_cmd_ar.c \
 	src/cmds/pe_cmd_perk.c \
 	src/driver/pe_amain.c \
 	src/driver/pe_driver_ctx.c \
@@ -37,6 +38,7 @@ API_SRCS = \
 	src/reader/pe_read_optional_header.c \
 	src/reader/pe_read_section_header.c \
 	src/skin/pe_skin_default.c \
+	src/skin/pe_skin_ar.c \
 	src/skin/pe_skin_perk.c \
 
 INTERNAL_SRCS = \

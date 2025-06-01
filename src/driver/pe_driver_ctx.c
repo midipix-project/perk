@@ -27,12 +27,14 @@ static const struct pe_source_version pe_src_version = {
 /* perk command names */
 static const char * const perk_cmd_name[PERK_CMD_CAP] = {
 	[PERK_CMD_PERK]     = "perk",
+	[PERK_CMD_AR]       = "ar",
 };
 
 /* perk command options */
 static const struct argv_option * perk_cmd_options[PERK_CMD_CAP] = {
 	[PERK_CMD_DEFAULT]  = pe_default_options,
 	[PERK_CMD_PERK]     = pe_perk_options,
+	[PERK_CMD_AR]       = pe_ar_options,
 };
 
 /* default fd context */
@@ -159,6 +161,9 @@ static int pe_cmd_from_program(const char * program)
 
 	if (!strcmp(mark,"perk")) {
 		return PERK_CMD_PERK;
+
+	} else if (!strcmp(mark,"ar")) {
+		return PERK_CMD_AR;
 
 	} else {
 		return PERK_CMD_DEFAULT;
@@ -417,6 +422,9 @@ int pe_lib_get_driver_ctx(
 
 	} else if (cctx.cmd == PERK_CMD_PERK) {
 		argv_optv_init(pe_perk_options,optv);
+
+	} else if (cctx.cmd == PERK_CMD_AR) {
+		argv_optv_init(pe_ar_options,optv);
 	}
 
 	/* process the selected tool's command-line arguments */
@@ -434,12 +442,16 @@ int pe_lib_get_driver_ctx(
 	}
 
 	/* utility mode and no action to take? */
-	if (cctx.drvflags & PERK_DRIVER_VERBOSITY_UTILITY)
+	if (cctx.cmd == PERK_CMD_AR) {
+		(void)0;
+
+	} else if (cctx.drvflags & PERK_DRIVER_VERBOSITY_UTILITY) {
 		if (!nunits && !(cctx.drvflags & PERK_DRIVER_VERSION))
 			return pe_driver_usage(
 				fdctx->fdout,
 				program,0,
 				optv,meta,cctx.cmd);
+	}
 
 	/* context allocation */
 	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))

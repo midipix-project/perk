@@ -10,7 +10,7 @@ const perk_hidden struct argv_option pe_default_options[] = {
 			"show usage information [listing %s options only]"},
 
 	{"cmd",		0,TAG_CMD,ARGV_OPTARG_REQUIRED,0,
-			"perk",0,
+			"perk|ar",0,
 			"invoke one of the following perk commands: {%s}"},
 
 	{0,0,0,0,0,0,0,0}
