@@ -20,6 +20,10 @@
 /* initial number of elements in the transient, on-stack vector */
 # define AR_STACK_VECTOR_ELEMENTS   (0x200)
 
+/* bit mask to indicate that the first non-option argument is <posname> */
+#define AR_POSNAME_MASK   (PERK_DRIVER_AR_POSITION_AFTER \
+	                  |PERK_DRIVER_AR_POSITION_BEFORE)
+
 extern const struct argv_option pe_ar_options[];
 
 struct ar_armaps_impl {

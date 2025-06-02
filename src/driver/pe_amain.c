@@ -10,6 +10,7 @@
 #include <perk/perk_output.h>
 #include "perk_driver_impl.h"
 #include "perk_dprintf_impl.h"
+#include "perk_ar_impl.h"
 
 #ifndef PERK_DRIVER_FLAGS
 #define PERK_DRIVER_FLAGS	PERK_DRIVER_VERBOSITY_ERRORS \
@@ -65,6 +66,10 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 	uint64_t		flags;
 	struct pe_driver_ctx *	dctx;
 	const char **		unit;
+	const char *            posname;
+	const char *            arname;
+	const char **           arfiles;
+	uint64_t                arflags;
 
 	flags = PERK_DRIVER_FLAGS;
 	fdout = fdctx ? fdctx->fdout : STDOUT_FILENO;
@@ -85,7 +90,20 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 			break;
 
 		case PERK_CMD_AR:
-			pe_cmd_ar(dctx,0,0,0,0);
+			arflags = dctx->cctx->drvflags;
+
+			if (arflags & AR_POSNAME_MASK) {
+				posname = dctx->units[0];
+				arname  = posname ? dctx->units[1]  : 0;
+				arfiles = arname  ? &dctx->units[2] : 0;
+			} else {
+				posname = 0;
+				arname = dctx->units[0];
+				arfiles = arname  ? &dctx->units[1] : 0;
+			}
+
+			pe_cmd_ar(dctx,arflags,posname,arname,arfiles);
+
 			break;
 
 		default:
