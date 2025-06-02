@@ -35,8 +35,8 @@ struct ar_armaps_impl {
 };
 
 struct pe_archive_meta_impl {
-	const struct pe_driver_ctx *  dctx;
-	struct pe_archive_ctx *       actx;
+	const struct pe_driver_ctx *    dctx;
+	struct pe_archive_ctx *         actx;
 	size_t                          ofmtattr;
 	size_t                          nentries;
 	void *                          hdrinfov;
@@ -50,40 +50,40 @@ struct pe_archive_meta_impl {
 	struct ar_meta_member_info **   memberv;
 	struct ar_meta_member_info *    members;
 	struct ar_armaps_impl           armaps;
-	struct pe_txtfile_ctx *       nminfo;
-	struct pe_archive_meta        armeta;
+	struct pe_txtfile_ctx *         nminfo;
+	struct pe_archive_meta          armeta;
 };
 
 struct ar_meta_member_info * pe_archive_member_from_offset(
-	struct pe_archive_meta_impl * meta,
+	struct pe_archive_meta_impl *   meta,
 	off_t                           offset);
 
 int pe_ar_parse_primary_armap_bsd_32(
-	const struct pe_driver_ctx *  dctx,
-	struct pe_archive_meta_impl * m);
+	const struct pe_driver_ctx *    dctx,
+	struct pe_archive_meta_impl *   m);
 
 int pe_ar_parse_primary_armap_bsd_64(
-	const struct pe_driver_ctx *  dctx,
-	struct pe_archive_meta_impl * m);
+	const struct pe_driver_ctx *    dctx,
+	struct pe_archive_meta_impl *   m);
 
 int pe_ar_parse_primary_armap_sysv_32(
-	const struct pe_driver_ctx *  dctx,
-	struct pe_archive_meta_impl * m);
+	const struct pe_driver_ctx *    dctx,
+	struct pe_archive_meta_impl *   m);
 
 int pe_ar_parse_primary_armap_sysv_64(
-	const struct pe_driver_ctx *  dctx,
-	struct pe_archive_meta_impl * m);
+	const struct pe_driver_ctx *    dctx,
+	struct pe_archive_meta_impl *   m);
 
 int pe_update_mapstrv(
-	const struct pe_driver_ctx *  dctx,
-	struct pe_archive_meta_impl * m);
+	const struct pe_driver_ctx *    dctx,
+	struct pe_archive_meta_impl *   m);
 
 int pe_ar_update_syminfo(
-	struct pe_archive_ctx * actx);
+	struct pe_archive_ctx *         actx);
 
 int pe_ar_update_syminfo_ex(
-	struct pe_archive_ctx * actx,
-	int                       fdout);
+	struct pe_archive_ctx *         actx,
+	int                             fdout);
 
 static inline struct pe_archive_meta_impl * pe_archive_meta_ictx(const struct pe_archive_meta * meta)
 {
