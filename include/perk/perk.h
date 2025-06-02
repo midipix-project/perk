@@ -44,6 +44,23 @@ extern "C" {
 #define PERK_DRIVER_AR_STRICT_PE        0x10000
 #define PERK_DRIVER_AR_STRICT_PE_ARCH   0x20000
 #define PERK_DRIVER_AR_OBJECT_VECTOR    0x40000
+#define PERK_DRIVER_AR_LIST_MEMBERS     0x80000     /* [-t] */
+
+#define PERK_DRIVER_AR_SUPPRESS_MESSAGE 0X100000    /* [-c] */
+#define PERK_DRIVER_AR_VERBOSE_OUTPUT   0X200000    /* [-v] */
+#define PERK_DRIVER_AR_UPDATE_SYMTBL    0X400000    /* [-s] */
+#define PERK_DRIVER_AR_UPDATE_MEMBERS   0x800000    /* [-u] */
+#define PERK_DRIVER_AR_PRESERVE_NEWER   0X800000    /* [-C] */
+
+#define PERK_DRIVER_AR_DELETE_MEMBERS   0X1000000   /* [-d] */
+#define PERK_DRIVER_AR_APPEND_MEMBERS   0X2000000   /* [-q] */
+#define PERK_DRIVER_AR_REPLACE_MEMBERS  0X4000000   /* [-r] */
+#define PERK_DRIVER_AR_EXTRACT_MEMBERS  0X8000000   /* [-x] */
+
+#define PERK_DRIVER_AR_MOVE_MEMBERS     0X10000000  /* [-m] */
+#define PERK_DRIVER_AR_POSITION_AFTER   0X20000000  /* [-a] */
+#define PERK_DRIVER_AR_POSITION_BEFORE  0X40000000  /* [-b] */
+#define PERK_DRIVER_AR_PRINT_ARCHIVE    0X80000000  /* [-p] */
 
 /* error flags */
 #define PERK_ERROR_TOP_LEVEL		0x0001
@@ -257,7 +274,8 @@ perk_api int  pe_lib_set_driver_fdctx           (struct pe_driver_ctx *, const s
 
 /* cmd api */
 perk_api int  pe_cmd_perk                       (const struct pe_driver_ctx *, const char *);
-perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *);
+perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *, uint64_t,
+                                                 const char *, const char *, const char **);
 
 /* utility api */
 perk_api int  pe_main                           (char **, char **, const struct pe_fd_ctx *);
