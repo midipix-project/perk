@@ -3,7 +3,7 @@
 #include "argv/argv.h"
 
 const perk_hidden struct argv_option pe_ar_options[] = {
-	{"Wversion",	'v',TAG_VERSION,ARGV_OPTARG_NONE,
+	{"Wversion",	'V',TAG_VERSION,ARGV_OPTARG_NONE,
 			ARGV_OPTION_HYBRID_ONLY,0,0,
 			"show version information"},
 
