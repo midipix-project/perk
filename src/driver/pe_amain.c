@@ -19,7 +19,7 @@
 				| PERK_DRIVER_AR_OBJECT_VECTOR
 #endif
 
-static const char vermsg[] = "%s%s%s (git://midipix.org/perk): "
+static const char vermsg[] = "%s%s%s (https://git.foss21.org/perk): "
 			     "version %s%d.%d.%d%s.\n"
 			     "[commit reference: %s%s%s]\n";
 
