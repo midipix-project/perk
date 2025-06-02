@@ -14,6 +14,7 @@
 #include <perk/perk_output.h>
 #include "perk_version.h"
 #include "perk_driver_impl.h"
+#include "perk_synopsis_impl.h"
 #include "argv/argv.h"
 
 /* package info */
@@ -76,29 +77,39 @@ static int pe_driver_usage(
 	const char *			arg,
 	const struct argv_option **	optv,
 	struct argv_meta *		meta,
+	const char *                    cmdarg,
 	enum pe_cmd                     cmd)
 {
-	char		header[512];
-	char *		cmdarg[2];
-	const char *	cmdname;
+	char header [2048];
+	char cmdname[128];
 
-	if (cmd == PERK_CMD_DEFAULT) {
-		cmdarg[0] = "";
-		cmdarg[1] = "";
-		cmdname   = "";
-	} else {
-		cmdarg[0] = " (--cmd=";
-		cmdarg[1] = ")";
-		cmdname   = perk_cmd_name[cmd];
+	snprintf(cmdname,sizeof(cmdname),"%s%s%s",
+		program,
+		cmdarg ? " --cmd="           : "",
+		cmdarg ? perk_cmd_name[cmd]  : "");
+
+	switch (cmd) {
+		case PERK_CMD_AR:
+			snprintf(header,sizeof(header),
+				PERK_AR_CMD_SYNOPSIS,
+				cmdname,cmdname,cmdname,cmdname,
+				cmdname,cmdname,cmdname,cmdname,
+				cmdname,cmdname,cmdname,cmdname,
+				cmdname,cmdname,cmdname);
+			break;
+
+		case PERK_CMD_PERK:
+			snprintf(header,sizeof(header),
+				PERK_PERK_CMD_SYNOPSIS,
+				cmdname,cmdname,cmdname);
+			break;
+
+		default:
+			snprintf(header,sizeof(header),
+				PERK_DEFAULT_CMD_SYNOPSIS,
+				program,program,program,program);
+			break;
 	}
-
-	snprintf(header,sizeof(header),
-		"Usage: %s [options] ...\n"
-		"Usage: %s [options] [--cmd=<command>] <arg> <arg> ...\n\n"
-		"Notes: --cmd must precede all non-option arguments, as well as\n"
-		"       all arguments that are specific to the selected command.\n\n"
-		"Options%s%s%s:\n",
-		program,program,cmdarg[0],cmdname,cmdarg[1]);
 
 	argv_usage(fdout,header,optv,arg);
 	argv_free(meta);
@@ -176,7 +187,8 @@ static int pe_cctx_update(
 	struct argv_meta *              meta,
 	const struct pe_fd_ctx *        fdctx,
 	struct pe_common_ctx *          cctx,
-	size_t *                        nunits)
+	size_t *                        nunits,
+	const char *			cmdarg)
 {
 	struct argv_entry *		entry;
 	const char *			pretty;
@@ -191,7 +203,7 @@ static int pe_cctx_update(
 					return pe_driver_usage(
 						fdctx->fdout,
 						program,entry->arg,
-						optv,0,cctx->cmd);
+						optv,0,cmdarg,cctx->cmd);
 					break;
 
 				case TAG_CMD:
@@ -199,9 +211,10 @@ static int pe_cctx_update(
 						return pe_driver_usage(
 							fdctx->fderr,
 							program,0,
-							optv,0,cctx->cmd);
+							optv,0,cmdarg,cctx->cmd);
 
 					cctx->cmd = pe_cmd_from_program(entry->arg);
+					cmdarg    = entry->arg;
 					break;
 
 				case TAG_VERSION:
@@ -319,6 +332,7 @@ int pe_lib_get_driver_ctx(
 	struct argv_meta *		meta;
 	size_t				nunits;
 	const char *			program;
+	const char *                    cmdarg;
 	char **				parg;
 	char **				pargcap;
 	char **				cmdargv;
@@ -341,6 +355,7 @@ int pe_lib_get_driver_ctx(
 	cctx.cmd      = pe_cmd_from_program(program);
 	cctx.drvflags = flags;
 	nunits	      = 0;
+	cmdarg        = 0;
 
 	/* missing arguments? */
 	argv_optv_init(perk_cmd_options[cctx.cmd],optv);
@@ -349,7 +364,7 @@ int pe_lib_get_driver_ctx(
 		return pe_driver_usage(
 			fdctx->fderr,
 			program,0,
-			optv,0,cctx.cmd);
+			optv,0,0,cctx.cmd);
 
 	/* initial argv scan: ... --cmd=xxx ... */
 	argv_scan(argv,optv,&actx,0);
@@ -370,9 +385,11 @@ int pe_lib_get_driver_ctx(
 		if (!strcmp(*parg,"--cmd") && parg[1]) {
 				cmdargv = &parg[2];
 				cmdmark = parg[2];
+				cmdarg  = parg[1];
 		} else if (!strncmp(*parg,"--cmd=",6)) {
 				cmdargv = &parg[1];
 				cmdmark = parg[1];
+				cmdarg  = &parg[0][6];
 		}
 	}
 
@@ -404,7 +421,8 @@ int pe_lib_get_driver_ctx(
 
 		if (pe_cctx_update(
 				program,optv,meta,
-				fdctx,&cctx,&nunits)) {
+				fdctx,&cctx,&nunits,
+				cmdarg)) {
 			argv_free(meta);
 			return -1;
 		}
@@ -436,22 +454,19 @@ int pe_lib_get_driver_ctx(
 
 	if (pe_cctx_update(
 			program,optv,meta,
-			fdctx,&cctx,&nunits)) {
+			fdctx,&cctx,&nunits,
+			cmdarg)) {
 		argv_free(meta);
 		return -1;
 	}
 
 	/* utility mode and no action to take? */
-	if (cctx.cmd == PERK_CMD_AR) {
-		(void)0;
-
-	} else if (cctx.drvflags & PERK_DRIVER_VERBOSITY_UTILITY) {
+	if (cctx.drvflags & PERK_DRIVER_VERBOSITY_UTILITY)
 		if (!nunits && !(cctx.drvflags & PERK_DRIVER_VERSION))
 			return pe_driver_usage(
 				fdctx->fdout,
-				program,0,
-				optv,meta,cctx.cmd);
-	}
+				program,0,optv,meta,
+				cmdarg,cctx.cmd);
 
 	/* context allocation */
 	if (!(ctx = pe_driver_ctx_alloc(meta,fdctx,&cctx,nunits)))
