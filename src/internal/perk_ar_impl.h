@@ -24,6 +24,18 @@
 #define AR_POSNAME_MASK   (PERK_DRIVER_AR_POSITION_AFTER \
 	                  |PERK_DRIVER_AR_POSITION_BEFORE)
 
+#define AR_UPDATE_MASK    (PERK_DRIVER_AR_UPDATE_MEMBERS \
+	                  |PERK_DRIVER_AR_REPLACE_MEMBERS)
+
+#define AR_ACTION_MASK    (PERK_DRIVER_AR_LIST_MEMBERS  \
+	                  |PERK_DRIVER_AR_MOVE_MEMBERS   \
+	                  |PERK_DRIVER_AR_UPDATE_MEMBERS  \
+	                  |PERK_DRIVER_AR_DELETE_MEMBERS  \
+	                  |PERK_DRIVER_AR_APPEND_MEMBERS  \
+	                  |PERK_DRIVER_AR_REPLACE_MEMBERS \
+	                  |PERK_DRIVER_AR_EXTRACT_MEMBERS \
+	                  |PERK_DRIVER_AR_PRINT_ARCHIVE)
+
 extern const struct argv_option pe_ar_options[];
 
 struct ar_armaps_impl {

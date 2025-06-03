@@ -38,6 +38,14 @@ static const char * const pe_error_strings[PERK_ERR_CAP] = {
 	[PERK_ERR_AR_NON_PE_MEMBERS]   = "format of current archive member is not PE/COFF",
 	[PERK_ERR_AR_MIXED_PE_MEMBERS] = "archive mixes objects of different architectures",
 	[PERK_ERR_AR_NESTED_ARCHIVE]   = "nested archives are currently not supported",
+
+	[PERK_ERR_AR_MISSING_ACTION]   = "missing action, which should be exactly one of [dqmrxpt]",
+	[PERK_ERR_AR_MULTIPLE_ACTIONS] = "exactly one action permitted, multiple actions specified",
+	[PERK_ERR_AR_MULTIPLE_ANCHORS] = "multiple anchors: may specify _before_ or _after_, but not both",
+	[PERK_ERR_AR_INVALID_ANCHORS]  = "mismatched arguments: anchors are incompatible with the selected action",
+	[PERK_ERR_AR_MISSING_ANCHOR]   = "missing anchor: <posname> provided, but no anchor specified",
+	[PERK_ERR_AR_NULL_POSNAME]     = "null <posname> argument with [-a], [-b], or [-i]",
+	[PERK_ERR_AR_NULL_ARNAME]      = "null <arname> argument",
 };
 
 static const char * pe_output_error_header(const struct pe_error_info * erri)
