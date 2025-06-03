@@ -225,6 +225,10 @@ static int pe_cctx_update(
 					pretty = entry->arg;
 					break;
 
+				case TAG_VERBOSE:
+					cctx->fmtflags |= PERK_PRETTY_VERBOSE;
+					break;
+
 				case TAG_CATEGORY:
 					cctx->fmtflags |= PERK_OUTPUT_IMAGE_CATEGORY;
 					break;
@@ -305,6 +309,12 @@ static int pe_cctx_update(
 
 	if (pretty && !strcmp(pretty,"yaml")) {
 		cctx->fmtflags |= PERK_PRETTY_YAML;
+
+	} else if (pretty && !strcmp(pretty,"posix")) {
+		cctx->fmtflags |= PERK_PRETTY_POSIX;
+
+	} else if (pretty && !strcmp(pretty,"hexdata")) {
+		cctx->fmtflags |= PERK_PRETTY_HEXDATA;
 
 	} else if (pretty && !strcmp(pretty,"dlltool")) {
 		cctx->fmtflags |= PERK_PRETTY_DLLTOOL;
