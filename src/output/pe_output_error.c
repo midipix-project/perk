@@ -35,6 +35,7 @@ static const char * const pe_error_strings[PERK_ERR_CAP] = {
 	[PERK_ERR_BAD_IMAGE_TYPE]  = "bad PE image type",
 	[PERK_ERR_UNSUPPORTED_ABI] = "unsupported image abi",
 
+	[PERK_ERR_AR_NON_ARCHIVE_IMAGE]= "the parsed PE/COFF object or image is not an archive",
 	[PERK_ERR_AR_NON_PE_MEMBERS]   = "format of current archive member is not PE/COFF",
 	[PERK_ERR_AR_MIXED_PE_MEMBERS] = "archive mixes objects of different architectures",
 	[PERK_ERR_AR_NESTED_ARCHIVE]   = "nested archives are currently not supported",

@@ -301,6 +301,11 @@ static int pe_cctx_update(
 						cctx->hdrdump  = PERK_HDRDUMP_IMPORT_TABLE;
 					}
 					break;
+
+				/*---ar---*/
+				case TAG_AR_LIST_MEMBERS:
+					cctx->drvflags |= PERK_DRIVER_AR_LIST_MEMBERS;
+					break;
 			}
 		} else {
 			(*nunits)++;

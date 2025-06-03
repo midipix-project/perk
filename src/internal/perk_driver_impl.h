@@ -32,6 +32,7 @@ enum app_tags {
 	TAG_DSOLIBS,
 	TAG_DSOSYMS,
 	TAG_HDRDUMP,
+	TAG_AR_LIST_MEMBERS,
 };
 
 struct pe_driver_ctx_impl {
