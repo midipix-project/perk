@@ -1,6 +1,7 @@
 tree.tag:
 		mkdir -p src
 		mkdir -p src/arbits
+		mkdir -p src/arbits/output
 		mkdir -p src/cmds
 		mkdir -p src/driver
 		mkdir -p src/hexdump
