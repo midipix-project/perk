@@ -337,6 +337,7 @@ int pe_lib_get_driver_ctx(
 	char **				pargcap;
 	char **				cmdargv;
 	char *				cmdmark;
+	char                            stckarg[64];
 	struct argv_ctx			actx = {ARGV_VERBOSITY_NONE,
                                                ARGV_MODE_SCAN,
                                                0,0,0,0,0,0,0,0};
@@ -365,6 +366,17 @@ int pe_lib_get_driver_ctx(
 			fdctx->fderr,
 			program,0,
 			optv,0,0,cctx.cmd);
+
+	/* historic ar usage (vector will be cloned, so stack var is fine) */
+	if (cctx.cmd == PERK_CMD_AR) {
+		if (argv && argv[0] && argv[1] && (argv[1][0] != '-')) {
+			if (strlen(argv[1]) < (sizeof(stckarg) - 1)) {
+				stckarg[0] = '-';
+				strcpy(&stckarg[1],argv[1]);
+				argv[1] = stckarg;
+			}
+		}
+	}
 
 	/* initial argv scan: ... --cmd=xxx ... */
 	argv_scan(argv,optv,&actx,0);
