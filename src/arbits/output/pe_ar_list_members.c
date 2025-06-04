@@ -77,13 +77,13 @@ static struct ar_meta_member_info * pe_ar_get_member_info(
 }
 
 static int pe_ar_member_in_members(
-	struct ar_meta_member_info *    member,
+	struct ar_meta_member_info *    minfo,
 	const char **                   members)
 {
 	const char ** pname;
 
 	for (pname=members; *pname; pname++)
-		if (!strcmp(*pname,member->ar_file_header.ar_member_name))
+		if (!strcmp(*pname,minfo->ar_file_header.ar_member_name))
 			return 1;
 
 	return 0;
@@ -91,16 +91,16 @@ static int pe_ar_member_in_members(
 
 static int pe_ar_list_one_member_posix(
 	int                             fdout,
-	struct ar_meta_member_info *    memberp)
+	struct ar_meta_member_info *    minfo)
 {
 	return pe_dprintf(
 		fdout,"%s\n",
-		memberp->ar_file_header.ar_member_name);
+		minfo->ar_file_header.ar_member_name);
 }
 
 static int pe_ar_list_one_member_posix_verbose(
 	int                             fdout,
-	struct ar_meta_member_info *    memberp,
+	struct ar_meta_member_info *    minfo,
 	const char *                    fmtstr,
 	locale_t                        arlocale)
 {
@@ -111,10 +111,10 @@ static int pe_ar_list_one_member_posix_verbose(
 	struct tm   artimeloc;
 	char        artimestr[64] = {0};
 
-	ownerbits = (memberp->ar_file_header.ar_file_mode & 0700) >> 6;
-	groupbits = (memberp->ar_file_header.ar_file_mode & 0070) >> 3;
-	worldbits = (memberp->ar_file_header.ar_file_mode & 0007);
-	artimeval = memberp->ar_file_header.ar_time_date_stamp;
+	ownerbits = (minfo->ar_file_header.ar_file_mode & 0700) >> 6;
+	groupbits = (minfo->ar_file_header.ar_file_mode & 0070) >> 3;
+	worldbits = (minfo->ar_file_header.ar_file_mode & 0007);
+	artimeval = minfo->ar_file_header.ar_time_date_stamp;
 
 	if (localtime_r(&artimeval,&artimeloc))
 		strftime_l(
@@ -127,11 +127,11 @@ static int pe_ar_list_one_member_posix_verbose(
 		pe_ar_perm_strs[ownerbits],
 		pe_ar_perm_strs[groupbits],
 		pe_ar_perm_strs[worldbits],
-		memberp->ar_file_header.ar_uid,
-		memberp->ar_file_header.ar_gid,
-		memberp->ar_object_size,
+		minfo->ar_file_header.ar_uid,
+		minfo->ar_file_header.ar_gid,
+		minfo->ar_object_size,
 		artimestr,
-		memberp->ar_file_header.ar_member_name);
+		minfo->ar_file_header.ar_member_name);
 }
 
 static int pe_ar_list_members_posix(
@@ -238,24 +238,24 @@ static int pe_ar_list_members_posix(
 
 static int pe_ar_list_one_member_yaml(
 	int                             fdout,
-	struct ar_meta_member_info *    memberp)
+	struct ar_meta_member_info *    minfo)
 {
 	return pe_dprintf(
 		fdout,
 		"    - [ member: %s ]\n",
-		memberp->ar_file_header.ar_member_name);
+		minfo->ar_file_header.ar_member_name);
 }
 
 static int pe_ar_list_one_member_yaml_verbose(
 	int                             fdout,
-	struct ar_meta_member_info *    memberp,
+	struct ar_meta_member_info *    minfo,
 	locale_t                        arlocale)
 {
 	time_t      artimeval;
 	struct tm   artimeloc;
 	char        artimestr[64] = {0};
 
-	artimeval = memberp->ar_file_header.ar_time_date_stamp;
+	artimeval = minfo->ar_file_header.ar_time_date_stamp;
 
 	if (localtime_r(&artimeval,&artimeloc))
 		strftime_l(
@@ -272,12 +272,12 @@ static int pe_ar_list_one_member_yaml_verbose(
 		"      - [ uid:        " "%d"    " ]\n"
 		"      - [ gid:        " "%d"    " ]\n"
 		"      - [ mode:       " "%d"    " ]\n\n",
-		memberp->ar_file_header.ar_member_name,
+		minfo->ar_file_header.ar_member_name,
 		artimestr,
-		memberp->ar_object_size,
-		memberp->ar_file_header.ar_uid,
-		memberp->ar_file_header.ar_gid,
-		memberp->ar_file_header.ar_file_mode);
+		minfo->ar_object_size,
+		minfo->ar_file_header.ar_uid,
+		minfo->ar_file_header.ar_gid,
+		minfo->ar_file_header.ar_file_mode);
 }
 
 static int pe_ar_list_members_yaml(
