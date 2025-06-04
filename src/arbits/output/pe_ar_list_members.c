@@ -62,6 +62,10 @@ static struct ar_meta_member_info * pe_ar_get_member_info(
 	const char *                    name)
 {
 	struct ar_meta_member_info **   memberp;
+	const char *                    slash;
+
+	if ((slash = strrchr(name,'/')))
+		name = ++slash;
 
 	for (memberp=meta->a_memberv; *memberp; memberp++)
 		if (!strcmp(memberp[0]->ar_file_header.ar_member_name,name))
