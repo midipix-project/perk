@@ -362,6 +362,7 @@ perk_api void pe_ar_free_archive_meta           (struct pe_archive_meta *);
 
 /* archiver utility api */
 perk_api int  pe_ar_list_members                (const struct pe_archive_meta *, const char **);
+perk_api int  pe_ar_print_members               (const struct pe_archive_meta *, const char **);
 
 /* package info */
 perk_api const struct pe_source_version * pe_source_version(void);

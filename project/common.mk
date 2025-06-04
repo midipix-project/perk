@@ -5,6 +5,7 @@ API_SRCS = \
 	src/arbits/pe_armap_sysv_32.c \
 	src/arbits/pe_armap_sysv_64.c \
 	src/arbits/output/pe_ar_list_members.c \
+	src/arbits/output/pe_ar_print_members.c \
 	src/cmds/pe_cmd_ar.c \
 	src/cmds/pe_cmd_perk.c \
 	src/driver/pe_amain.c \
