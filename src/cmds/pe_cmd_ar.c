@@ -11,12 +11,14 @@
 
 int pe_ar_list_members(const struct pe_archive_meta *, const char **);
 
-static int pe_cmd_ar_list_members(
+static int pe_cmd_ar_perform_unit_actions(
 	const struct pe_driver_ctx * dctx,
 	const char *                 arname,
-	const char **                members)
+	const char **                members,
+	uint64_t                     action)
 {
 	struct pe_unit_ctx * arctx = 0;
+	int  (*pe_ar_fn)(const struct pe_archive_meta *,const char **);
 
 	if (pe_lib_get_unit_ctx(dctx,arname,&arctx) < 0)
 		return PERK_NESTED_ERROR(dctx);
@@ -25,7 +27,11 @@ static int pe_cmd_ar_list_members(
 		return PERK_CUSTOM_ERROR(dctx,
 			PERK_ERR_AR_NON_ARCHIVE_IMAGE);
 
-	if (pe_ar_list_members(arctx->armeta,members) < 0) {
+	if (action == PERK_DRIVER_AR_LIST_MEMBERS) {
+		pe_ar_fn = pe_ar_list_members;
+	}
+
+	if (pe_ar_fn(arctx->armeta,members) < 0) {
 		pe_lib_free_unit_ctx(arctx);
 		return PERK_NESTED_ERROR(dctx);
 	}
@@ -110,15 +116,13 @@ int pe_cmd_ar(
 	const char *                 arname,
 	const char **                members)
 {
+	uint64_t action = (flags & AR_ACTION_MASK);
+
 	if (pe_cmd_ar_verify_cmdline(dctx,flags,posname,arname,members) < 0)
 		return PERK_NESTED_ERROR(dctx);
 
-	switch (flags & AR_ACTION_MASK) {
-		case PERK_DRIVER_AR_LIST_MEMBERS:
-			return pe_cmd_ar_list_members(
-				dctx,arname,members);
-
-	}
+	if (pe_cmd_ar_perform_unit_actions(dctx,arname,members,action) < 0)
+		return PERK_NESTED_ERROR(dctx);
 
 	return 0;
 }
