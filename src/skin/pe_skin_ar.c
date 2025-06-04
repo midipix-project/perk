@@ -21,6 +21,10 @@ const perk_hidden struct argv_option pe_ar_options[] = {
 			"or otherwise a detailed table of contents in "
 			"verbose mode"},
 
+	{"Wprint",	'p',TAG_AR_PRINT_MEMBERS,ARGV_OPTARG_NONE,
+			ARGV_OPTION_HYBRID_ONLY,0,0,
+			"print archive members"},
+
 	{"Wpretty",	0,TAG_PRETTY,ARGV_OPTARG_REQUIRED,
 			ARGV_OPTION_HYBRID_ONLY|ARGV_OPTION_HYBRID_EQUAL,
 			"yaml|posix|hexdata",0,

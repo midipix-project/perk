@@ -306,6 +306,10 @@ static int pe_cctx_update(
 				case TAG_AR_LIST_MEMBERS:
 					cctx->drvflags |= PERK_DRIVER_AR_LIST_MEMBERS;
 					break;
+
+				case TAG_AR_PRINT_MEMBERS:
+					cctx->drvflags |= PERK_DRIVER_AR_PRINT_ARCHIVE;
+					break;
 			}
 		} else {
 			(*nunits)++;

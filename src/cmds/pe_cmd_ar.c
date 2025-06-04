@@ -29,6 +29,9 @@ static int pe_cmd_ar_perform_unit_actions(
 
 	if (action == PERK_DRIVER_AR_LIST_MEMBERS) {
 		pe_ar_fn = pe_ar_list_members;
+
+	} else if (action == PERK_DRIVER_AR_PRINT_ARCHIVE) {
+		pe_ar_fn = pe_ar_print_members;
 	}
 
 	if (pe_ar_fn(arctx->armeta,members) < 0) {
