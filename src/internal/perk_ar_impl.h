@@ -34,7 +34,7 @@
 	                  |PERK_DRIVER_AR_APPEND_MEMBERS  \
 	                  |PERK_DRIVER_AR_REPLACE_MEMBERS \
 	                  |PERK_DRIVER_AR_EXTRACT_MEMBERS \
-	                  |PERK_DRIVER_AR_PRINT_ARCHIVE)
+	                  |PERK_DRIVER_AR_PRINT_MEMBERS)
 
 extern const struct argv_option pe_ar_options[];
 

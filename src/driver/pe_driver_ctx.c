@@ -308,7 +308,7 @@ static int pe_cctx_update(
 					break;
 
 				case TAG_AR_PRINT_MEMBERS:
-					cctx->drvflags |= PERK_DRIVER_AR_PRINT_ARCHIVE;
+					cctx->drvflags |= PERK_DRIVER_AR_PRINT_MEMBERS;
 					break;
 			}
 		} else {

@@ -23,7 +23,7 @@ static int pe_cmd_ar_perform_unit_actions(
 	if (action == PERK_DRIVER_AR_LIST_MEMBERS) {
 		pe_ar_fn = pe_ar_list_members;
 
-	} else if (action == PERK_DRIVER_AR_PRINT_ARCHIVE) {
+	} else if (action == PERK_DRIVER_AR_PRINT_MEMBERS) {
 		pe_ar_fn = pe_ar_print_members;
 
 	} else {
@@ -74,7 +74,7 @@ static int pe_cmd_ar_verify_cmdline(
 		case PERK_DRIVER_AR_DELETE_MEMBERS:
 		case PERK_DRIVER_AR_APPEND_MEMBERS:
 		case PERK_DRIVER_AR_EXTRACT_MEMBERS:
-		case PERK_DRIVER_AR_PRINT_ARCHIVE:
+		case PERK_DRIVER_AR_PRINT_MEMBERS:
 			if (poscmd || posname)
 				return PERK_CUSTOM_ERROR(dctx,
 					PERK_ERR_AR_INVALID_ANCHORS);

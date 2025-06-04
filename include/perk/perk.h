@@ -60,7 +60,7 @@ extern "C" {
 #define PERK_DRIVER_AR_MOVE_MEMBERS     0X10000000  /* [-m] */
 #define PERK_DRIVER_AR_POSITION_AFTER   0X20000000  /* [-a] */
 #define PERK_DRIVER_AR_POSITION_BEFORE  0X40000000  /* [-b] */
-#define PERK_DRIVER_AR_PRINT_ARCHIVE    0X80000000  /* [-p] */
+#define PERK_DRIVER_AR_PRINT_MEMBERS    0X80000000  /* [-p] */
 
 /* error flags */
 #define PERK_ERROR_TOP_LEVEL		0x0001
