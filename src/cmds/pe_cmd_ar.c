@@ -20,19 +20,22 @@ static int pe_cmd_ar_perform_unit_actions(
 	struct pe_unit_ctx * arctx = 0;
 	int  (*pe_ar_fn)(const struct pe_archive_meta *,const char **);
 
+	if (action == PERK_DRIVER_AR_LIST_MEMBERS) {
+		pe_ar_fn = pe_ar_list_members;
+
+	} else if (action == PERK_DRIVER_AR_PRINT_ARCHIVE) {
+		pe_ar_fn = pe_ar_print_members;
+
+	} else {
+		return 0;
+	}
+
 	if (pe_lib_get_unit_ctx(dctx,arname,&arctx) < 0)
 		return PERK_NESTED_ERROR(dctx);
 
 	if (arctx->armeta == 0)
 		return PERK_CUSTOM_ERROR(dctx,
 			PERK_ERR_AR_NON_ARCHIVE_IMAGE);
-
-	if (action == PERK_DRIVER_AR_LIST_MEMBERS) {
-		pe_ar_fn = pe_ar_list_members;
-
-	} else if (action == PERK_DRIVER_AR_PRINT_ARCHIVE) {
-		pe_ar_fn = pe_ar_print_members;
-	}
 
 	if (pe_ar_fn(arctx->armeta,members) < 0) {
 		pe_lib_free_unit_ctx(arctx);
