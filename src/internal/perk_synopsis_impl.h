@@ -22,22 +22,22 @@
 	"       %s [option] ... <file> ...\n\n" \
 	"Options:\n"
 
-#define PERK_AR_CMD_SYNOPSIS                                                  \
+#define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
-	"Synopsis:\n"                                                         \
+	"Synopsis:\n"                                                          \
 	"       %s -d [-v]                          <archive> <file> ...\n"     \
 	"       %s -p [-v] [-s]                     <archive> <file> ...\n"     \
 	"       %s -q [-v] [-c]                     <archive> <file> ...\n"     \
 	"       %s -r [-v] [-c] [-u]                <archive> <file> ...\n"     \
 	"       %s -t [-v] [-s]                     <archive> [<file> ...]\n"   \
 	"       %s -x [-v] [-s] [-C] [-T]           <archive> [<file> ...]\n\n" \
-	                                                                      \
-	"       %s -m [-v]                          <archive> <file> ...\n"     \
+	                                                                        \
+	"       %s -m    [-v]                       <archive> <file> ...\n"     \
 	"       %s -m -a [-v]             <posname> <archive> <file> ...\n"     \
 	"       %s -m -b [-v]             <posname> <archive> <file> ...\n"     \
 	"       %s -m -i [-v]             <posname> <archive> <file> ...\n\n"   \
 	                                                                        \
-	"       %s -r [-v] [-c] [-u]                <archive> <file> ...\n"     \
+	"       %s -r    [-v] [-c] [-u]             <archive> <file> ...\n"     \
 	"       %s -r -a [-v] [-c] [-u]   <posname> <archive> <file> ...\n"     \
 	"       %s -r -b [-v] [-c] [-u]   <posname> <archive> <file> ...\n"     \
 	"       %s -r -i [-v] [-c] [-u]   <posname> <archive> <file> ...\n\n"   \
