@@ -76,7 +76,7 @@ struct pe_meta_coff_file_hdr {
 	uint16_t	cfh_num_of_sections;
 	uint32_t	cfh_time_date_stamp;
 	uint32_t	cfh_ptr_to_sym_tbl;
-	uint32_t	cfh_num_of_syms;
+	uint32_t	cfh_size_of_sym_tbl;
 	uint16_t	cfh_size_of_opt_hdr;
 	uint16_t	cfh_characteristics;
 	uint32_t	cfh_ptr_to_str_tbl;

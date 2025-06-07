@@ -20,6 +20,7 @@ int pe_output_image_symbols(
 	const struct pe_image_meta *	meta)
 {
 	unsigned			i;
+	unsigned                        nrecs;
 	int				fdout;
 	char *				mark;
 	struct pe_raw_coff_symbol *	symtbl;
@@ -27,6 +28,7 @@ int pe_output_image_symbols(
 	const char * 			dash = "";
 
 	fdout = pe_driver_fdout(dctx);
+	nrecs = meta->m_coff.cfh_size_of_sym_tbl / sizeof(struct pe_raw_coff_symbol);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (pe_dprintf(fdout,"symbols:\n") < 0)
@@ -38,7 +40,7 @@ int pe_output_image_symbols(
 	mark   = (char *)meta->r_image.map_addr;
 	symtbl = (struct pe_raw_coff_symbol *)(mark + meta->m_coff.cfh_ptr_to_sym_tbl);
 
-	for (i=0; i<meta->m_coff.cfh_num_of_syms; i++) {
+	for (i=0; i<nrecs; i++) {
 		pe_read_coff_symbol(
 			&symtbl[i],&symrec,
 			&meta->m_coff,meta->r_image.map_addr);
