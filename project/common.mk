@@ -8,6 +8,8 @@ API_SRCS = \
 	src/arbits/output/pe_ar_print_members.c \
 	src/cmds/pe_cmd_ar.c \
 	src/cmds/pe_cmd_perk.c \
+	src/crc/pe_crc32.c \
+	src/crc/pe_crc64.c \
 	src/driver/pe_amain.c \
 	src/driver/pe_driver_ctx.c \
 	src/driver/pe_unit_ctx.c \
