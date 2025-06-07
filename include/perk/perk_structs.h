@@ -34,7 +34,7 @@ struct pe_raw_coff_image_hdr {
 	unsigned char	cfh_num_of_sections		[0x02];		/* 0x06 */
 	unsigned char	cfh_time_date_stamp		[0x04];		/* 0x08 */
 	unsigned char	cfh_ptr_to_sym_tbl		[0x04];		/* 0x0c */
-	unsigned char	cfh_num_of_syms			[0x04];		/* 0x10 */
+	unsigned char	cfh_num_of_sym_recs		[0x04];		/* 0x10 */
 	unsigned char	cfh_size_of_opt_hdr		[0x02];		/* 0x14 */
 	unsigned char	cfh_characteristics		[0x02];		/* 0x16 */
 };
