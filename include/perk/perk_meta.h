@@ -258,6 +258,7 @@ struct pe_meta_coff_symbol {
 	uint16_t	cs_type;
 	unsigned char	cs_storage_class;
 	unsigned char	cs_num_of_aux_symbols;
+	const void *    cs_aux_recs;
 	char		cs_name_buf[24];
 };
 
