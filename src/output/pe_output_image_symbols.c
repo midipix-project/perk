@@ -43,13 +43,7 @@ int pe_output_image_symbols(
 			&symtbl[i],&symrec,
 			&meta->m_coff,meta->r_image.map_addr);
 
-		if (pe_dprintf(
-				fdout,
-				"%s%s\n",
-				dash,
-				symrec.cs_long_name
-					? symrec.cs_long_name
-					: symrec.cs_name) < 0)
+		if (pe_dprintf(fdout,"%s%s\n",dash,symrec.cs_name) < 0)
 			return PERK_FILE_ERROR(dctx);
 
 		i += symtbl[i].cs_num_of_aux_symbols[0];

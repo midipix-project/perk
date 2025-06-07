@@ -22,14 +22,14 @@ int pe_read_coff_symbol(
 	char *		mark;
 	unsigned	bias = 0;
 
-	m->cs_long_name           = 0;
+	m->cs_name                = m->cs_name_buf;
 	m->cs_value               = pe_read_long(p->cs_value);
 	m->cs_section_number      = pe_read_short(p->cs_section_number);
 	m->cs_type                = pe_read_short(p->cs_type);
 	m->cs_storage_class       = p->cs_storage_class[0];
 	m->cs_num_of_aux_symbols  = p->cs_num_of_aux_symbols[0];
 
-	memset(m->cs_name,0,sizeof(m->cs_name));
+	memset(m->cs_name_buf,0,sizeof(m->cs_name_buf));
 
 	if (p->cs_storage_class[0] == PE_IMAGE_SYM_CLASS_FILE)
 		if (p->cs_num_of_aux_symbols[0])
@@ -40,17 +40,17 @@ int pe_read_coff_symbol(
 
 	if (!bias && (p->cs_storage_class[0] == PE_IMAGE_SYM_CLASS_FILE)
 			&& p->cs_num_of_aux_symbols[0]) {
-		memcpy(m->cs_name,p[1].cs_name,sizeof(*p));
+		memcpy(m->cs_name_buf,p[1].cs_name,sizeof(*p));
 
 	} else if (p->cs_name[0]) {
-		memcpy(m->cs_name,p->cs_name,sizeof(p->cs_name));
+		memcpy(m->cs_name_buf,p->cs_name,sizeof(p->cs_name));
 
 	} else if (!p->cs_name[1] && !p->cs_name[2] && !p->cs_name[3]) {
 		mark	= (char *)base;
 		roffset	= pe_read_long(&p->cs_name[4]);
 
 		if (roffset < coff->cfh_size_of_str_tbl)
-			m->cs_long_name = mark + coff->cfh_ptr_to_str_tbl + roffset;
+			m->cs_name = mark + coff->cfh_ptr_to_str_tbl + roffset;
 	}
 
 	return 0;
