@@ -49,7 +49,7 @@ int pe_hexdump_coff_object_hdr(
 	ch += PE_OUTPUT(cfh_num_of_sections);
 	ch += PE_OUTPUT(cfh_time_date_stamp);
 	ch += PE_OUTPUT(cfh_ptr_to_sym_tbl);
-	ch += PE_OUTPUT(cfh_num_of_syms);
+	ch += PE_OUTPUT(cfh_num_of_sym_recs);
 	ch += PE_OUTPUT(cfh_size_of_opt_hdr);
 	ch += PE_OUTPUT(cfh_characteristics);
 

@@ -99,7 +99,7 @@ int pe_read_object_header(const struct pe_raw_coff_object_hdr * p, struct pe_met
 
 	m->cfh_time_date_stamp	= pe_read_long(p->cfh_time_date_stamp);
 	m->cfh_ptr_to_sym_tbl	= pe_read_long(p->cfh_ptr_to_sym_tbl);
-	m->cfh_num_of_syms	= pe_read_long(p->cfh_num_of_syms);
+	m->cfh_num_of_syms	= pe_read_long(p->cfh_num_of_sym_recs);
 
 	m->cfh_size_of_opt_hdr	= pe_read_short(p->cfh_size_of_opt_hdr);
 	m->cfh_characteristics	= pe_read_short(p->cfh_characteristics);
