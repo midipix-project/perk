@@ -46,7 +46,7 @@ int pe_output_image_symbols(
 		if (pe_dprintf(fdout,"%s%s\n",dash,symrec.cs_name) < 0)
 			return PERK_FILE_ERROR(dctx);
 
-		i += symtbl[i].cs_num_of_aux_symbols[0];
+		i += symtbl[i].cs_num_of_aux_recs[0];
 	}
 
 	return 0;

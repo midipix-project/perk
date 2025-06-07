@@ -27,23 +27,23 @@ int pe_read_coff_symbol(
 	m->cs_section_number      = pe_read_short(p->cs_section_number);
 	m->cs_type                = pe_read_short(p->cs_type);
 	m->cs_storage_class       = p->cs_storage_class[0];
-	m->cs_num_of_aux_symbols  = p->cs_num_of_aux_symbols[0];
+	m->cs_num_of_aux_recs     = p->cs_num_of_aux_recs[0];
 	m->cs_aux_recs            = 0;
 
 	memset(m->cs_name_buf,0,sizeof(m->cs_name_buf));
 
-	if (m->cs_num_of_aux_symbols)
+	if (m->cs_num_of_aux_recs)
 		m->cs_aux_recs = &p[1].cs_name[0];
 
 	if (p->cs_storage_class[0] == PE_IMAGE_SYM_CLASS_FILE)
-		if (p->cs_num_of_aux_symbols[0])
+		if (p->cs_num_of_aux_recs[0])
 			if (!p[1].cs_value[0])
 				bias = 1;
 
 	p += bias;
 
 	if (!bias && (p->cs_storage_class[0] == PE_IMAGE_SYM_CLASS_FILE)
-			&& p->cs_num_of_aux_symbols[0]) {
+			&& p->cs_num_of_aux_recs[0]) {
 		memcpy(m->cs_name_buf,p[1].cs_name,sizeof(*p));
 
 	} else if (p->cs_name[0]) {

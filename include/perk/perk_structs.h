@@ -314,7 +314,7 @@ struct pe_raw_coff_symbol {
 	unsigned char	cs_section_number		[0x02];		/* 0x0c */
 	unsigned char	cs_type				[0x02];		/* 0x0e */
 	unsigned char	cs_storage_class		[0x01];		/* 0x10 */
-	unsigned char	cs_num_of_aux_symbols		[0x01];		/* 0x11 */
+	unsigned char	cs_num_of_aux_recs		[0x01];		/* 0x11 */
 };
 
 
