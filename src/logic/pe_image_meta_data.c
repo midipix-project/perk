@@ -330,19 +330,20 @@ static void pe_detect_image_framework(struct pe_image_meta * m)
 }
 
 int pe_meta_get_image_meta(
-	const struct pe_driver_ctx *	dctx,
-	const struct pe_raw_image *	image,
-	struct pe_image_meta ** meta)
+	const struct pe_driver_ctx *    dctx,
+	const struct pe_raw_image *     image,
+	struct pe_image_meta **         meta)
 {
-	int			ret;
-	int 			i,s;
-	long			l;
-	unsigned		j;
-	const unsigned char *	mark;
-	struct pe_image_meta *	m;
-	char *			base;
-	uint64_t		vaddr;
+	int                             ret;
+	int                             i,s;
+	long                            l;
+	unsigned                        j;
 
+	char *                          base;
+	const unsigned char *           mark;
+	uint64_t                        vaddr;
+
+	struct pe_image_meta *          m;
 	struct pe_meta_coff_symbol *    symrec;
 	int                             nrecs;
 
