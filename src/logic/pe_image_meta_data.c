@@ -26,6 +26,9 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 		for (i=0; i<meta->m_stats.t_nimplibs; i++)
 			free(meta->m_idata[i].ih_items);
 
+		free(meta->m_symvec_crc32);
+		free(meta->m_symvec_crc64);
+
 		free(meta->m_idata);
 		free(meta->m_symtbl);
 		free(meta->m_sectbl);
@@ -38,6 +41,24 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 void pe_meta_free_image_meta(struct pe_image_meta * meta)
 {
 	pe_free_image_meta_impl(meta,0);
+}
+
+static int pe_symrec_crc32_compare(const void * a, const void * b)
+{
+	struct pe_meta_coff_symbol * syma = *(struct pe_meta_coff_symbol **)a;
+	struct pe_meta_coff_symbol * symb = *(struct pe_meta_coff_symbol **)b;
+	int                          eqor = !!(syma->cs_crc32 - symb->cs_crc32);
+
+	return eqor * (syma->cs_crc32 > symb->cs_crc32 ? (1) : (-1));
+}
+
+static int pe_symrec_crc64_compare(const void * a, const void * b)
+{
+	struct pe_meta_coff_symbol * syma = *(struct pe_meta_coff_symbol **)a;
+	struct pe_meta_coff_symbol * symb = *(struct pe_meta_coff_symbol **)b;
+	int                          eqor = !!(syma->cs_crc64 - symb->cs_crc64);
+
+	return eqor * (syma->cs_crc64 > symb->cs_crc64 ? (1) : (-1));
 }
 
 static int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
@@ -348,6 +369,7 @@ int pe_meta_get_image_meta(
 	struct pe_image_meta *          m;
 	struct pe_meta_coff_symbol *    symrec;
 	int                             nrecs;
+	int                             nsyms;
 
 	base = image->map_addr;
 
@@ -401,6 +423,30 @@ int pe_meta_get_image_meta(
 	}
 
 	m->m_stats.t_nsymbols = symrec - m->m_symtbl;
+
+	if ((nsyms = m->m_stats.t_nsymbols) && true) {
+		if (!(m->m_symvec_crc32 = calloc(nsyms,sizeof(*m->m_symvec_crc32))))
+			return PERK_SYSTEM_ERROR(dctx);
+
+		for (i=0; i<nsyms; i++)
+			m->m_symvec_crc32[i] = &m->m_symtbl[i];
+
+		qsort(&m->m_symvec_crc32[0],nsyms,
+			sizeof(*m->m_symvec_crc32),
+			pe_symrec_crc32_compare);
+	}
+
+	if (nsyms && true) {
+		if (!(m->m_symvec_crc64 = calloc(nsyms,sizeof(*m->m_symvec_crc64))))
+			return PERK_SYSTEM_ERROR(dctx);
+
+		for (i=0; i<nsyms; i++)
+			m->m_symvec_crc64[i] = &m->m_symtbl[i];
+
+		qsort(m->m_symvec_crc64,nsyms,
+			sizeof(*m->m_symvec_crc64),
+			pe_symrec_crc64_compare);
+	}
 
 	if (m->r_dos) {
 		mark    = &m->r_coff->cfh_signature[0];

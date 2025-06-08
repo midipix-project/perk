@@ -183,6 +183,9 @@ struct pe_image_meta {
 	struct pe_meta_sec_hdr *	m_sectbl;
 	struct pe_meta_coff_symbol *    m_symtbl;
 
+	struct pe_meta_coff_symbol **   m_symvec_crc32;
+	struct pe_meta_coff_symbol **   m_symvec_crc64;
+
 	struct pe_meta_export_hdr	m_edata;
 	struct pe_meta_import_hdr *	m_idata;
 
