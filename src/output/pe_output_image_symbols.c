@@ -15,26 +15,51 @@
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
+static int pe_output_symbol_names(
+	const struct pe_driver_ctx *	dctx,
+	const struct pe_image_meta *	meta,
+	int                             fdout)
+{
+	struct pe_meta_coff_symbol *	symrec;
+
+	for (symrec=meta->m_symtbl; symrec->cs_name; symrec++)
+		if (pe_dprintf(fdout,"%s\n",symrec->cs_name) < 0)
+			return PERK_FILE_ERROR(dctx);
+
+	return 0;
+}
+
+static int pe_output_symbol_names_yaml(
+	const struct pe_driver_ctx *	dctx,
+	const struct pe_image_meta *	meta,
+	int                             fdout)
+{
+	struct pe_meta_coff_symbol *	symrec;
+
+	if (pe_dprintf(fdout,"  - Symbols:\n") < 0)
+		return PERK_FILE_ERROR(dctx);
+
+	for (symrec=meta->m_symtbl; symrec->cs_name; symrec++)
+		if (pe_dprintf(fdout,"    - [ symbol: %s ]\n",symrec->cs_name) < 0)
+			return PERK_FILE_ERROR(dctx);
+
+	return 0;
+}
+
 int pe_output_image_symbols(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
-	int				fdout;
-	struct pe_meta_coff_symbol *	symrec;
-	const char * 			dash = "";
-
-	fdout = pe_driver_fdout(dctx);
+	int fdout = pe_driver_fdout(dctx);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
-		if (pe_dprintf(fdout,"symbols:\n") < 0)
-			return PERK_FILE_ERROR(dctx);
+		if (pe_output_symbol_names_yaml(dctx,meta,fdout) < 0)
+			return PERK_NESTED_ERROR(dctx);
 
-		dash = "- ";
+	} else {
+		if (pe_output_symbol_names(dctx,meta,fdout) < 0)
+			return PERK_NESTED_ERROR(dctx);
 	}
-
-	for (symrec=meta->m_symtbl; symrec->cs_name; symrec++)
-		if (pe_dprintf(fdout,"%s%s\n",dash,symrec->cs_name) < 0)
-			return PERK_FILE_ERROR(dctx);
 
 	return 0;
 }
