@@ -1,6 +1,6 @@
 /***************************************************************/
 /*  perk: PE Resource Kit                                      */
-/*  Copyright (C) 2015--2021  SysDeer Technologies, LLC        */
+/*  Copyright (C) 2015--2025  SysDeer Technologies, LLC        */
 /*  Released under GPLv2 and GPLv3; see COPYING.PERK.          */
 /***************************************************************/
 
