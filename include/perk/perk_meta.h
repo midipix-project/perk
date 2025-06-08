@@ -254,6 +254,8 @@ struct pe_meta_import_lookup {
 struct pe_meta_coff_symbol {
 	char *          cs_name;
 	uint32_t	cs_value;
+	uint32_t        cs_crc32;
+	uint64_t        cs_crc64;
 	int16_t		cs_section_number;
 	uint16_t	cs_type;
 	unsigned char	cs_storage_class;

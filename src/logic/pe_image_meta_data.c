@@ -339,6 +339,7 @@ int pe_meta_get_image_meta(
 	long                            l;
 	unsigned                        j;
 
+	void *                          addr;
 	char *                          base;
 	const unsigned char *           mark;
 	uint64_t                        vaddr;
@@ -388,6 +389,12 @@ int pe_meta_get_image_meta(
 		pe_read_coff_symbol(
 			&m->r_symtbl[i],symrec,
 			&m->m_coff,base);
+
+		addr = symrec->cs_name;
+		mark = addr;
+
+		symrec->cs_crc32 = pe_hash_mbstr_crc32(mark);
+		symrec->cs_crc64 = pe_hash_mbstr_crc64(mark);
 
 		i += m->r_symtbl[i].cs_num_of_aux_recs[0];
 	}
