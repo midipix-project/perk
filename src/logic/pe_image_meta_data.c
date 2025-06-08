@@ -27,6 +27,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 			free(meta->m_idata[i].ih_items);
 
 		free(meta->m_idata);
+		free(meta->m_symtbl);
 		free(meta->m_sectbl);
 		free(meta);
 	}
