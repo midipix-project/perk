@@ -155,6 +155,7 @@ struct pe_meta_stats {
 	int32_t		t_nimplibs;
 	int32_t		t_ndsolibs;
 	int32_t		t_ndsosyms;
+	int32_t         t_nsymbols;
 	int32_t		t_nrelocs;
 };
 
@@ -165,6 +166,7 @@ struct pe_image_meta {
 	struct pe_raw_coff_object_hdr *	r_obj;
 	union  pe_raw_opt_hdr *		r_opt;
 	struct pe_raw_sec_hdr *		r_sectbl;
+	struct pe_raw_coff_symbol *     r_symtbl;
 
 	struct pe_raw_export_hdr *	r_edata;
 	struct pe_raw_import_hdr *	r_idata;
@@ -179,6 +181,7 @@ struct pe_image_meta {
 	struct pe_meta_coff_file_hdr	m_coff;
 	struct pe_meta_opt_hdr		m_opt;
 	struct pe_meta_sec_hdr *	m_sectbl;
+	struct pe_meta_coff_symbol *    m_symtbl;
 
 	struct pe_meta_export_hdr	m_edata;
 	struct pe_meta_import_hdr *	m_idata;

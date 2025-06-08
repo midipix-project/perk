@@ -343,6 +343,9 @@ int pe_meta_get_image_meta(
 	char *			base;
 	uint64_t		vaddr;
 
+	struct pe_meta_coff_symbol *    symrec;
+	int                             nrecs;
+
 	base = image->map_addr;
 
 	if (!(m = calloc(1,sizeof(*m))))
@@ -365,14 +368,30 @@ int pe_meta_get_image_meta(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 	}
 
-	mark  = (const unsigned char *)base + m->m_coff.cfh_ptr_to_sym_tbl;
-	mark += m->m_coff.cfh_size_of_sym_tbl;
-
 	if (m->m_coff.cfh_ptr_to_sym_tbl) {
+		mark        = (const unsigned char *)base+ + m->m_coff.cfh_ptr_to_sym_tbl;
+		m->r_symtbl = (struct pe_raw_coff_symbol *)mark;
+		mark       += m->m_coff.cfh_size_of_sym_tbl;
+
 		m->m_coff.cfh_ptr_to_str_tbl  = m->m_coff.cfh_ptr_to_sym_tbl;
 		m->m_coff.cfh_ptr_to_str_tbl += m->m_coff.cfh_size_of_sym_tbl;
 		m->m_coff.cfh_size_of_str_tbl = pe_read_long(mark);
+
 	}
+
+	if ((nrecs = m->m_coff.cfh_size_of_sym_tbl/sizeof(struct pe_raw_coff_symbol)))
+		if (!(m->m_symtbl = calloc(nrecs+1,sizeof(struct pe_meta_coff_symbol))))
+			return PERK_SYSTEM_ERROR(dctx);
+
+	for (i=0,symrec=m->m_symtbl; i<nrecs; i++,symrec++) {
+		pe_read_coff_symbol(
+			&m->r_symtbl[i],symrec,
+			&m->m_coff,base);
+
+		i += m->r_symtbl[i].cs_num_of_aux_recs[0];
+	}
+
+	m->m_stats.t_nsymbols = symrec - m->m_symtbl;
 
 	if (m->r_dos) {
 		mark    = &m->r_coff->cfh_signature[0];
