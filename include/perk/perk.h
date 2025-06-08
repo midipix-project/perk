@@ -357,8 +357,8 @@ perk_api int  pe_read_import_lookup             (const unsigned char *,         
                                                  uint32_t magic);
 
 /* low-level symtbl api */
-perk_api uint32_t pe_hash_mbstr_crc32           (const unsigned char *, size_t *);
-perk_api uint64_t pe_hash_mbstr_crc64           (const unsigned char *, size_t *);
+perk_api uint32_t pe_hash_mbstr_crc32           (const unsigned char *);
+perk_api uint64_t pe_hash_mbstr_crc64           (const unsigned char *);
 
 /* archiver api */
 perk_api int  pe_ar_get_archive_meta            (const struct pe_driver_ctx *,

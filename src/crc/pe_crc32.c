@@ -12,7 +12,7 @@
 
 static const uint32_t crc32_table[256] = PERK_CRC32_TABLE;
 
-uint32_t pe_hash_mbstr_crc32(const unsigned char * str, size_t * symlen)
+uint32_t pe_hash_mbstr_crc32(const unsigned char * str)
 {
 	const unsigned char *	ch;
 	uint32_t		crc32;
@@ -24,9 +24,6 @@ uint32_t pe_hash_mbstr_crc32(const unsigned char * str, size_t * symlen)
 		crc32 = (crc32 >> 8) ^ crc32_table[(crc32 ^ *ch) & 0xFF];
 		ch++;
 	}
-
-	if (symlen)
-		*symlen = ch - str;
 
 	return (crc32 ^ 0xFFFFFFFF);
 }
