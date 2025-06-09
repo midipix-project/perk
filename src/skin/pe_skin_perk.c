@@ -12,6 +12,9 @@ const perk_hidden struct argv_option pe_perk_options[] = {
 	{"pretty",	'p',TAG_PRETTY,ARGV_OPTARG_REQUIRED,0,"yaml|dlltool",0,
 			"format output for parsing by %s"},
 
+	{"verbose",	'V',TAG_VERBOSE,ARGV_OPTARG_NONE,0,0,0,
+			"provide verbose output"},
+
 	{"category",	'y',TAG_CATEGORY,ARGV_OPTARG_NONE,0,0,0,
 			"print image category"},
 
