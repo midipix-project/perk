@@ -253,6 +253,8 @@ struct pe_meta_import_lookup {
 /* coff: symbol table entry */
 struct pe_meta_coff_symbol {
 	char *          cs_name;
+	uint32_t        cs_attr;
+	uint32_t        cs_xattr;
 	uint32_t	cs_value;
 	uint32_t        cs_crc32;
 	uint64_t        cs_crc64;
