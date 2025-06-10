@@ -377,6 +377,12 @@ struct pe_raw_aux_rec_efinfo {
 	unsigned char	aux_trail                       [0x02];		/* 0x10 */
 };
 
+struct pe_raw_aux_rec_weaksym {
+	unsigned char	aux_tag_index			[0x04];		/* 0x00 */
+	unsigned char	aux_characteristics		[0x04];		/* 0x04 */
+	unsigned char	aux_unused			[0x0a];		/* 0x08 */
+};
+
 struct pe_raw_archive_common_hdr {
 	unsigned char	ar_file_id			[0x10];		/* 0x00 */
 	unsigned char	ar_time_date_stamp		[0x0c];		/* 0x10 */
