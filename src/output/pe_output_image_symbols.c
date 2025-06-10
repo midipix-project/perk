@@ -234,6 +234,9 @@ int pe_output_image_symbols(
 {
 	int fdout = pe_driver_fdout(dctx);
 
+	if (!meta->m_symtbl)
+		return 0;
+
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
 		if (pe_output_image_symbols_yaml(dctx,meta,fdout) < 0)
 			return PERK_NESTED_ERROR(dctx);
