@@ -266,6 +266,16 @@ struct pe_meta_coff_symbol {
 	char		cs_name_buf[24];
 };
 
+/* auxiliary record for a section symbol */
+struct pe_meta_aux_rec_section {
+	uint32_t        aux_size;
+	uint16_t        aux_num_of_relocs;
+	uint16_t        aux_num_of_line_nums;
+	uint32_t        aux_check_sum;
+	uint16_t        aux_number;
+	uint8_t         aux_selection;
+};
+
 
 #ifdef __cplusplus
 }
