@@ -276,6 +276,12 @@ struct pe_meta_aux_rec_section {
 	uint8_t         aux_selection;
 };
 
+/* auxiliary record for a weak external symbol */
+struct pe_meta_aux_rec_weaksym {
+	uint32_t        aux_tag_index;
+	uint32_t        aux_characteristics;
+};
+
 
 #ifdef __cplusplus
 }
