@@ -361,6 +361,21 @@ struct pe_raw_aux_rec_function {
 	unsigned char	aux_pad				[0x02];		/* 0x10 */
 };
 
+struct pe_raw_aux_rec_bfinfo {
+	unsigned char	aux_unused 			[0x04];		/* 0x00 */
+	unsigned char	aux_linu_num			[0x02];		/* 0x04 */
+	unsigned char	aux_pad				[0x06];		/* 0x06 */
+	unsigned char	aux_ptr_to_next_fn		[0x04];		/* 0x0c */
+	unsigned char	aux_trail                       [0x02];		/* 0x10 */
+};
+
+struct pe_raw_aux_rec_efinfo {
+	unsigned char	aux_unused 			[0x04];		/* 0x00 */
+	unsigned char	aux_linu_num			[0x02];		/* 0x04 */
+	unsigned char	aux_pad				[0x06];		/* 0x06 */
+	unsigned char	aux_null			[0x04];		/* 0x0c */
+	unsigned char	aux_trail                       [0x02];		/* 0x10 */
+};
 
 struct pe_raw_archive_common_hdr {
 	unsigned char	ar_file_id			[0x10];		/* 0x00 */
