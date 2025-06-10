@@ -78,6 +78,13 @@ static const char * pe_sym_storage_class_desc[256] = {
 	[PE_IMAGE_SYM_CLASS_END_OF_FUNC]      = "end-of-function"
 };
 
+static const char * pe_weak_extern_switches[4] = {
+	[PE_IMAGE_WEAK_EXTERN_SEARCH_NOLIBRARY]  = "do not perform a library search",
+	[PE_IMAGE_WEAK_EXTERN_SEARCH_LIBRARY]    = "do perform a library search",
+	[PE_IMAGE_WEAK_EXTERN_SEARCH_ALIAS]      = "apply weak alias semantics",
+};
+
+
 static int pe_output_symbol_names(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta,
@@ -193,9 +200,10 @@ static int pe_output_symbol_records_yaml(
 
 				if (pe_dprintf(fdout,
 						"        - [ tag-index:             = %d ]\n"
-						"        - [ tag-characteristics:   = 0x%08X ]\n\n",
+						"        - [ tag-characteristics:   = 0x%01X (%s) ]\n\n",
 						auxrec.aux_tag_index,
-						auxrec.aux_characteristics) < 0)
+						auxrec.aux_characteristics,
+						pe_weak_extern_switches[auxrec.aux_characteristics & 0x03]) < 0)
 					return PERK_SYSTEM_ERROR(dctx);
 			}
 		}
