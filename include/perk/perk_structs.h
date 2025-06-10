@@ -353,6 +353,15 @@ struct pe_raw_aux_rec_section {
 	unsigned char	aux_pad				[0x03];		/* 0x0f */
 };
 
+struct pe_raw_aux_rec_function {
+	unsigned char	aux_tag_index			[0x04];		/* 0x00 */
+	unsigned char	aux_total_size			[0x04];		/* 0x04 */
+	unsigned char	aux_ptr_to_line_nums		[0x04];		/* 0x08 */
+	unsigned char	aux_ptr_to_next_fn		[0x04];		/* 0x0c */
+	unsigned char	aux_pad				[0x02];		/* 0x10 */
+};
+
+
 struct pe_raw_archive_common_hdr {
 	unsigned char	ar_file_id			[0x10];		/* 0x00 */
 	unsigned char	ar_time_date_stamp		[0x0c];		/* 0x10 */
