@@ -176,6 +176,29 @@ static int pe_output_symbol_records_yaml(
 				classdesc,
 				symrec->cs_num_of_aux_recs) < 0)
 			return PERK_FILE_ERROR(dctx);
+
+		if (symrec->cs_storage_class == PE_IMAGE_SYM_CLASS_WEAK_EXTERN) {
+			const struct pe_raw_coff_symbol * coffsym;
+			struct pe_meta_aux_rec_weaksym    auxrec;
+			int                               idx;
+
+			coffsym = (const struct pe_raw_coff_symbol *)symrec->cs_aux_recs;
+			coffsym--;
+
+			if (pe_dprintf(fdout,"      - aux-rec:\n") < 0)
+				return PERK_SYSTEM_ERROR(dctx);
+
+			for (idx=0; idx<symrec->cs_num_of_aux_recs; idx++) {
+				pe_read_aux_rec_weaksym(coffsym,&auxrec,idx);
+
+				if (pe_dprintf(fdout,
+						"        - [ tag-index:             = %d ]\n"
+						"        - [ tag-characteristics:   = 0x%08X ]\n\n",
+						auxrec.aux_tag_index,
+						auxrec.aux_characteristics) < 0)
+					return PERK_SYSTEM_ERROR(dctx);
+			}
+		}
 	}
 
 	return 0;
