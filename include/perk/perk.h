@@ -359,6 +359,9 @@ perk_api int  pe_read_coff_symbol               (const struct pe_raw_coff_symbol
 perk_api int  pe_read_import_lookup             (const unsigned char *,                 struct pe_meta_import_lookup *,
                                                  uint32_t magic);
 
+perk_api int pe_read_aux_rec_section            (const struct pe_raw_coff_symbol *,     struct pe_meta_aux_rec_section *,
+                                                 int idx);
+
 /* low-level symtbl api */
 perk_api uint32_t pe_hash_mbstr_crc32           (const unsigned char *);
 perk_api uint64_t pe_hash_mbstr_crc64           (const unsigned char *);

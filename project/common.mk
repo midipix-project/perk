@@ -34,6 +34,7 @@ API_SRCS = \
 	src/output/pe_output_image_symbols.c \
 	src/output/pe_output_idata_libraries.c \
 	src/output/pe_output_mdso_libraries.c \
+	src/reader/pe_read_aux_rec_section.c \
 	src/reader/pe_read_coff_header.c \
 	src/reader/pe_read_coff_symbol.c \
 	src/reader/pe_read_dos_header.c \
