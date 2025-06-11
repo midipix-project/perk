@@ -43,14 +43,53 @@ static int pe_output_section_names_yaml(
 	return 0;
 }
 
+static int pe_output_section_record_yaml(
+	int                             fdout,
+	const struct pe_driver_ctx *	dctx,
+	const struct pe_meta_sec_hdr *  s)
+{
+	if (pe_dprintf(fdout,
+			"    - section:\n"
+			"      - [ name:              %s ]\n"
+			"      - [ virtual-size:      0x%08x ]\n"
+			"      - [ virtual-addr:      0x%08x ]\n"
+			"      - [ size-of-raw-data:  0x%08x ]\n"
+			"      - [ ptr-to-raw-data:   0x%08x ]\n"
+			"      - [ ptr-to-relocs:     0x%08x ]\n"
+			"      - [ ptr-to-line-nums:  0x%08x ]\n"
+			"      - [ num-of-relocs:     %u ]\n"
+			"      - [ num-of-line-nums:  %u ]\n"
+			"      - [ characteristics:   0x%08x ]\n"
+			"\n",
+			s->sh_name,
+			s->sh_virtual_size,
+			s->sh_virtual_addr,
+			s->sh_size_of_raw_data,
+			s->sh_ptr_to_raw_data,
+			s->sh_ptr_to_relocs,
+			s->sh_ptr_to_line_nums,
+			s->sh_num_of_relocs,
+			s->sh_num_of_line_nums,
+			s->sh_characteristics) < 0)
+		return PERK_FILE_ERROR(dctx);
+
+	return 0;
+}
+
 static int pe_output_section_records_yaml(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta,
 	int                             fdout)
 {
-	(void)dctx;
-	(void)meta;
-	(void)fdout;
+	int i;
+
+	if (pe_dprintf(fdout,"  - Sections:\n") < 0)
+		return PERK_FILE_ERROR(dctx);
+
+	for (i=0; i<meta->m_coff.cfh_num_of_sections; i++)
+		if (pe_output_section_record_yaml(fdout,dctx,&meta->m_sectbl[i]) < 0)
+			return PERK_NESTED_ERROR(dctx);
+
 	return 0;
 }
 
