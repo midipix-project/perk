@@ -54,5 +54,9 @@ const perk_hidden struct argv_option pe_perk_options[] = {
 			"either all headers (the default) "
 			"or a specific header"},
 
+	{"yaml",	'Y',TAG_YAML,ARGV_OPTARG_NONE,0,0,0,
+			"produce output in yaml format "
+			"(same as --pretty=yaml)"},
+
 	{0,0,0,0,0,0,0,0}
 };

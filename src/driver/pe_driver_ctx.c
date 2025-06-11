@@ -191,6 +191,7 @@ static int pe_cctx_update(
 	const char *			cmdarg)
 {
 	struct argv_entry *		entry;
+	struct argv_entry *		fmtarg;
 	const char *			pretty;
 
 	pretty = 0;
@@ -219,6 +220,10 @@ static int pe_cctx_update(
 
 				case TAG_VERSION:
 					cctx->drvflags |= PERK_DRIVER_VERSION;
+					break;
+
+				case TAG_YAML:
+					fmtarg = entry;
 					break;
 
 				case TAG_PRETTY:
@@ -327,6 +332,9 @@ static int pe_cctx_update(
 
 	} else if (pretty && !strcmp(pretty,"dlltool")) {
 		cctx->fmtflags |= PERK_PRETTY_DLLTOOL;
+
+	} else if (fmtarg && (fmtarg->tag == TAG_YAML)) {
+		cctx->fmtflags |= PERK_PRETTY_YAML;
 	}
 
 	return 0;
