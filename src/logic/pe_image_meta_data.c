@@ -470,10 +470,10 @@ int pe_meta_get_image_meta(
 	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
 		pe_read_section_header(&m->r_sectbl[i],&m->m_sectbl[i]);
 
-		if (m->m_sectbl[i].sh_name[0] == '/')
-			if ((l = strtol(&m->m_sectbl[i].sh_name[1],0,10)) > 0)
+		if (m->m_sectbl[i].sh_name_buf[0] == '/')
+			if ((l = strtol(&m->m_sectbl[i].sh_name_buf[1],0,10)) > 0)
 				if (l < m->m_coff.cfh_size_of_str_tbl)
-					m->m_sectbl[i].sh_long_name = base + m->m_coff.cfh_ptr_to_str_tbl + l;
+					m->m_sectbl[i].sh_name = base + m->m_coff.cfh_ptr_to_str_tbl + l;
 	}
 
 	/* .edata */

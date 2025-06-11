@@ -15,10 +15,10 @@
 int pe_read_section_header(const struct pe_raw_sec_hdr * p, struct pe_meta_sec_hdr * m)
 {
 	/* name: meta struct conveniently contains null termination */
-	memset(m,0,sizeof(m->sh_name));
-	memcpy(m,p,sizeof(p->sh_name));
+	memset(m->sh_name_buf,0,sizeof(m->sh_name_buf));
+	memcpy(m->sh_name_buf,p,sizeof(p->sh_name));
 
-	m->sh_long_name         = 0;
+	m->sh_name              = m->sh_name_buf;
 	m->sh_virtual_size      = pe_read_long(p->sh_virtual_size);
 	m->sh_virtual_addr      = pe_read_long(p->sh_virtual_addr);
 	m->sh_size_of_raw_data  = pe_read_long(p->sh_size_of_raw_data);

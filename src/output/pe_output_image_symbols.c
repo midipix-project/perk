@@ -146,9 +146,7 @@ static int pe_output_symbol_records_yaml(
 
 			default:
 				sechdr  = &meta->m_sectbl[symrec->cs_section_number - 1];
-				secname = sechdr->sh_long_name
-					? sechdr->sh_long_name
-					: sechdr->sh_name;
+				secname = sechdr->sh_name;
 		}
 
 		typedesc[0] = pe_sym_type_desc_msb[(symrec->cs_type >> 4) & 0x03];
