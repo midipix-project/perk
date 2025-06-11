@@ -196,6 +196,14 @@ struct pe_meta_sec_hdr {
 };
 
 
+/* section relocation record */
+struct pe_meta_coff_reloc {
+	uint32_t        rel_rva;
+	uint32_t        rel_sym;
+	uint16_t        rel_type;
+};
+
+
 /* .edata section header*/
 struct pe_meta_export_hdr {
 	uint32_t	eh_virtual_addr;

@@ -127,6 +127,7 @@ struct pe_raw_image;
 struct pe_raw_image_dos_hdr;
 struct pe_raw_coff_image_hdr;
 struct pe_raw_coff_object_hdr;
+struct pe_raw_coff_reloc;
 union  pe_raw_opt_hdr;
 struct pe_raw_sec_hdr;
 struct pe_raw_export_hdr;
@@ -352,9 +353,11 @@ perk_api int  pe_read_optional_header           (const union  pe_raw_opt_hdr *, 
 perk_api int  pe_read_section_header            (const struct pe_raw_sec_hdr *,         struct pe_meta_sec_hdr *);
 perk_api int  pe_read_export_header             (const struct pe_raw_export_hdr *,      struct pe_meta_export_hdr *);
 perk_api int  pe_read_import_header             (const struct pe_raw_import_hdr *,      struct pe_meta_import_hdr *);
+perk_api int  pe_read_coff_reloc                (const struct pe_raw_coff_reloc *,      struct pe_meta_coff_reloc *);
 
 perk_api int  pe_read_coff_symbol               (const struct pe_raw_coff_symbol *,     struct pe_meta_coff_symbol *,
                                                  const struct pe_meta_coff_file_hdr *,  void * base);
+
 
 perk_api int  pe_read_import_lookup             (const unsigned char *,                 struct pe_meta_import_lookup *,
                                                  uint32_t magic);

@@ -37,6 +37,7 @@ API_SRCS = \
 	src/reader/pe_read_aux_rec_section.c \
 	src/reader/pe_read_aux_rec_weaksym.c \
 	src/reader/pe_read_coff_header.c \
+	src/reader/pe_read_coff_reloc.c \
 	src/reader/pe_read_coff_symbol.c \
 	src/reader/pe_read_dos_header.c \
 	src/reader/pe_read_export_header.c \
