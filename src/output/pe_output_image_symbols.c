@@ -204,6 +204,37 @@ static int pe_output_symbol_records_yaml(
 						pe_weak_extern_switches[auxrec.aux_characteristics & 0x03]) < 0)
 					return PERK_SYSTEM_ERROR(dctx);
 			}
+
+		} else if (!strcmp(symrec->cs_name,secname)) {
+			const struct pe_raw_coff_symbol * coffsym;
+			struct pe_meta_aux_rec_section    auxrec;
+			int                               idx;
+
+			coffsym = (const struct pe_raw_coff_symbol *)symrec->cs_aux_recs;
+			coffsym--;
+
+			if (pe_dprintf(fdout,"      - aux-rec:\n") < 0)
+				return PERK_SYSTEM_ERROR(dctx);
+
+			for (idx=0; idx<symrec->cs_num_of_aux_recs; idx++) {
+				pe_read_aux_rec_section(coffsym,&auxrec,idx);
+
+				if (pe_dprintf(fdout,
+						"        - [ size:              = 0x%08x ]\n"
+						"        - [ num-of-relocs:     = 0x%08X ]\n"
+						"        - [ num-of-line-nums:  = 0x%08X ]\n"
+						"        - [ check-sum:         = 0x%08X ]\n"
+						"        - [ number:            = %u ]\n"
+						"        - [ selection:         = %u ]\n"
+						"\n",
+						auxrec.aux_size,
+						auxrec.aux_num_of_relocs,
+						auxrec.aux_num_of_line_nums,
+						auxrec.aux_check_sum,
+						auxrec.aux_number,
+						auxrec.aux_selection) < 0)
+					return PERK_SYSTEM_ERROR(dctx);
+			}
 		}
 	}
 
