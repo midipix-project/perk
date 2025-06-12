@@ -155,11 +155,12 @@ static int pe_output_section_record_yaml(
 				fdout,
 				"        - reloction-record:\n"
 				"          - [ rva:  0x%08x ]\n"
-				"          - [ sym:  0x%08x ]\n"
+				"          - [ sym:  0x%08x (%s) ]\n"
 				"          - [ type: %s ]\n"
 				"\n",
 				m.rel_rva,
 				m.rel_sym,
+				meta->m_symvec_symidx[m.rel_sym]->cs_name,
 				reltypedesc) < 0)
 			return PERK_FILE_ERROR(dctx);
 	}
