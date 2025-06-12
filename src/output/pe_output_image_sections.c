@@ -8,6 +8,7 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include <perk/perk_structs.h>
 #include "perk_driver_impl.h"
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
@@ -46,8 +47,13 @@ static int pe_output_section_names_yaml(
 static int pe_output_section_record_yaml(
 	int                             fdout,
 	const struct pe_driver_ctx *	dctx,
-	const struct pe_meta_sec_hdr *  s)
+	const struct pe_meta_sec_hdr *  s,
+	const unsigned char *           base)
 {
+	int                               i;
+	const struct pe_raw_coff_reloc *  r;
+	struct pe_meta_coff_reloc         m;
+
 	if (pe_dprintf(fdout,
 			"    - section:\n"
 			"      - [ name:              %s ]\n"
@@ -73,6 +79,30 @@ static int pe_output_section_record_yaml(
 			s->sh_characteristics) < 0)
 		return PERK_FILE_ERROR(dctx);
 
+	if (s->sh_num_of_relocs == 0)
+		return 0;
+
+	if (pe_dprintf(fdout,"      - relocation-records:\n") < 0)
+		return PERK_FILE_ERROR(dctx);
+
+	r = (const struct pe_raw_coff_reloc *)&base[s->sh_ptr_to_relocs];
+
+	for (i=0; i<s->sh_num_of_relocs; i++) {
+		pe_read_coff_reloc(&r[i],&m);
+
+		if (pe_dprintf(
+				fdout,
+				"        - reloction-record:\n"
+				"          - [ rva:  0x%08x ]\n"
+				"          - [ sym:  0x%08x ]\n"
+				"          - [ type: %d ]\n"
+				"\n",
+				m.rel_rva,
+				m.rel_sym,
+				m.rel_type) < 0)
+			return PERK_FILE_ERROR(dctx);
+	}
+
 	return 0;
 }
 
@@ -87,7 +117,10 @@ static int pe_output_section_records_yaml(
 		return PERK_FILE_ERROR(dctx);
 
 	for (i=0; i<meta->m_coff.cfh_num_of_sections; i++)
-		if (pe_output_section_record_yaml(fdout,dctx,&meta->m_sectbl[i]) < 0)
+		if (pe_output_section_record_yaml(
+				fdout,dctx,
+				&meta->m_sectbl[i],
+				meta->r_image.map_addr) < 0)
 			return PERK_NESTED_ERROR(dctx);
 
 	return 0;
