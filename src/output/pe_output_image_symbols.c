@@ -197,8 +197,8 @@ static int pe_output_symbol_records_yaml(
 				pe_read_aux_rec_weaksym(coffsym,&auxrec,idx);
 
 				if (pe_dprintf(fdout,
-						"        - [ tag-index:             = %d ]\n"
-						"        - [ tag-characteristics:   = 0x%01X (%s) ]\n\n",
+						"        - [ tag-index:             %d ]\n"
+						"        - [ tag-characteristics:   0x%01X (%s) ]\n\n",
 						auxrec.aux_tag_index,
 						auxrec.aux_characteristics,
 						pe_weak_extern_switches[auxrec.aux_characteristics & 0x03]) < 0)
@@ -220,12 +220,12 @@ static int pe_output_symbol_records_yaml(
 				pe_read_aux_rec_section(coffsym,&auxrec,idx);
 
 				if (pe_dprintf(fdout,
-						"        - [ size:              = 0x%08x ]\n"
-						"        - [ num-of-relocs:     = 0x%08X ]\n"
-						"        - [ num-of-line-nums:  = 0x%08X ]\n"
-						"        - [ check-sum:         = 0x%08X ]\n"
-						"        - [ number:            = %u ]\n"
-						"        - [ selection:         = %u ]\n"
+						"        - [ size:              0x%08x ]\n"
+						"        - [ num-of-relocs:     0x%08X ]\n"
+						"        - [ num-of-line-nums:  0x%08X ]\n"
+						"        - [ check-sum:         0x%08X ]\n"
+						"        - [ number:            %u ]\n"
+						"        - [ selection:         %u ]\n"
 						"\n",
 						auxrec.aux_size,
 						auxrec.aux_num_of_relocs,
