@@ -8,10 +8,45 @@
 
 #include <perk/perk.h>
 #include <perk/perk_output.h>
+#include <perk/perk_consts.h>
 #include <perk/perk_structs.h>
 #include "perk_driver_impl.h"
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
+
+static const char * pe_i386_reloc_type_desc[0x16] = {
+	[PE_IMAGE_REL_I386_ABSOLUTE]    = "PE_IMAGE_REL_I386_ABSOLUTE",
+	[PE_IMAGE_REL_I386_DIR16]       = "PE_IMAGE_REL_I386_DIR16",
+	[PE_IMAGE_REL_I386_REL16]       = "PE_IMAGE_REL_I386_REL16",
+	[PE_IMAGE_REL_I386_DIR32]       = "PE_IMAGE_REL_I386_DIR32",
+	[PE_IMAGE_REL_I386_DIR32NB]     = "PE_IMAGE_REL_I386_DIR32NB",
+	[PE_IMAGE_REL_I386_SEG12]       = "PE_IMAGE_REL_I386_SEG12",
+	[PE_IMAGE_REL_I386_SECTION]     = "PE_IMAGE_REL_I386_SECTION",
+	[PE_IMAGE_REL_I386_SECREL]      = "PE_IMAGE_REL_I386_SECREL",
+	[PE_IMAGE_REL_I386_TOKEN]       = "PE_IMAGE_REL_I386_TOKEN",
+	[PE_IMAGE_REL_I386_SECREL7]     = "PE_IMAGE_REL_I386_SECREL7",
+	[PE_IMAGE_REL_I386_REL32]       = "PE_IMAGE_REL_I386_REL32",
+};
+
+static const char * pe_amd64_reloc_type_desc[0x12] = {
+	[PE_IMAGE_REL_AMD64_ABSOLUTE]   = "PE_IMAGE_REL_AMD64_ABSOLUTE",
+	[PE_IMAGE_REL_AMD64_ADDR64]     = "PE_IMAGE_REL_AMD64_ADDR64",
+	[PE_IMAGE_REL_AMD64_ADDR32]     = "PE_IMAGE_REL_AMD64_ADDR32",
+	[PE_IMAGE_REL_AMD64_ADDR32NB]   = "PE_IMAGE_REL_AMD64_ADDR32NB",
+	[PE_IMAGE_REL_AMD64_REL32]      = "PE_IMAGE_REL_AMD64_REL32",
+	[PE_IMAGE_REL_AMD64_REL32_1]    = "PE_IMAGE_REL_AMD64_REL32_1",
+	[PE_IMAGE_REL_AMD64_REL32_2]    = "PE_IMAGE_REL_AMD64_REL32_2",
+	[PE_IMAGE_REL_AMD64_REL32_3]    = "PE_IMAGE_REL_AMD64_REL32_3",
+	[PE_IMAGE_REL_AMD64_REL32_4]    = "PE_IMAGE_REL_AMD64_REL32_4",
+	[PE_IMAGE_REL_AMD64_REL32_5]    = "PE_IMAGE_REL_AMD64_REL32_5",
+	[PE_IMAGE_REL_AMD64_SECTION]    = "PE_IMAGE_REL_AMD64_SECTION",
+	[PE_IMAGE_REL_AMD64_SECREL]     = "PE_IMAGE_REL_AMD64_SECREL",
+	[PE_IMAGE_REL_AMD64_SECREL7]    = "PE_IMAGE_REL_AMD64_SECREL7",
+	[PE_IMAGE_REL_AMD64_TOKEN]      = "PE_IMAGE_REL_AMD64_TOKEN",
+	[PE_IMAGE_REL_AMD64_SREL32]     = "PE_IMAGE_REL_AMD64_SREL32",
+	[PE_IMAGE_REL_AMD64_PAIR]       = "PE_IMAGE_REL_AMD64_PAIR",
+	[PE_IMAGE_REL_AMD64_SSPAN32]    = "PE_IMAGE_REL_AMD64_SSPAN32",
+};
 
 static int pe_output_section_names(
 	const struct pe_driver_ctx *	dctx,
@@ -47,12 +82,14 @@ static int pe_output_section_names_yaml(
 static int pe_output_section_record_yaml(
 	int                             fdout,
 	const struct pe_driver_ctx *	dctx,
+	const struct pe_image_meta *    meta,
 	const struct pe_meta_sec_hdr *  s,
 	const unsigned char *           base)
 {
 	int                               i;
 	const struct pe_raw_coff_reloc *  r;
 	struct pe_meta_coff_reloc         m;
+	char                              reltypedesc[64];
 
 	if (pe_dprintf(fdout,
 			"    - section:\n"
@@ -89,17 +126,41 @@ static int pe_output_section_record_yaml(
 
 	for (i=0; i<s->sh_num_of_relocs; i++) {
 		pe_read_coff_reloc(&r[i],&m);
+		memset(reltypedesc,0,sizeof(reltypedesc));
+
+		switch (meta->m_abi) {
+			case PE_ABI_PE32:
+				if (m.rel_type <= PE_IMAGE_REL_I386_REL32)
+					snprintf(reltypedesc,sizeof(reltypedesc),
+						"0x%04x (%s)",
+						m.rel_type,
+						pe_i386_reloc_type_desc[m.rel_type]);
+				break;
+
+			case PE_ABI_PE64:
+				if (m.rel_type <= PE_IMAGE_REL_AMD64_SSPAN32)
+					snprintf(reltypedesc,sizeof(reltypedesc),
+						"0x%04x (%s)",
+						m.rel_type,
+						pe_amd64_reloc_type_desc[m.rel_type]);
+				break;
+
+			default:
+				snprintf(reltypedesc,sizeof(reltypedesc),
+					"0x%04x",
+					m.rel_type);
+		}
 
 		if (pe_dprintf(
 				fdout,
 				"        - reloction-record:\n"
 				"          - [ rva:  0x%08x ]\n"
 				"          - [ sym:  0x%08x ]\n"
-				"          - [ type: %d ]\n"
+				"          - [ type: %s ]\n"
 				"\n",
 				m.rel_rva,
 				m.rel_sym,
-				m.rel_type) < 0)
+				reltypedesc) < 0)
 			return PERK_FILE_ERROR(dctx);
 	}
 
@@ -118,7 +179,7 @@ static int pe_output_section_records_yaml(
 
 	for (i=0; i<meta->m_coff.cfh_num_of_sections; i++)
 		if (pe_output_section_record_yaml(
-				fdout,dctx,
+				fdout,dctx,meta,
 				&meta->m_sectbl[i],
 				meta->r_image.map_addr) < 0)
 			return PERK_NESTED_ERROR(dctx);
