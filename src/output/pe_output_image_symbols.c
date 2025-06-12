@@ -84,6 +84,14 @@ static const char * pe_weak_extern_switches[4] = {
 	[PE_IMAGE_WEAK_EXTERN_SEARCH_ALIAS]      = "apply weak alias semantics",
 };
 
+static const char * pe_comdat_select_desc[0x7] = {
+	[PE_IMAGE_COMDAT_SELECT_NODUPLICATES]    = "PE_IMAGE_COMDAT_SELECT_NODUPLICATES",
+	[PE_IMAGE_COMDAT_SELECT_ANY]             = "PE_IMAGE_COMDAT_SELECT_ANY",
+	[PE_IMAGE_COMDAT_SELECT_SAME_SIZE]       = "PE_IMAGE_COMDAT_SELECT_SAME_SIZE",
+	[PE_IMAGE_COMDAT_SELECT_EXACT_MATCH]     = "PE_IMAGE_COMDAT_SELECT_EXACT_MATCH",
+	[PE_IMAGE_COMDAT_SELECT_ASSOCIATIVE]     = "PE_IMAGE_COMDAT_SELECT_ASSOCIATIVE",
+	[PE_IMAGE_COMDAT_SELECT_LARGEST]         = "PE_IMAGE_COMDAT_SELECT_LARGEST",
+};
 
 static int pe_output_symbol_names(
 	const struct pe_driver_ctx *	dctx,
@@ -161,7 +169,7 @@ static int pe_output_symbol_records_yaml(
 				"      - [ value:      0x%08x ]\n"
 				"      - [ crc32:      0x%08x ]\n"
 				"      - [ crc64:      0x"PPRIX64" ]\n"
-				"      - [ secnum:     (%d) ]\n"
+				"      - [ secnum:     %d (one-based) ]\n"
 				"      - [ secname:    %s ]\n"
 				"      - [ type:       0x%02X ]\n"
 				"      - [ typedesc:   %s%s ]\n"
@@ -209,6 +217,9 @@ static int pe_output_symbol_records_yaml(
 			const struct pe_raw_coff_symbol * coffsym;
 			struct pe_meta_aux_rec_section    auxrec;
 			int                               idx;
+			char                              selection[64];
+			const int                         seldesclo = PE_IMAGE_COMDAT_SELECT_NODUPLICATES;
+			const int                         seldeschi = PE_IMAGE_COMDAT_SELECT_LARGEST;
 
 			coffsym = (const struct pe_raw_coff_symbol *)symrec->cs_aux_recs;
 			coffsym--;
@@ -219,20 +230,29 @@ static int pe_output_symbol_records_yaml(
 			for (idx=0; idx<symrec->cs_num_of_aux_recs; idx++) {
 				pe_read_aux_rec_section(coffsym,&auxrec,idx);
 
+				if ((auxrec.aux_selection >= seldesclo) && (auxrec.aux_selection <= seldeschi)) {
+					snprintf(selection,sizeof(selection),"%u (%s)",
+						auxrec.aux_selection,
+						pe_comdat_select_desc[auxrec.aux_selection]);
+				} else {
+					snprintf(selection,sizeof(selection),"%u",
+						auxrec.aux_selection);
+				}
+
 				if (pe_dprintf(fdout,
 						"        - [ size:              0x%08x ]\n"
 						"        - [ num-of-relocs:     0x%08X ]\n"
 						"        - [ num-of-line-nums:  0x%08X ]\n"
 						"        - [ check-sum:         0x%08X ]\n"
 						"        - [ number:            %u ]\n"
-						"        - [ selection:         %u ]\n"
+						"        - [ selection:         %s ]\n"
 						"\n",
 						auxrec.aux_size,
 						auxrec.aux_num_of_relocs,
 						auxrec.aux_num_of_line_nums,
 						auxrec.aux_check_sum,
 						auxrec.aux_number,
-						auxrec.aux_selection) < 0)
+						selection) < 0)
 					return PERK_SYSTEM_ERROR(dctx);
 			}
 		}
