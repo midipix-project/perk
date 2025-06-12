@@ -28,6 +28,7 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 
 		free(meta->m_symvec_crc32);
 		free(meta->m_symvec_crc64);
+		free(meta->m_symvec_symidx);
 
 		free(meta->m_idata);
 		free(meta->m_symtbl);
@@ -404,11 +405,17 @@ int pe_meta_get_image_meta(
 
 	}
 
-	if ((nrecs = m->m_coff.cfh_size_of_sym_tbl/sizeof(struct pe_raw_coff_symbol)))
+	if ((nrecs = m->m_coff.cfh_size_of_sym_tbl/sizeof(struct pe_raw_coff_symbol))) {
 		if (!(m->m_symtbl = calloc(nrecs+1,sizeof(struct pe_meta_coff_symbol))))
 			return PERK_SYSTEM_ERROR(dctx);
 
+		if (!(m->m_symvec_symidx = calloc(nrecs,sizeof(struct pe_meta_coff_symbol *))))
+			return PERK_SYSTEM_ERROR(dctx);
+	}
+
 	for (i=0,symrec=m->m_symtbl; i<nrecs; i++,symrec++) {
+		m->m_symvec_symidx[i] = symrec;
+
 		pe_read_coff_symbol(
 			&m->r_symtbl[i],symrec,
 			&m->m_coff,base);
