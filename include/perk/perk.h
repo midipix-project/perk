@@ -296,7 +296,7 @@ perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *, u
 /* utility api */
 perk_api int  pe_main                           (char **, char **, const struct pe_fd_ctx *);
 
-perk_api int  pe_output_image_category          (const struct pe_driver_ctx *, const struct pe_image_meta *);
+perk_api int  pe_output_pecoff_category         (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_image_sections          (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_image_symbols           (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_image_strings           (const struct pe_driver_ctx *, const struct pe_image_meta *);

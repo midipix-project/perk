@@ -12,7 +12,7 @@
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
-int pe_output_image_category(
+int pe_output_pecoff_category(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {

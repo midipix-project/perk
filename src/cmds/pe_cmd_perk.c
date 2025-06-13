@@ -44,7 +44,7 @@ static void pe_perform_unit_actions_impl(
 	uint64_t flags = dctx->cctx->fmtflags;
 
 	if (flags & PERK_OUTPUT_IMAGE_CATEGORY)
-		pe_output_image_category(dctx,meta);
+		pe_output_pecoff_category(dctx,meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_SECTIONS)
 		pe_output_image_sections(dctx,meta);
