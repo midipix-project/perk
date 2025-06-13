@@ -29,7 +29,7 @@ API_SRCS = \
 	src/output/pe_output_error.c \
 	src/output/pe_output_export_symbols.c \
 	src/output/pe_output_pecoff_category.c \
-	src/output/pe_output_image_sections.c \
+	src/output/pe_output_pecoff_sections.c \
 	src/output/pe_output_image_strings.c \
 	src/output/pe_output_image_symbols.c \
 	src/output/pe_output_idata_libraries.c \

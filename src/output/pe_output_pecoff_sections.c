@@ -188,7 +188,7 @@ static int pe_output_section_records_yaml(
 	return 0;
 }
 
-static int pe_output_image_sections_yaml(
+static int pe_output_pecoff_sections_yaml(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta,
 	int                             fdout)
@@ -204,14 +204,14 @@ static int pe_output_image_sections_yaml(
 	return 0;
 }
 
-int pe_output_image_sections(
+int pe_output_pecoff_sections(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
 	int fdout = pe_driver_fdout(dctx);
 
 	if (dctx->cctx->fmtflags & PERK_PRETTY_YAML) {
-		if (pe_output_image_sections_yaml(dctx,meta,fdout) < 0)
+		if (pe_output_pecoff_sections_yaml(dctx,meta,fdout) < 0)
 			return PERK_NESTED_ERROR(dctx);
 
 	} else {
