@@ -50,7 +50,7 @@ static void pe_perform_unit_actions_impl(
 		pe_output_pecoff_sections(dctx,meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_SYMBOLS)
-		pe_output_image_symbols(dctx,meta);
+		pe_output_pecoff_symbols(dctx,meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_STRINGS)
 		pe_output_pecoff_strings(dctx,meta);
