@@ -53,7 +53,7 @@ static void pe_perform_unit_actions_impl(
 		pe_output_image_symbols(dctx,meta);
 
 	if (flags & PERK_OUTPUT_IMAGE_STRINGS)
-		pe_output_image_strings(dctx,meta);
+		pe_output_pecoff_strings(dctx,meta);
 
 	if (flags & PERK_OUTPUT_EXPORT_SYMS)
 		pe_output_export_symbols(dctx,meta);

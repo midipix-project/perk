@@ -299,7 +299,7 @@ perk_api int  pe_main                           (char **, char **, const struct 
 perk_api int  pe_output_pecoff_category         (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_pecoff_sections         (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_image_symbols           (const struct pe_driver_ctx *, const struct pe_image_meta *);
-perk_api int  pe_output_image_strings           (const struct pe_driver_ctx *, const struct pe_image_meta *);
+perk_api int  pe_output_pecoff_strings          (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_export_symbols          (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_import_libraries        (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_mdso_libraries          (const struct pe_driver_ctx *, const struct pe_image_meta *);

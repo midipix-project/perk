@@ -14,7 +14,7 @@
 #include "perk_dprintf_impl.h"
 #include "perk_errinfo_impl.h"
 
-int pe_output_image_strings(
+int pe_output_pecoff_strings(
 	const struct pe_driver_ctx *	dctx,
 	const struct pe_image_meta *	meta)
 {
