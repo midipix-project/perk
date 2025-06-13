@@ -8,6 +8,7 @@ API_HEADERS = \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_edefs.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_meta.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_output.h \
+	$(SOURCE_DIR)/include/$(PACKAGE)/perk_secattr.h \
 	$(SOURCE_DIR)/include/$(PACKAGE)/perk_structs.h
 
 INTERNAL_HEADERS = \
