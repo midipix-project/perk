@@ -195,6 +195,7 @@ static int pe_cctx_update(
 	const char *			pretty;
 
 	pretty = 0;
+	fmtarg = 0;
 
 	/* get options, count units */
 	for (entry=meta->entries; entry->fopt || entry->arg; entry++) {
