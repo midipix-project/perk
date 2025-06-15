@@ -601,17 +601,16 @@ int pe_meta_get_image_meta(
 		b.dh_rva  = pe_read_long(r->blk_rva);
 		b.dh_size = pe_read_long(r->blk_size);
 
-		if (b.dh_size <= offsetof(struct pe_raw_base_reloc_block,blk_data))
-			return pe_free_image_meta_impl(
-				m,PERK_CUSTOM_ERROR(
-					dctx,
-					PERK_ERR_IMAGE_MALFORMED));
+		if ((b.dh_rva == 0) && (b.dh_size == 0)) {
+			mark = cap;
 
-		mark      += b.dh_size;
-		b.dh_size -= offsetof(struct pe_raw_base_reloc_block,blk_data);
+		} else {
+			mark      += b.dh_size;
+			b.dh_size -= offsetof(struct pe_raw_base_reloc_block,blk_data);
 
-		m->m_stats.t_nrelocs += b.dh_size / sizeof(uint16_t);
-		m->m_stats.t_nrelblks++;
+			m->m_stats.t_nrelocs += b.dh_size / sizeof(uint16_t);
+			m->m_stats.t_nrelblks++;
+		}
 	}
 
 
