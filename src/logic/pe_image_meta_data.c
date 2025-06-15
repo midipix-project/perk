@@ -197,9 +197,9 @@ static int pe_get_expsym_by_index(
 	unsigned			index,
 	struct pe_expsym *		expsym)
 {
-	uint32_t 	offset;
-	uint32_t *	symrva;
-	uintptr_t	symaddr;
+	uint32_t              offset;
+	const unsigned char * symptr;
+	const char *          sym;
 
 	if (m->r_obj)
 		return -1;
@@ -208,11 +208,16 @@ static int pe_get_expsym_by_index(
 		return -1;
 
 	if (expsym) {
-		offset  = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-		symrva  = (uint32_t *)((uintptr_t)m->r_image.map_addr + (m->m_edata.eh_name_ptr_rva - offset));
-		symaddr = (uintptr_t)m->r_image.map_addr + symrva[index] - offset;
+		offset = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
 
-		expsym->s_name    = (const char *)symaddr;
+		symptr  = m->r_image.map_addr;
+		symptr += m->m_edata.eh_name_ptr_rva - offset;
+		symptr += index * sizeof(uint32_t);
+
+		sym  = m->r_image.map_addr;
+		sym += pe_read_long(symptr) - offset;
+
+		expsym->s_name    = sym;
 		expsym->s_eaddr   = 0;
 		expsym->s_maddr   = 0;
 		expsym->s_roffset = 0;
