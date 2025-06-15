@@ -15,6 +15,7 @@
 #include <perk/perk.h>
 #include <perk/perk_consts.h>
 #include <perk/perk_structs.h>
+#include "perk_endian_impl.h"
 #include "perk_reader_impl.h"
 #include "perk_errinfo_impl.h"
 
@@ -365,6 +366,7 @@ int pe_meta_get_image_meta(
 	void *                          addr;
 	char *                          base;
 	const unsigned char *           mark;
+	const unsigned char *           cap;
 	uint64_t                        vaddr;
 
 	struct pe_image_meta *          m;
@@ -481,6 +483,56 @@ int pe_meta_get_image_meta(
 			if ((l = strtol(&m->m_sectbl[i].sh_name_buf[1],0,10)) > 0)
 				if (l < m->m_coff.cfh_size_of_str_tbl)
 					m->m_sectbl[i].sh_name = base + m->m_coff.cfh_ptr_to_str_tbl + l;
+	}
+
+	/* .relocs */
+	struct pe_raw_base_reloc_block * r;
+	struct pe_block                  b;
+
+	i = pe_get_named_section_index(m,".reloc");
+	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_base_reloc_tbl);
+
+	if ((i >= 0) && (i != s))
+		return pe_free_image_meta_impl(
+			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+
+
+	if (s >= 0) {
+		mark  = image->map_addr;
+		mark += m->m_sectbl[s].sh_ptr_to_raw_data;
+		mark += m->m_opt.oh_dirs.coh_base_reloc_tbl.dh_rva;
+		mark -= m->m_sectbl[s].sh_virtual_addr;
+		cap   = &mark[m->m_sectbl[s].sh_virtual_size];
+
+	} else if (i >= 0) {
+		mark  = image->map_addr;
+		mark += m->m_sectbl[i].sh_ptr_to_raw_data;
+		cap   = &mark[m->m_sectbl[s].sh_virtual_size];
+
+	} else {
+		mark = 0;
+		cap  = 0;
+	}
+
+
+
+	for (; mark < cap; ) {
+		r = (struct pe_raw_base_reloc_block *)mark;
+
+		b.dh_rva  = pe_read_long(r->blk_rva);
+		b.dh_size = pe_read_long(r->blk_size);
+
+		if (b.dh_size <= offsetof(struct pe_raw_base_reloc_block,blk_data))
+			return pe_free_image_meta_impl(
+				m,PERK_CUSTOM_ERROR(
+					dctx,
+					PERK_ERR_IMAGE_MALFORMED));
+
+		mark      += b.dh_size;
+		b.dh_size -= offsetof(struct pe_raw_base_reloc_block,blk_data);
+
+		m->m_stats.t_nrelocs += b.dh_size / sizeof(uint16_t);
+		m->m_stats.t_nrelblks++;
 	}
 
 	/* .edata */

@@ -157,6 +157,7 @@ struct pe_meta_stats {
 	int32_t		t_ndsolibs;
 	int32_t		t_ndsosyms;
 	int32_t         t_nsymbols;
+	int32_t         t_nrelblks;
 	int32_t		t_nrelocs;
 };
 
