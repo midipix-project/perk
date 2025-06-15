@@ -573,7 +573,9 @@ int pe_meta_get_image_meta(
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+			m,PERK_CUSTOM_ERROR(
+				dctx,
+				PERK_ERR_IMAGE_MALFORMED));
 
 
 	if (s >= 0) {
@@ -844,7 +846,8 @@ int pe_meta_get_image_meta(
 		if (m->m_abi == PE_ABI_UNSUPPORTED)
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(
-					dctx,PERK_ERR_UNSUPPORTED_ABI));
+					dctx,
+					PERK_ERR_UNSUPPORTED_ABI));
 
 
 	/* all done */
