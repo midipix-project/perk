@@ -402,21 +402,36 @@ int pe_meta_get_image_meta(
 	unsigned                        j;
 
 	void *                          addr;
-	char *                          base;
+	char *                          sptr;
+	unsigned char *                 base;
 	const unsigned char *           mark;
 	const unsigned char *           cap;
 	uint64_t                        vaddr;
+	uint32_t                        strtbl;
+	uint32_t                        symtbl;
+	uint32_t                        arroff;
+
+	uint32_t                        tbllen;
+	uint32_t                        reclen;
 
 	struct pe_image_meta *          m;
 	struct pe_meta_coff_symbol *    symrec;
+	union pe_raw_import_lookup *    imptbl;
 	int                             nrecs;
 	int                             nsyms;
 
-	base = image->map_addr;
 
+	/* mapped pe/coff or archive member data */
+	base = image->map_addr;
+	sptr = image->map_addr;
+
+
+	/* context allocation */
 	if (!(m = calloc(1,sizeof(*m))))
 		return PERK_SYSTEM_ERROR(dctx);
 
+
+	/* image dos header, coff object header */
 	m->r_obj = (struct pe_raw_coff_object_hdr *)base;
 
 	if (pe_read_object_header(m->r_obj,&m->m_coff)) {
@@ -427,31 +442,43 @@ int pe_meta_get_image_meta(
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-		m->r_coff = (struct pe_raw_coff_image_hdr *)(base + m->m_dos.dos_lfanew);
+		mark      = &base[m->m_dos.dos_lfanew];
+		m->r_coff = (struct pe_raw_coff_image_hdr *)mark;
 
 		if ((ret = (pe_read_coff_header(m->r_coff,&m->m_coff))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 	}
 
-	if (m->m_coff.cfh_ptr_to_sym_tbl) {
-		mark        = (const unsigned char *)base+ + m->m_coff.cfh_ptr_to_sym_tbl;
+
+	/* symbol table & string table */
+	symtbl = m->m_coff.cfh_ptr_to_sym_tbl;
+	tbllen = m->m_coff.cfh_size_of_sym_tbl;
+	reclen = sizeof(struct pe_raw_coff_symbol);
+	strtbl = symtbl + tbllen;
+
+
+	if (symtbl) {
+		mark        = &base[symtbl];
 		m->r_symtbl = (struct pe_raw_coff_symbol *)mark;
-		mark       += m->m_coff.cfh_size_of_sym_tbl;
 
-		m->m_coff.cfh_ptr_to_str_tbl  = m->m_coff.cfh_ptr_to_sym_tbl;
-		m->m_coff.cfh_ptr_to_str_tbl += m->m_coff.cfh_size_of_sym_tbl;
-		m->m_coff.cfh_size_of_str_tbl = pe_read_long(mark);
-
+		m->m_coff.cfh_ptr_to_str_tbl  = strtbl;
+		m->m_coff.cfh_size_of_str_tbl = pe_read_long(&base[strtbl]);
 	}
 
-	if ((nrecs = m->m_coff.cfh_size_of_sym_tbl/sizeof(struct pe_raw_coff_symbol))) {
-		if (!(m->m_symtbl = calloc(nrecs+1,sizeof(struct pe_meta_coff_symbol))))
+
+	if ((nrecs = tbllen/reclen)) {
+		if (!(m->m_symtbl = calloc(
+				nrecs+1,
+				sizeof(struct pe_meta_coff_symbol))))
 			return PERK_SYSTEM_ERROR(dctx);
 
-		if (!(m->m_symvec_symidx = calloc(nrecs,sizeof(struct pe_meta_coff_symbol *))))
+		if (!(m->m_symvec_symidx = calloc(
+				nrecs,
+				sizeof(struct pe_meta_coff_symbol *))))
 			return PERK_SYSTEM_ERROR(dctx);
 	}
+
 
 	for (i=0,symrec=m->m_symtbl; i<nrecs; i++,symrec++) {
 		m->m_symvec_symidx[i] = symrec;
@@ -472,45 +499,58 @@ int pe_meta_get_image_meta(
 	m->m_stats.t_nsymbols = symrec - m->m_symtbl;
 
 	if ((nsyms = m->m_stats.t_nsymbols) && true) {
-		if (!(m->m_symvec_crc32 = calloc(nsyms,sizeof(*m->m_symvec_crc32))))
+		if (!(m->m_symvec_crc32 = calloc(
+				nsyms,
+				sizeof(m->m_symvec_crc32[0]))))
 			return PERK_SYSTEM_ERROR(dctx);
 
 		for (i=0; i<nsyms; i++)
 			m->m_symvec_crc32[i] = &m->m_symtbl[i];
 
-		qsort(&m->m_symvec_crc32[0],nsyms,
-			sizeof(*m->m_symvec_crc32),
+		qsort(
+			m->m_symvec_crc32,nsyms,
+			sizeof(m->m_symvec_crc32[0]),
 			pe_symrec_crc32_compare);
 	}
 
 	if (nsyms && true) {
-		if (!(m->m_symvec_crc64 = calloc(nsyms,sizeof(*m->m_symvec_crc64))))
+		if (!(m->m_symvec_crc64 = calloc(
+				nsyms,
+				sizeof(m->m_symvec_crc64[0]))))
 			return PERK_SYSTEM_ERROR(dctx);
 
 		for (i=0; i<nsyms; i++)
 			m->m_symvec_crc64[i] = &m->m_symtbl[i];
 
-		qsort(m->m_symvec_crc64,nsyms,
-			sizeof(*m->m_symvec_crc64),
+		qsort(
+			m->m_symvec_crc64,nsyms,
+			sizeof(m->m_symvec_crc64[0]),
 			pe_symrec_crc64_compare);
 	}
 
+
+	/* optional header & section table */
 	if (m->r_dos) {
-		mark    = &m->r_coff->cfh_signature[0];
-		m->r_opt = (union pe_raw_opt_hdr *)(mark + sizeof(*m->r_coff));
+		mark     = &m->r_coff->cfh_signature[0];
+		mark    += sizeof(m->r_coff[0]);
+		m->r_opt = (union pe_raw_opt_hdr *)mark;
 
 		if ((ret = (pe_read_optional_header(m->r_opt,&m->m_opt))))
 			return pe_free_image_meta_impl(
 				m,PERK_CUSTOM_ERROR(dctx,ret));
 
-		mark       = &m->r_opt->opt_hdr_32.coh_magic[0];
-		m->r_sectbl = (struct pe_raw_sec_hdr *)(mark + m->m_coff.cfh_size_of_opt_hdr);
+		mark         = &m->r_opt->opt_hdr_32.coh_magic[0];
+		mark        += m->m_coff.cfh_size_of_opt_hdr;
+		m->r_sectbl  = (struct pe_raw_sec_hdr *)mark;
 	} else {
-		mark       = &m->r_obj->cfh_machine[0];
-		m->r_sectbl = (struct pe_raw_sec_hdr *)(mark + sizeof(*m->r_obj));
+		mark         = &m->r_obj->cfh_machine[0];
+		mark        += sizeof(m->r_obj[0]);
+		m->r_sectbl  = (struct pe_raw_sec_hdr *)mark;
 	}
 
-	if (!(m->m_sectbl = calloc(m->m_coff.cfh_num_of_sections,sizeof(*(m->m_sectbl)))))
+	if (!(m->m_sectbl = calloc(
+			m->m_coff.cfh_num_of_sections,
+			sizeof(m->m_sectbl[0]))))
 		return pe_free_image_meta_impl(
 			m,PERK_SYSTEM_ERROR(dctx));
 
@@ -520,8 +560,9 @@ int pe_meta_get_image_meta(
 		if (m->m_sectbl[i].sh_name_buf[0] == '/')
 			if ((l = strtol(&m->m_sectbl[i].sh_name_buf[1],0,10)) > 0)
 				if (l < m->m_coff.cfh_size_of_str_tbl)
-					m->m_sectbl[i].sh_name = base + m->m_coff.cfh_ptr_to_str_tbl + l;
+					m->m_sectbl[i].sh_name = &sptr[strtbl+l];
 	}
+
 
 	/* .relocs */
 	struct pe_raw_base_reloc_block * r;
@@ -573,22 +614,35 @@ int pe_meta_get_image_meta(
 		m->m_stats.t_nrelblks++;
 	}
 
+
 	/* .edata */
 	i = pe_get_named_section_index(m,".edata");
 	s = pe_get_block_section_index(m,&m->m_opt.oh_dirs.coh_export_tbl);
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+			m,PERK_CUSTOM_ERROR(
+				dctx,
+				PERK_ERR_IMAGE_MALFORMED));
 
 	if (s >= 0) {
+		mark  = base;
+		mark += m->m_sectbl[s].sh_ptr_to_raw_data;
+		mark += m->m_opt.oh_dirs.coh_export_tbl.dh_rva;
+		mark -= m->m_sectbl[s].sh_virtual_addr;
+
 		m->h_edata = &m->m_sectbl[s];
-		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
-				+ m->m_opt.oh_dirs.coh_export_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
+		m->r_edata = (struct pe_raw_export_hdr *)mark;
+
 		m->m_edata.eh_virtual_addr = m->m_opt.oh_dirs.coh_export_tbl.dh_rva;
+
 	} else if (i >= 0) {
+		mark  = base;
+		mark += m->m_sectbl[i].sh_ptr_to_raw_data;
+
 		m->h_edata = &m->m_sectbl[i];
-		m->r_edata = (struct pe_raw_export_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
+		m->r_edata = (struct pe_raw_export_hdr *)mark;
+
 		m->m_edata.eh_virtual_addr = m->m_sectbl[i].sh_virtual_addr;
 	}
 
@@ -596,6 +650,7 @@ int pe_meta_get_image_meta(
 		pe_read_export_header(m->r_edata,&m->m_edata);
 		m->m_stats.t_nexpsyms = m->m_edata.eh_num_of_name_ptrs;
 	}
+
 
 	/* .idata */
 	struct pe_raw_import_hdr * 	pidata;
@@ -607,92 +662,134 @@ int pe_meta_get_image_meta(
 
 	if ((i >= 0) && (i != s))
 		return pe_free_image_meta_impl(
-			m,PERK_CUSTOM_ERROR(dctx,PERK_ERR_IMAGE_MALFORMED));
+			m,PERK_CUSTOM_ERROR(
+				dctx,
+				PERK_ERR_IMAGE_MALFORMED));
+
 
 	if (s >= 0) {
+		mark  = base;
+		mark += m->m_sectbl[s].sh_ptr_to_raw_data;
+		mark += m->m_opt.oh_dirs.coh_import_tbl.dh_rva;
+		mark -= m->m_sectbl[s].sh_virtual_addr;
+
 		m->h_idata = &m->m_sectbl[s];
-		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[s].sh_ptr_to_raw_data
-				+ m->m_opt.oh_dirs.coh_import_tbl.dh_rva - m->m_sectbl[s].sh_virtual_addr);
-		vaddr = m->m_opt.oh_dirs.coh_import_tbl.dh_rva;
+		m->r_idata = (struct pe_raw_import_hdr *)mark;
+		vaddr      = m->m_opt.oh_dirs.coh_import_tbl.dh_rva;
+
 	} else if (i >= 0) {
+		mark  = base;
+		mark += m->m_sectbl[i].sh_ptr_to_raw_data;
+
 		m->h_idata = &m->m_sectbl[i];
-		m->r_idata = (struct pe_raw_import_hdr *)(base + m->m_sectbl[i].sh_ptr_to_raw_data);
-		vaddr = m->m_sectbl[i].sh_virtual_addr;
+		m->r_idata = (struct pe_raw_import_hdr *)mark;
+		vaddr      = m->m_sectbl[i].sh_virtual_addr;
 	}
 
-	if (m->r_idata) {
-		/* num of implibs */
-		for (pidata=m->r_idata; pe_read_long(pidata->ih_name_rva); pidata++)
-			m->m_stats.t_nimplibs++;
 
-		/* import headers */
-		if (!(m->m_idata = calloc(m->m_stats.t_nimplibs,sizeof(*m->m_idata))))
+	if ((pidata = m->r_idata)) {
+		for (; pe_read_long(pidata->ih_name_rva); ) {
+			m->m_stats.t_nimplibs++;
+			pidata++;
+		}
+
+
+		if (!(m->m_idata = calloc(
+				m->m_stats.t_nimplibs,
+				sizeof(m->m_idata[0]))))
 			return pe_free_image_meta_impl(
 				m,PERK_SYSTEM_ERROR(dctx));
 
+
 		for (i=0; i<m->m_stats.t_nimplibs; i++) {
-			m->m_idata[i].ih_virtual_addr = vaddr + (i * sizeof(*m->r_idata));
+			arroff                        = i * sizeof(m->r_idata[0]);
+			m->m_idata[i].ih_virtual_addr = vaddr + arroff;
+
 			pe_read_import_header(&m->r_idata[i],&m->m_idata[i]);
 
-			m->m_idata[i].ih_name = base + m->h_idata->sh_ptr_to_raw_data
-						   + m->m_idata[i].ih_name_rva
-						   - m->h_idata->sh_virtual_addr;
+			arroff  = m->h_idata->sh_ptr_to_raw_data;
+			arroff += m->m_idata[i].ih_name_rva;
+			arroff -= m->h_idata->sh_virtual_addr;
 
-			if (m->m_idata[i].ih_import_lookup_tbl_rva)
-				m->m_idata[i].ih_aitems = (union pe_raw_import_lookup *)(base + m->h_idata->sh_ptr_to_raw_data
-							+ m->m_idata[i].ih_import_lookup_tbl_rva
-							- m->h_idata->sh_virtual_addr);
+			m->m_idata[i].ih_name = &sptr[arroff];
 
-			/* items */
 			if (m->m_idata[i].ih_import_lookup_tbl_rva) {
+				mark   = base;
+				mark  += m->h_idata->sh_ptr_to_raw_data;
+				mark  += m->m_idata[i].ih_import_lookup_tbl_rva;
+				mark  -= m->h_idata->sh_virtual_addr;
+				imptbl = (union pe_raw_import_lookup *)mark;
+
+				m->m_idata[i].ih_aitems = imptbl;
+
+
 				if (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32) {
-					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_32;
+					pitem = imptbl->ii_import_lookup_entry_32;
 
-					for (; pe_read_long(pitem); m->m_idata[i].ih_count++)
+					for (; pe_read_long(pitem); ) {
 						pitem += sizeof(uint32_t);
-				} else if (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS) {
-					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_64;
+						m->m_idata[i].ih_count++;
+					}
 
-					for (; pe_read_quad(pitem); m->m_idata[i].ih_count++)
+				} else if (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS) {
+					pitem = imptbl->ii_import_lookup_entry_64;
+
+					for (; pe_read_quad(pitem); ) {
 						pitem += sizeof(uint64_t);
+						m->m_idata[i].ih_count++;
+					}
+
 				} else {
 					return pe_free_image_meta_impl(
 						m,PERK_CUSTOM_ERROR(
-							dctx,PERK_ERR_UNSUPPORTED_ABI));
+							dctx,
+							PERK_ERR_UNSUPPORTED_ABI));
 				}
 
-				if (!(m->m_idata[i].ih_items = calloc(m->m_idata[i].ih_count,sizeof(*(m->m_idata[i].ih_items)))))
+				if (!(m->m_idata[i].ih_items = calloc(
+						m->m_idata[i].ih_count,
+						sizeof(m->m_idata[i].ih_items[0]))))
 					return pe_free_image_meta_impl(
 						m,PERK_SYSTEM_ERROR(dctx));
 			}
 
+
 			switch (m->m_opt.oh_std.coh_magic) {
 				case PE_MAGIC_PE32:
-					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_32;
+					pitem = imptbl->ii_import_lookup_entry_32;
 					psize = sizeof(uint32_t);
 					break;
 
 				case PE_MAGIC_PE32_PLUS:
-					pitem = m->m_idata[i].ih_aitems->ii_import_lookup_entry_64;
+					pitem = imptbl->ii_import_lookup_entry_64;
 					psize = sizeof(uint64_t);
 					break;
 			}
 
+
 			for (j=0; j<m->m_idata[i].ih_count; j++) {
+				struct pe_raw_hint_name_entry * pentry;
+				struct pe_meta_import_lookup *  ihitem;
+
+				ihitem = &m->m_idata[i].ih_items[j];
+
 				if ((ret = pe_read_import_lookup(
-						pitem + j*psize,
-						&(m->m_idata[i].ih_items[j]),
+						&pitem[j*psize],ihitem,
 						m->m_opt.oh_std.coh_magic)))
 					return pe_free_image_meta_impl(
-						m,PERK_CUSTOM_ERROR(dctx,ret));
+						m,PERK_CUSTOM_ERROR(
+							dctx,ret));
 
-				if (!m->m_idata[i].ih_items[j].ii_flag) {
-					struct pe_raw_hint_name_entry * pentry =
-						(struct pe_raw_hint_name_entry *)(base + m->h_idata->sh_ptr_to_raw_data
-							+ m->m_idata[i].ih_items[j].ii_hint_name_tbl_rva - m->h_idata->sh_virtual_addr);
+				if (!ihitem->ii_flag) {
+					mark  = base;
+					mark += m->h_idata->sh_ptr_to_raw_data;
+					mark += ihitem->ii_hint_name_tbl_rva;
+					mark -= m->h_idata->sh_virtual_addr;
 
-					m->m_idata[i].ih_items[j].ii_hint = pe_read_short(pentry->ii_hint);
-					m->m_idata[i].ih_items[j].ii_name = (char *)pentry->ii_name;
+					pentry = (struct pe_raw_hint_name_entry *)mark;
+
+					ihitem->ii_hint = pe_read_short(pentry->ii_hint);
+					ihitem->ii_name = &sptr[pentry->ii_name - base];
 				}
 			}
 		}
@@ -703,9 +800,11 @@ int pe_meta_get_image_meta(
 		m->h_dsometa = &m->m_sectbl[i];
 		m->r_dsometa = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 
-		m->m_stats.t_ndsolibs = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
-			? m->h_dsometa->sh_virtual_size / sizeof(struct mdso_raw_meta_record_m64)
-			: m->h_dsometa->sh_virtual_size / sizeof(struct mdso_raw_meta_record_m32);
+		psize = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
+			? sizeof(struct mdso_raw_meta_record_m64)
+			: sizeof(struct mdso_raw_meta_record_m32);
+
+		m->m_stats.t_ndsolibs = m->h_dsometa->sh_virtual_size / psize;
 	}
 
 	/* .dsosyms */
@@ -713,15 +812,17 @@ int pe_meta_get_image_meta(
 		m->h_dsosyms = &m->m_sectbl[i];
 		m->r_dsosyms = base + m->m_sectbl[i].sh_ptr_to_raw_data;
 
-		m->m_stats.t_ndsosyms = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
-			? m->h_dsosyms->sh_virtual_size / sizeof(struct mdso_raw_sym_entry_m64)
-			: m->h_dsosyms->sh_virtual_size / sizeof(struct mdso_raw_sym_entry_m32);
+		psize = (m->m_opt.oh_std.coh_magic == PE_MAGIC_PE32_PLUS)
+			? sizeof(struct mdso_raw_sym_entry_m64)
+			: sizeof(struct mdso_raw_sym_entry_m32);
+
+		m->m_stats.t_ndsosyms = m->h_dsosyms->sh_virtual_size / psize;
 	}
 
 	/* .dsostrs */
 	if ((i = pe_get_named_section_index(m,MDSO_STRS_SECTION)) >= 0) {
 		m->h_dsostrs = &m->m_sectbl[i];
-		m->r_dsostrs = base + m->m_sectbl[i].sh_ptr_to_raw_data;
+		m->r_dsostrs = sptr + m->m_sectbl[i].sh_ptr_to_raw_data;
 	}
 
 	/* .dsodata */
