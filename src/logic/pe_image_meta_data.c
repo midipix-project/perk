@@ -149,19 +149,23 @@ static int pe_get_expsym_by_name(
 	const char *			name,
 	struct pe_expsym *		expsym)
 {
-	uint32_t 	offset;
-	uint32_t *	symrva;
-	const char *	sym;
-	unsigned	i;
+	uint32_t              offset;
+	const unsigned char * ptrtbl;
+	const char *	      sym;
+	unsigned              i;
 
 	if (m->r_obj || !m->h_edata)
 		return -1;
 
 	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
-	symrva	= (uint32_t *)((uintptr_t)m->r_image.map_addr + (m->m_edata.eh_name_ptr_rva - offset));
+
+	ptrtbl  = m->r_image.map_addr;
+	ptrtbl += m->m_edata.eh_name_ptr_rva;
+	ptrtbl -= offset;
 
 	for (i=0; i<m->m_edata.eh_num_of_name_ptrs; i++) {
-		sym = (const char *)m->r_image.map_addr + symrva[i] - offset;
+		sym  = m->r_image.map_addr;
+		sym += pe_read_long(ptrtbl) - offset;
 
 		if (!(strcmp(sym,name))) {
 			if (expsym) {
@@ -173,6 +177,8 @@ static int pe_get_expsym_by_name(
 
 			return 0;
 		}
+
+		ptrtbl += sizeof(uint32_t);
 	}
 
 	return -1;
