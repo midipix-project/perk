@@ -63,7 +63,9 @@ static int pe_symrec_crc64_compare(const void * a, const void * b)
 	return eqor * (syma->cs_crc64 > symb->cs_crc64 ? (1) : (-1));
 }
 
-static int pe_get_named_section_index(const struct pe_image_meta * m, const char * name)
+static int pe_get_named_section_index(
+	const struct pe_image_meta *  m,
+	const char *                  name)
 {
 	int i; for (i=0; i<m->m_coff.cfh_num_of_sections; i++)
 		if (!(strcmp(name,m->m_sectbl[i].sh_name)))
@@ -72,12 +74,16 @@ static int pe_get_named_section_index(const struct pe_image_meta * m, const char
 	return -1;
 }
 
-int pe_meta_get_named_section_index(const struct pe_image_meta * m, const char * name)
+int pe_meta_get_named_section_index(
+	const struct pe_image_meta *  m,
+	const char *                  name)
 {
 	return pe_get_named_section_index(m,name);
 }
 
-static int pe_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
+static int pe_get_block_section_index(
+	const struct pe_image_meta *  m,
+	const struct pe_block *       block)
 {
 	int i;
 	uint32_t low,high;
@@ -89,21 +95,28 @@ static int pe_get_block_section_index(const struct pe_image_meta * m, const stru
 		low  = m->m_sectbl[i].sh_virtual_addr;
 		high = low + m->m_sectbl[i].sh_virtual_size;
 
-		if ((block->dh_rva >= low) && (block->dh_rva + block->dh_size <= high))
-			return i;
+		if (block->dh_rva >= low)
+			if (block->dh_rva + block->dh_size <= high)
+				return i;
 	}
 
 	return -1;
 }
 
-int pe_meta_get_block_section_index(const struct pe_image_meta * m, const struct pe_block * block)
+int pe_meta_get_block_section_index(
+	const struct pe_image_meta *  m,
+	const struct pe_block *       block)
 {
 	return pe_get_block_section_index(m,block);
 }
 
-int pe_meta_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, uint32_t * roffset)
+int pe_meta_get_roffset_from_rva(
+	const struct pe_image_meta *  m,
+	uint32_t                      rva,
+	uint32_t *                    roffset)
 {
-	int i;
+	int      i;
+	uint32_t offset;
 	uint32_t low,high;
 
 	for (i=0; i<m->m_coff.cfh_num_of_sections; i++) {
@@ -111,7 +124,11 @@ int pe_meta_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, u
 		high = low + m->m_sectbl[i].sh_virtual_size;
 
 		if ((rva >= low) && (rva < high)) {
-			*roffset = (rva - low) + m->m_sectbl[i].sh_ptr_to_raw_data;
+			offset   = m->m_sectbl[i].sh_ptr_to_raw_data;
+			offset  += rva - low;
+
+			*roffset = offset;
+
 			return 0;
 		}
 	}
@@ -119,9 +136,12 @@ int pe_meta_get_roffset_from_rva(const struct pe_image_meta * m, uint32_t rva, u
 	return -1;
 }
 
-int pe_meta_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffset, uint32_t * rva)
+int pe_meta_get_rva_from_roffset(
+	const struct pe_image_meta *  m,
+	uint32_t                      roffset,
+	uint32_t *                    rva)
 {
-	int i;
+	int      i;
 	uint32_t low,high,ref;
 
 	for (i=0, ref=~0; i<m->m_coff.cfh_num_of_sections; i++) {
@@ -129,8 +149,13 @@ int pe_meta_get_rva_from_roffset(const struct pe_image_meta * m, uint32_t roffse
 		high = low + m->m_sectbl[i].sh_virtual_size;
 
 		if ((roffset >= low) && (roffset < high)) {
-			*rva = (roffset - low) + m->m_sectbl[i].sh_virtual_addr;
+			roffset -= low;
+			roffset += m->m_sectbl[i].sh_virtual_addr;
+
+			*rva = roffset;
+
 			return 0;
+
 		} else if (ref > low) {
 			ref = low;
 		}
@@ -157,7 +182,8 @@ static int pe_get_expsym_by_name(
 	if (m->r_obj || !m->h_edata)
 		return -1;
 
-	offset	= m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
+	offset	= m->h_edata->sh_virtual_addr;
+	offset -= m->h_edata->sh_ptr_to_raw_data;
 
 	ptrtbl  = m->r_image.map_addr;
 	ptrtbl += m->m_edata.eh_name_ptr_rva;
@@ -208,7 +234,8 @@ static int pe_get_expsym_by_index(
 		return -1;
 
 	if (expsym) {
-		offset = m->h_edata->sh_virtual_addr - m->h_edata->sh_ptr_to_raw_data;
+		offset  = m->h_edata->sh_virtual_addr;
+		offset -= m->h_edata->sh_ptr_to_raw_data;
 
 		symptr  = m->r_image.map_addr;
 		symptr += m->m_edata.eh_name_ptr_rva - offset;
