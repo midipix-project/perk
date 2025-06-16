@@ -169,6 +169,7 @@ struct pe_image_meta {
 	union  pe_raw_opt_hdr *		r_opt;
 	struct pe_raw_sec_hdr *		r_sectbl;
 	struct pe_raw_coff_symbol *     r_symtbl;
+	struct pe_raw_base_reloc_blk ** r_reltbl;
 
 	struct pe_raw_export_hdr *	r_edata;
 	struct pe_raw_import_hdr *	r_idata;

@@ -34,6 +34,9 @@ static int pe_free_image_meta_impl(struct pe_image_meta * meta, int ret)
 		free(meta->m_idata);
 		free(meta->m_symtbl);
 		free(meta->m_sectbl);
+
+		free(meta->r_reltbl);
+
 		free(meta);
 	}
 
@@ -404,6 +407,7 @@ int pe_meta_get_image_meta(
 	void *                          addr;
 	char *                          sptr;
 	unsigned char *                 base;
+	const unsigned char *           rtbl;
 	const unsigned char *           mark;
 	const unsigned char *           cap;
 	uint64_t                        vaddr;
@@ -579,18 +583,23 @@ int pe_meta_get_image_meta(
 
 
 	if (s >= 0) {
-		mark  = image->map_addr;
-		mark += m->m_sectbl[s].sh_ptr_to_raw_data;
-		mark += m->m_opt.oh_dirs.coh_base_reloc_tbl.dh_rva;
-		mark -= m->m_sectbl[s].sh_virtual_addr;
+		rtbl  = image->map_addr;
+		rtbl += m->m_sectbl[s].sh_ptr_to_raw_data;
+		rtbl += m->m_opt.oh_dirs.coh_base_reloc_tbl.dh_rva;
+		rtbl -= m->m_sectbl[s].sh_virtual_addr;
+
+		mark  = rtbl;
 		cap   = &mark[m->m_sectbl[s].sh_virtual_size];
 
 	} else if (i >= 0) {
-		mark  = image->map_addr;
-		mark += m->m_sectbl[i].sh_ptr_to_raw_data;
+		rtbl  = image->map_addr;
+		rtbl += m->m_sectbl[i].sh_ptr_to_raw_data;
+
+		mark  = rtbl;
 		cap   = &mark[m->m_sectbl[s].sh_virtual_size];
 
 	} else {
+		rtbl = 0;
 		mark = 0;
 		cap  = 0;
 	}
@@ -613,6 +622,18 @@ int pe_meta_get_image_meta(
 			m->m_stats.t_nrelocs += b.dh_size / sizeof(uint16_t);
 			m->m_stats.t_nrelblks++;
 		}
+	}
+
+
+	if (m->m_stats.t_nrelblks)
+		if (!(m->r_reltbl = calloc(
+				m->m_stats.t_nrelblks + 1,
+				sizeof(m->r_reltbl[0]))))
+			return PERK_SYSTEM_ERROR(dctx);
+
+	for (i=0,mark=rtbl; i<m->m_stats.t_nrelblks; i++) {
+		m->r_reltbl[i] = (struct pe_raw_base_reloc_blk *)mark;
+		mark += pe_read_long(m->r_reltbl[i]->blk_size);
 	}
 
 
