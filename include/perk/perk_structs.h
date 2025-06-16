@@ -343,7 +343,7 @@ struct pe_raw_coff_reloc {
 };
 
 
-struct pe_raw_base_reloc_block {
+struct pe_raw_base_reloc_blk {
 	unsigned char	blk_rva				[0x04];		/* 0x00 */
 	unsigned char	blk_size			[0x04];		/* 0x04 */
 	unsigned char	blk_data[]			[0x02];		/* 0x08 */

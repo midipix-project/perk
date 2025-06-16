@@ -565,7 +565,7 @@ int pe_meta_get_image_meta(
 
 
 	/* .relocs */
-	struct pe_raw_base_reloc_block * r;
+	struct pe_raw_base_reloc_blk *   r;
 	struct pe_block                  b;
 
 	i = pe_get_named_section_index(m,".reloc");
@@ -598,7 +598,7 @@ int pe_meta_get_image_meta(
 
 
 	for (; mark < cap; ) {
-		r = (struct pe_raw_base_reloc_block *)mark;
+		r = (struct pe_raw_base_reloc_blk *)mark;
 
 		b.dh_rva  = pe_read_long(r->blk_rva);
 		b.dh_size = pe_read_long(r->blk_size);
@@ -608,7 +608,7 @@ int pe_meta_get_image_meta(
 
 		} else {
 			mark      += b.dh_size;
-			b.dh_size -= offsetof(struct pe_raw_base_reloc_block,blk_data);
+			b.dh_size -= offsetof(struct pe_raw_base_reloc_blk,blk_data);
 
 			m->m_stats.t_nrelocs += b.dh_size / sizeof(uint16_t);
 			m->m_stats.t_nrelblks++;
