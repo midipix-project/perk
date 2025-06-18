@@ -57,13 +57,24 @@ static int pe_exit(struct pe_driver_ctx * dctx, int ret)
 	return ret;
 }
 
+typedef int (*pe_cmd)(const struct pe_driver_ctx *, const char *);
+
+static void pe_cmd_common(
+	const struct pe_driver_ctx *  dctx,
+	pe_cmd                        cmdfn)
+{
+	const char ** unit;
+
+	for (unit=dctx->units; *unit; unit++)
+		cmdfn(dctx,*unit);
+}
+
 int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 {
 	int			ret;
 	int			fdout;
 	uint64_t		flags;
 	struct pe_driver_ctx *	dctx;
-	const char **		unit;
 	const char *            posname;
 	const char *            arname;
 	const char **           arfiles;
@@ -83,8 +94,7 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 
 	switch (dctx->cctx->cmd) {
 		case PERK_CMD_PERK:
-			for (unit=dctx->units; *unit; unit++)
-				pe_cmd_perk(dctx,*unit);
+			pe_cmd_common(dctx,pe_cmd_perk);
 			break;
 
 		case PERK_CMD_AR:
@@ -105,13 +115,11 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 			break;
 
 		case PERK_CMD_NM:
-			for (unit=dctx->units; *unit; unit++)
-				pe_cmd_nm(dctx,*unit);
+			pe_cmd_common(dctx,pe_cmd_nm);
 			break;
 
 		case PERK_CMD_SIZE:
-			for (unit=dctx->units; *unit; unit++)
-				pe_cmd_size(dctx,*unit);
+			pe_cmd_common(dctx,pe_cmd_size);
 			break;
 
 		default:
