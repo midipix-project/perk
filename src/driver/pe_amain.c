@@ -97,6 +97,14 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 			pe_cmd_common(dctx,pe_cmd_perk);
 			break;
 
+		case PERK_CMD_NM:
+			pe_cmd_common(dctx,pe_cmd_nm);
+			break;
+
+		case PERK_CMD_SIZE:
+			pe_cmd_common(dctx,pe_cmd_size);
+			break;
+
 		case PERK_CMD_AR:
 			arflags = dctx->cctx->drvflags;
 
@@ -112,14 +120,6 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 
 			pe_cmd_ar(dctx,arflags,posname,arname,arfiles);
 
-			break;
-
-		case PERK_CMD_NM:
-			pe_cmd_common(dctx,pe_cmd_nm);
-			break;
-
-		case PERK_CMD_SIZE:
-			pe_cmd_common(dctx,pe_cmd_size);
 			break;
 
 		default:
