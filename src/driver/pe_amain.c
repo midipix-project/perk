@@ -109,6 +109,11 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 				pe_cmd_nm(dctx,*unit);
 			break;
 
+		case PERK_CMD_SIZE:
+			for (unit=dctx->units; *unit; unit++)
+				pe_cmd_size(dctx,*unit);
+			break;
+
 		default:
 			break;
 	}

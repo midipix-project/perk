@@ -28,6 +28,12 @@
 	"       %s [-V] [-APv] [-efox] [-g|-u] [-t format] <file> ...\n\n"  \
 	"Options:\n"
 
+#define PERK_SIZE_CMD_SYNOPSIS                                        \
+	"%s — PE/COFF Section Size Information\n\n"                    \
+	"Synopsis:\n"                                                   \
+	"       %s [-V] [-A|-B|-G] [-d|-o|-x] [-t] [-f] <file> ...\n\n"  \
+	"Options:\n"
+
 #define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
 	"Synopsis:\n"                                                          \
