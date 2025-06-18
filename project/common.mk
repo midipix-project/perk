@@ -27,6 +27,7 @@ API_SRCS = \
 	src/logic/pe_image_meta_data.c \
 	src/logic/pe_image_raw_data.c \
 	src/output/pe_output_error.c \
+	src/output/pe_output_base_relocs.c \
 	src/output/pe_output_export_symbols.c \
 	src/output/pe_output_pecoff_category.c \
 	src/output/pe_output_pecoff_sections.c \

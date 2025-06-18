@@ -305,6 +305,7 @@ perk_api int  pe_output_pecoff_strings          (const struct pe_driver_ctx *, c
 perk_api int  pe_output_export_symbols          (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_import_libraries        (const struct pe_driver_ctx *, const struct pe_image_meta *);
 perk_api int  pe_output_mdso_libraries          (const struct pe_driver_ctx *, const struct pe_image_meta *);
+perk_api int  pe_output_base_relocs             (const struct pe_driver_ctx *, const struct pe_image_meta *);
 
 /* error trace api */
 perk_api int  pe_output_error_record            (const struct pe_driver_ctx *, const struct pe_error_info *);
