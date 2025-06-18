@@ -9,8 +9,6 @@
 #include "perk_errinfo_impl.h"
 #include "perk_ar_impl.h"
 
-int pe_ar_list_members(const struct pe_archive_meta *, const char **);
-
 static int pe_cmd_ar_perform_unit_actions(
 	const struct pe_driver_ctx * dctx,
 	const char *                 arname,
