@@ -44,6 +44,10 @@ const perk_hidden struct argv_option pe_perk_options[] = {
 			"list .dsometa (mdso) dependency libraries "
 			"along with referenced symbols"},
 
+	{"relocs",	'r',TAG_RELOCS,ARGV_OPTARG_NONE,0,0,0,
+			"list image base relocations found "
+			"in the .reloc section"},
+
 	{"hdrdump",	'X',TAG_HDRDUMP,ARGV_OPTARG_OPTIONAL,0,
 			"dos|image.dos|"
 			"coff|coff.image|coff.object|coff.optional|"

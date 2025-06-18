@@ -64,6 +64,9 @@ static void pe_perform_unit_actions_impl(
 	if ((flags & PERK_OUTPUT_MDSO_LIBS) || (flags & PERK_OUTPUT_MDSO_SYMS))
 		pe_output_mdso_libraries(dctx,meta);
 
+	if (flags & PERK_OUTPUT_BASE_RELOCS)
+		pe_output_base_relocs(dctx,meta);
+
 	if (dctx->cctx->hdrdump)
 		pe_perform_hdrdump_actions(dctx,meta);
 }

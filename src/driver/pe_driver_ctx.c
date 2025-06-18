@@ -251,6 +251,10 @@ static int pe_cctx_update(
 					cctx->fmtflags |= PERK_OUTPUT_IMAGE_STRINGS;
 					break;
 
+				case TAG_RELOCS:
+					cctx->fmtflags |= PERK_OUTPUT_BASE_RELOCS;
+					break;
+
 				case TAG_EXPSYMS:
 					cctx->fmtflags |= PERK_OUTPUT_EXPORT_SYMS;
 					break;
