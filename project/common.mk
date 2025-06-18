@@ -7,6 +7,7 @@ API_SRCS = \
 	src/arbits/output/pe_ar_list_members.c \
 	src/arbits/output/pe_ar_print_members.c \
 	src/cmds/pe_cmd_ar.c \
+	src/cmds/pe_cmd_nm.c \
 	src/cmds/pe_cmd_perk.c \
 	src/crc/pe_crc32.c \
 	src/crc/pe_crc64.c \
@@ -47,6 +48,7 @@ API_SRCS = \
 	src/reader/pe_read_section_header.c \
 	src/skin/pe_skin_default.c \
 	src/skin/pe_skin_ar.c \
+	src/skin/pe_skin_nm.c \
 	src/skin/pe_skin_perk.c \
 
 INTERNAL_SRCS = \

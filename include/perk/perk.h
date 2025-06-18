@@ -301,6 +301,8 @@ perk_api int  pe_lib_set_driver_fdctx           (struct pe_driver_ctx *, const s
 
 /* cmd api */
 perk_api int  pe_cmd_perk                       (const struct pe_driver_ctx *, const char *);
+perk_api int  pe_cmd_nm                         (const struct pe_driver_ctx *, const char *);
+
 perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *, uint64_t,
                                                  const char *, const char *, const char **);
 
