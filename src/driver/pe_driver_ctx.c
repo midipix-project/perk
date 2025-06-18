@@ -175,6 +175,7 @@ static int pe_cmd_from_program(const char * program)
 	const char *	dot;
 	const char *	hyphen;
 	const char *	mark;
+	enum pe_cmd     cmd;
 
 	dot    = strrchr(program,'.');
 	hyphen = strrchr(program,'-');
@@ -186,21 +187,12 @@ static int pe_cmd_from_program(const char * program)
 	else
 		mark = program;
 
-	if (!strcmp(mark,"perk")) {
-		return PERK_CMD_PERK;
+	for (cmd=0; cmd<PERK_CMD_CAP; cmd++)
+		if (perk_cmd_name[cmd])
+			if (!strcmp(mark,perk_cmd_name[cmd]))
+				return cmd;
 
-	} else if (!strcmp(mark,"ar")) {
-		return PERK_CMD_AR;
-
-	} else if (!strcmp(mark,"nm")) {
-		return PERK_CMD_NM;
-
-	} else if (!strcmp(mark,"size")) {
-		return PERK_CMD_SIZE;
-
-	} else {
-		return PERK_CMD_DEFAULT;
-	}
+	return PERK_CMD_DEFAULT;
 }
 
 static int pe_cctx_update(
