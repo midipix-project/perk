@@ -7,6 +7,8 @@
 #ifndef SLIBTOOL_SYNOPSIS_IMPL_H
 #define SLIBTOOL_SYNOPSIS_IMPL_H
 
+
+
 #define PERK_DEFAULT_CMD_SYNOPSIS                          \
 	"%s — PE/COFF Resource Kit\n\n"                     \
 	"Synopsis:\n"                                        \
@@ -15,6 +17,8 @@
 	"       %s --cmd=<command> [option] ... <file> ...\n\n" \
 	"Options:\n"
 
+
+
 #define PERK_PERK_CMD_SYNOPSIS              \
 	"%s — PE/COFF Resource Kit\n\n"      \
 	"Synopsis:\n"                         \
@@ -22,17 +26,23 @@
 	"       %s [option] ... <file> ...\n\n" \
 	"Options:\n"
 
+
+
 #define PERK_NM_CMD_SYNOPSIS                                             \
 	"%s — PE/COFF Name Mangler\n\n"                                   \
 	"Synopsis:\n"                                                      \
 	"       %s [-V] [-APv] [-efox] [-g|-u] [-t format] <file> ...\n\n"  \
 	"Options:\n"
 
+
+
 #define PERK_SIZE_CMD_SYNOPSIS                                        \
 	"%s — PE/COFF Section Size Information\n\n"                    \
 	"Synopsis:\n"                                                   \
 	"       %s [-V] [-A|-B|-G] [-d|-o|-x] [-t] [-f] <file> ...\n\n"  \
 	"Options:\n"
+
+
 
 #define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
