@@ -11,6 +11,7 @@ API_SRCS = \
 	src/cmds/pe_cmd_perk.c \
 	src/cmds/pe_cmd_size.c \
 	src/cmds/pe_cmd_strip.c \
+	src/cmds/pe_cmd_ranlib.c \
 	src/crc/pe_crc32.c \
 	src/crc/pe_crc64.c \
 	src/driver/pe_amain.c \
@@ -54,6 +55,7 @@ API_SRCS = \
 	src/skin/pe_skin_perk.c \
 	src/skin/pe_skin_size.c \
 	src/skin/pe_skin_strip.c \
+	src/skin/pe_skin_ranlib.c \
 
 INTERNAL_SRCS = \
 	src/internal/$(PACKAGE)_dprintf_impl.c \

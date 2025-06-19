@@ -57,6 +57,14 @@
 
 
 
+#define PERK_RANLIB_CMD_SYNOPSIS                   \
+	"%s — PE/COFF Archive Indexer\n\n"          \
+	"Synopsis:\n"                                \
+	"       %s [-V] [-D|-U] [-t] <file> ...\n\n"  \
+	"Options:\n"
+
+
+
 #define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
 	"Synopsis:\n"                                                          \
