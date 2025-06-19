@@ -21,3 +21,7 @@ install-app-extras:
 	rm -f bin/$(NICKNAME)-size$(OS_APP_SUFFIX).tmp
 	ln -s ./$(NICKNAME)$(OS_APP_SUFFIX) bin/$(NICKNAME)-size$(OS_APP_SUFFIX).tmp
 	mv bin/$(NICKNAME)-size$(OS_APP_SUFFIX).tmp     $(DESTDIR)$(BINDIR)/$(NICKNAME)-size$(OS_APP_SUFFIX)
+
+	rm -f bin/$(NICKNAME)-strip$(OS_APP_SUFFIX).tmp
+	ln -s ./$(NICKNAME)$(OS_APP_SUFFIX) bin/$(NICKNAME)-strip$(OS_APP_SUFFIX).tmp
+	mv bin/$(NICKNAME)-strip$(OS_APP_SUFFIX).tmp     $(DESTDIR)$(BINDIR)/$(NICKNAME)-strip$(OS_APP_SUFFIX)

@@ -17,6 +17,7 @@ extern const struct argv_option pe_perk_options[];
 extern const struct argv_option pe_ar_options[];
 extern const struct argv_option pe_nm_options[];
 extern const struct argv_option pe_size_options[];
+extern const struct argv_option pe_strip_options[];
 
 enum app_tags {
 	TAG_HELP,

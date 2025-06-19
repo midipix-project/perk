@@ -44,6 +44,19 @@
 
 
 
+#define PERK_STRIP_CMD_SYNOPSIS                        \
+	"%s — PE/COFF Fluff Removal Utility\n\n"        \
+	"Synopsis:\n"                                    \
+	"       %s [-V] [-v] [-p] [-o output] <file> \n"  \
+	"       %s [-X] [-x]             <file> ... \n"    \
+	"       %s [-s] [-g|-d|-S]       <file> ... \n"     \
+	"       %s [-w] [-R secname] ... <file> ... \n"      \
+	"       %s [-w] [-K symname] ... <file> ... \n"       \
+	"       %s [-w] [-N symname] ... <file> ... \n\n"      \
+	"Options:\n"
+
+
+
 #define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
 	"Synopsis:\n"                                                          \
