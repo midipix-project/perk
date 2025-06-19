@@ -113,6 +113,10 @@ int pe_main(char ** argv, char ** envp, const struct pe_fd_ctx * fdctx)
 			pe_cmd_common(dctx,pe_cmd_ranlib);
 			break;
 
+		case PERK_CMD_STRINGS:
+			pe_cmd_common(dctx,pe_cmd_strings);
+			break;
+
 		case PERK_CMD_AR:
 			arflags = dctx->cctx->drvflags;
 

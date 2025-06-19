@@ -65,6 +65,14 @@
 
 
 
+#define PERK_STRINGS_CMD_SYNOPSIS                                  \
+	"%s — PE/COFF String Finder\n\n"                            \
+	"Synopsis:\n"                                                \
+	"       %s [-V] [-a] [-t format] [-n number] <file> ...\n\n"  \
+	"Options:\n"
+
+
+
 #define PERK_AR_CMD_SYNOPSIS                                                 \
 	"%s — the PE/COFF Archive Manipulator\n\n"                            \
 	"Synopsis:\n"                                                          \

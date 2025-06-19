@@ -305,6 +305,7 @@ perk_api int  pe_cmd_nm                         (const struct pe_driver_ctx *, c
 perk_api int  pe_cmd_size                       (const struct pe_driver_ctx *, const char *);
 perk_api int  pe_cmd_strip                      (const struct pe_driver_ctx *, const char *);
 perk_api int  pe_cmd_ranlib                     (const struct pe_driver_ctx *, const char *);
+perk_api int  pe_cmd_strings                    (const struct pe_driver_ctx *, const char *);
 
 perk_api int  pe_cmd_ar                         (const struct pe_driver_ctx *, uint64_t,
                                                  const char *, const char *, const char **);

@@ -29,3 +29,7 @@ install-app-extras:
 	rm -f bin/$(NICKNAME)-ranlib$(OS_APP_SUFFIX).tmp
 	ln -s ./$(NICKNAME)$(OS_APP_SUFFIX) bin/$(NICKNAME)-ranlib$(OS_APP_SUFFIX).tmp
 	mv bin/$(NICKNAME)-ranlib$(OS_APP_SUFFIX).tmp     $(DESTDIR)$(BINDIR)/$(NICKNAME)-ranlib$(OS_APP_SUFFIX)
+
+	rm -f bin/$(NICKNAME)-strings$(OS_APP_SUFFIX).tmp
+	ln -s ./$(NICKNAME)$(OS_APP_SUFFIX) bin/$(NICKNAME)-strings$(OS_APP_SUFFIX).tmp
+	mv bin/$(NICKNAME)-strings$(OS_APP_SUFFIX).tmp     $(DESTDIR)$(BINDIR)/$(NICKNAME)-strings$(OS_APP_SUFFIX)

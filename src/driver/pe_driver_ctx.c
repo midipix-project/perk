@@ -33,6 +33,7 @@ static const char * const perk_cmd_name[PERK_CMD_CAP] = {
 	[PERK_CMD_SIZE]     = "size",
 	[PERK_CMD_STRIP]    = "strip",
 	[PERK_CMD_RANLIB]   = "ranlib",
+	[PERK_CMD_STRINGS]  = "strings",
 };
 
 /* perk command options */
@@ -44,6 +45,7 @@ static const struct argv_option * perk_cmd_options[PERK_CMD_CAP] = {
 	[PERK_CMD_SIZE]     = pe_size_options,
 	[PERK_CMD_STRIP]    = pe_strip_options,
 	[PERK_CMD_RANLIB]   = pe_ranlib_options,
+	[PERK_CMD_STRINGS]  = pe_strings_options,
 };
 
 /* default fd context */
@@ -128,6 +130,12 @@ static int pe_driver_usage(
 		case PERK_CMD_RANLIB:
 			snprintf(header,sizeof(header),
 				PERK_RANLIB_CMD_SYNOPSIS,
+				cmdname,cmdname);
+			break;
+
+		case PERK_CMD_STRINGS:
+			snprintf(header,sizeof(header),
+				PERK_STRINGS_CMD_SYNOPSIS,
 				cmdname,cmdname);
 			break;
 
@@ -530,6 +538,9 @@ int pe_lib_get_driver_ctx(
 
 	} else if (cctx.cmd == PERK_CMD_RANLIB) {
 		argv_optv_init(pe_ranlib_options,optv);
+
+	} else if (cctx.cmd == PERK_CMD_STRINGS) {
+		argv_optv_init(pe_strings_options,optv);
 	}
 
 	/* process the selected tool's command-line arguments */
