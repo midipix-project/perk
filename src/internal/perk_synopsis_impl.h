@@ -66,7 +66,7 @@
 
 
 #define PERK_AR_CMD_SYNOPSIS                                                 \
-	"%s — the PE/COFF Resource Kit Archiver\n\n"                          \
+	"%s — the PE/COFF Archive Manipulator\n\n"                            \
 	"Synopsis:\n"                                                          \
 	"       %s -d [-v]                          <archive> <file> ...\n"     \
 	"       %s -p [-v] [-s]                     <archive> <file> ...\n"     \
